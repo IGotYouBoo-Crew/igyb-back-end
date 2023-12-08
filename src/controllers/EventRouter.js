@@ -4,17 +4,17 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getAllPosts, getPostById } = require("./PostFunctions");
+const { getAllEvents, getEventById } = require('./EventFunctions');
 
 
 
 // Configure routes attached to the router instance
 
-// Show all posts
+// Show all Events
 router.get('/', async (request, response) => {
     let responseData = {};
 
-    responseData = await getAllPosts();
+    responseData = await getAllEvents();
 
     response.json({
         data: responseData
@@ -23,10 +23,10 @@ router.get('/', async (request, response) => {
 
 // Show all users with a matching role
 // Uses route params, notice the request.params too!
-router.get('/:postId', async (request, response) => {
+router.get('/:EventId', async (request, response) => {
     let responseData = {};
 
-    responseData = await getPostById(request.params.postId);
+    responseData = await getEventById(request.params.EventId);
 
     response.json({
         data: responseData

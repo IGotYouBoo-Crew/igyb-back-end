@@ -47,6 +47,9 @@ app.use("/account", userController);
 // Adds post routes
 const postController = require("./controllers/PostRouter");
 app.use("/posts", postController);
+// Adds event routes
+const eventController = require("./controllers/EventRouter");
+app.use("/events", eventController);
 
 // Return a bunch of useful details from the database connection
 // Dig into each property here:

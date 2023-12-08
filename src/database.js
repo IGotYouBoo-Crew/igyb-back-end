@@ -6,7 +6,7 @@ const DB_URI = process.env.DB_URI;
 async function databaseConnect() {
     try {
         // db connection can take time, wait is required
-        console.log("connecting to " + DB_URI)
+        console.log("connecting to database")
         await mongoose.connect(DB_URI);
         console.log("Database connected");
     } catch (error) {

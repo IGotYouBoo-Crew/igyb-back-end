@@ -3,6 +3,9 @@ This is the backend for I Got You Boo, a collaborative work for T3A2-B
 
 Currently, this is a skeleton of the eventual backend.
 
+## .env requirements:
+.env file is required for this to run correctly. An example .env file is included with the required values replaced with placeholders.
+
 ## Available scripts:
 - "start-dev"
     - NODE_ENV:development nodemon src/index.js
@@ -24,7 +27,6 @@ Currently, this is a skeleton of the eventual backend.
         dbHost: databaseHost,
     }
     ```
-#### Routers:
 - "/roles"
     - "/"
         - expected result: 

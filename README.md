@@ -46,3 +46,10 @@ Currently, this is a skeleton of the eventual backend.
     - "/:postId" 
         - expected result:
         `{ data: post with id: ':postId' }`
+- "/events"
+    - "/" 
+        - expected result:
+        `{ data: [list of all events] }`
+    - "/:postId" 
+        - expected result:
+        `{ data: post with id: ':eventId' }`

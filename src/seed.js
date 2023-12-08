@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { databaseConnector } = require("./database");
+const { databaseConnect } = require("./database");
 // import models needed
 const { User } = require("./models/UserModel");
 const { Post } = require("./models/PostModel");
@@ -50,24 +50,7 @@ const posts = [
     },
 ]
 
-// Connect to the database.
-var databaseURL = "";
-switch (process.env.NODE_ENV.toLowerCase()) {
-    case "test":
-        databaseURL = "mongodb://localhost:27017/IGotYouBoo-test";
-        break;
-    case "development":
-        databaseURL = "mongodb://localhost:27017/IGotYouBoo-dev";
-        break;
-    case "production":
-        databaseURL = process.env.DATABASE_URL;
-        break;
-    default:
-        console.error("Incorrect JS environment specified, database will not be connected.");
-        break;
-}
-
-databaseConnector(databaseURL)
+databaseConnect()
     .then(() => {
         console.log("Database connected successfully!");
     })

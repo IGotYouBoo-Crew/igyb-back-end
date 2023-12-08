@@ -7,7 +7,6 @@ dotenv.config();
 const express = require("express");
 const app = express();
 // If no process.env.X is found, assign a default value instead.
-const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 3000;
 
 // Configure some basic Helmet settings on the server instance.
@@ -48,34 +47,6 @@ app.use("/account", userController);
 // Adds post routes
 const postController = require("./controllers/PostRouter");
 app.use("/posts", postController);
-
-var databaseURL = "";
-switch (process.env.NODE_ENV.toLowerCase()) {
-    case "test":
-        databaseURL = "mongodb://localhost:27017/IGotYouBoo-test";
-        break;
-    case "development":
-        databaseURL = "mongodb://localhost:27017/IGotYouBoo-dev";
-        break;
-    case "production":
-        databaseURL = process.env.DATABASE_URL;
-        break;
-    default:
-        console.error("Incorrect JS environment specified, database will not be connected.");
-        break;
-}
-
-const { databaseConnector } = require("./database");
-databaseConnector(databaseURL)
-    .then(() => {
-        console.log("Database connected successfully!");
-    })
-    .catch((error) => {
-        console.log(`
-    Some error occurred connecting to the database! It was: 
-    ${error}
-    `);
-    });
 
 // Return a bunch of useful details from the database connection
 // Dig into each property here:
@@ -141,7 +112,6 @@ app.get("*", (request, response) => {
 
 // Export everything needed to run the server.
 module.exports = {
-    HOST,
     PORT,
     app,
 };

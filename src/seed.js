@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
-const { databaseConnector } = require("./database");
+const { databaseConnect } = require("./database");
 // import models needed
 const { User } = require("./models/UserModel");
 const { Post } = require("./models/PostModel");
 const { Role } = require("./models/RoleModel");
 const dotenv = require("dotenv");
+const { Event } = require("./models/EventModel");
 
 dotenv.config;
 
@@ -25,49 +26,43 @@ const users = [
         username: "user1",
         password: "this is fake data",
         pronouns: "fake/data",
-        role: null
+        role: null,
     },
     {
         email: "user2@email.com",
         username: "user2",
         password: "this is fake data",
         pronouns: "fake/data",
-        role: null
+        role: null,
     },
-
-]
+];
 
 const posts = [
     {
         title: "first post",
         content: "this is the first fake post",
-        author: null
+        author: null,
     },
     {
         title: "second post",
         content: "this is the second fake post",
-        author: null
+        author: null,
     },
-]
+];
+const events = [
+    {
+        title: "first event",
+        content: "this is the first fake event",
+        author: null,
+    },
+    {
+        title: "second event",
+        content: "this is the second fake event",
+        author: null,
+    },
+];
 
-// Connect to the database.
-var databaseURL = "";
-switch (process.env.NODE_ENV.toLowerCase()) {
-    case "test":
-        databaseURL = "mongodb://localhost:27017/IGotYouBoo-test";
-        break;
-    case "development":
-        databaseURL = "mongodb://localhost:27017/IGotYouBoo-dev";
-        break;
-    case "production":
-        databaseURL = process.env.DATABASE_URL;
-        break;
-    default:
-        console.error("Incorrect JS environment specified, database will not be connected.");
-        break;
-}
-
-databaseConnector(databaseURL)
+databaseConnect()
     .then(() => {
         console.log("Database connected successfully!");
     })
@@ -91,13 +86,17 @@ databaseConnector(databaseURL)
         // add new data
         let rolesCreated = await Role.insertMany(roles);
         for (const user of users) {
-            user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id
+            user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id;
         }
         let usersCreated = await User.insertMany(users);
         for (const post of posts) {
-            post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id
+            post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
         }
-        await Post.insertMany(posts)
+        await Post.insertMany(posts);
+        for (const event of events) {
+            event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+        }
+        await Event.insertMany(events);
         console.log("New DB data created");
     })
     .then(() => {

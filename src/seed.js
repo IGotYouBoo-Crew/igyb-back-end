@@ -62,45 +62,51 @@ const events = [
     },
 ];
 
-databaseConnect()
-    .then(() => {
-        console.log("Database connected successfully!");
-    })
-    .catch((error) => {
-        console.log(`An error occurred while connecting to the database:\n${error}`);
-    })
-    .then(async () => {
-        if (process.env.WIPE === "true") {
-            // get the names of all collections in the DB
-            const collections = await mongoose.connection.db.listCollections().toArray();
-            // empty data and collections from the DB
-            collections
-                .map((collection) => collection.name)
-                .forEach(async (collectionName) => {
-                    mongoose.connection.db.dropCollection(collectionName);
-                });
-            console.log("Old DB data deleted");
-        }
-    })
-    .then(async () => {
-        // add new data
-        let rolesCreated = await Role.insertMany(roles);
-        for (const user of users) {
-            user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id;
-        }
-        let usersCreated = await User.insertMany(users);
-        for (const post of posts) {
-            post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
-        }
-        await Post.insertMany(posts);
-        for (const event of events) {
-            event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
-        }
-        await Event.insertMany(events);
-        console.log("New DB data created");
-    })
-    .then(() => {
-        // dc from db
-        mongoose.connection.close();
-        console.log("DB seed connection closed");
-    });
+seedDb()
+
+function seedDb() {
+    databaseConnect()
+        .then(() => {
+            console.log("Database connected successfully when seeding!");
+        })
+        .catch((error) => {
+            console.log(`An error occurred while connecting to the database:\n${error}`);
+        })
+        .then(async () => {
+            if (process.env.WIPE === "true") {
+                // get the names of all collections in the DB
+                const collections = await mongoose.connection.db.listCollections().toArray();
+                // empty data and collections from the DB
+                collections
+                    .map((collection) => collection.name)
+                    .forEach(async (collectionName) => {
+                        mongoose.connection.db.dropCollection(collectionName);
+                    });
+                console.log("Old DB data deleted");
+            }
+        })
+        .then(async () => {
+            // add new data
+            let rolesCreated = await Role.insertMany(roles);
+            for (const user of users) {
+                user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id;
+            }
+            let usersCreated = await User.insertMany(users);
+            for (const post of posts) {
+                post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+            }
+            await Post.insertMany(posts);
+            for (const event of events) {
+                event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+            }
+            await Event.insertMany(events);
+            console.log("New DB data created");
+        })
+        .then(() => {
+            // dc from db
+            mongoose.connection.close();
+            console.log("DB seed connection closed");
+        });
+}
+
+module.exports = { seedDb }

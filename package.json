@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand --forceExit",
+    "reseed-and-test": "NODE_ENV=test WIPE=true node src/seed.js && jest --runInBand --forceExit",
     "start-dev": "NODE_ENV=development nodemon src/index.js",
     "dev-clean-seed": "NODE_ENV=development WIPE=true node src/seed.js"
   },

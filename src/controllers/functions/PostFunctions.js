@@ -3,14 +3,14 @@
 const { Post } = require('../../models/PostModel');
 
 // CREATE
-async function createNewUser(data){
+async function createNewPost(data){
     return await Post.create(data).catch((error) => error)
 }
 
 // READ
 // Model.find({}) returns all documents in a collection.
 async function getAllPosts(){
-    return await Post.find({}).populate("role");
+    return await Post.find({}).populate("author", "username");
     
 }
 

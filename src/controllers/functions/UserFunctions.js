@@ -12,13 +12,24 @@ async function getUserByUsername(username){
     return await User.findOne({username: username}).exec()
 }
 
+async function getUserById(id){
+    // finds one user with matching username
+    return await User.findOne({_id: id}).exec()
+}
+
 async function createNewUser(data){
     return await User.create(data).catch((error) => error)
+}
+
+async function deleteUserById(userId){
+    return await User.deleteOne({_id: userId}).exec()
 }
 
 // Export the functions for our routes to use.
 module.exports = {
     getAllUsers,
     getUserByUsername,
+    getUserById,
+    deleteUserById,
     createNewUser
 }

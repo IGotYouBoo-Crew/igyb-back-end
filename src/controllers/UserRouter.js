@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getAllUsers, getUserByUsername, createNewUser, getUserById } = require('./functions/UserFunctions');
+const { getAllUsers, getUserByUsername, createNewUser, getUserById, deleteUser, deleteUserById } = require('./functions/UserFunctions');
 
 
 // Configure routes attached to the router instance
@@ -40,6 +40,15 @@ router.post('/newUser', async (request, response) => {
         data: responseData
     });
 });
+
+router.delete("/:userId", async(request, response) => {
+    let user = await getUserById(request.params.userId)
+    await deleteUserById(request.params.userId)
+    let confirmation = `deleting user: ${user.username}`
+    response.json({
+        message: confirmation
+    })
+})
 
 
 // Export the router so that other files can use it:

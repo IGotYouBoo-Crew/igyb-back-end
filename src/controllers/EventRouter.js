@@ -4,35 +4,61 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getAllEvents, getEventById } = require('./functions/EventFunctions');
+const { getAllEvents, updateEventById, deleteEventById, getEventById, createNewEvent } = require("./functions/EventFunctions");
 
 
 
-// Configure routes attached to the router instance
+// Checklist: should include CREATE, READ, UPDATE, DELETE
 
-// Show all Events
+// CREATE
+// request.body must include required fields (TBD when creating events model)
+router.post('/newEvent', async (request, response) => {
+    let responseData = await createNewEvent(request.body);
+    response.json({
+        data: responseData
+    });
+});
+
+// READ
+
+// Show all events
 router.get('/', async (request, response) => {
     let responseData = {};
-
     responseData = await getAllEvents();
-
     response.json({
         data: responseData
     });
 });
 
-// Show all users with a matching role
-// Uses route params, notice the request.params too!
-router.get('/:EventId', async (request, response) => {
+// shows a event's data which matches a specified title
+router.get('/:eventId', async (request, response) => {
     let responseData = {};
 
-    responseData = await getEventById(request.params.EventId);
+    responseData = await getEventById(request.params.eventId);
 
     response.json({
         data: responseData
     });
 });
 
+// UPDATE
+// Updates the event properties provided in the request.body according to the eventId
+router.patch("/:eventId", async(request, response) => {
+    let updatedEvent = await updateEventById(request.params.eventId, request.body)
+    response.json({
+        message: updatedEvent
+    })
+})
+
+// DELETE
+// Deletes a event with matching _id value
+router.delete("/:eventId", async(request, response) => {
+    let deletedEvent = await deleteEventById(request.params.eventId)
+    let confirmation = `deleting event: ${deletedEvent.title}`
+    response.json({
+        message: confirmation
+    })
+})
 
 // Export the router so that other files can use it:
 module.exports = router;

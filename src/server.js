@@ -23,10 +23,8 @@ app.use(
 );
 
 // Configure some basic CORS settings on the server instance.
-// These origin values don't actually have to be anything -
-// this project exists without a front-end, but any front-end
-// that should interact with this API should be listed in the
-// array of origins for CORS configuration.
+// Any front-end that should interact with this API should be
+// listed in the array of origins for CORS configuration.
 const cors = require("cors");
 var corsOptions = {
     origin: ["http://localhost:5000", "https://deployedApp.com"],
@@ -52,8 +50,6 @@ const eventController = require("./controllers/EventRouter");
 app.use("/events", eventController);
 
 // Return a bunch of useful details from the database connection
-// Dig into each property here:
-// https://mongoosejs.com/docs/api/connection.html
 app.get("/databaseHealth", (request, response) => {
     let databaseState = mongoose.connection.readyState;
     let databaseName = mongoose.connection.name;
@@ -103,9 +99,7 @@ app.get("/databaseDump", async (request, response) => {
     });
 });
 
-// Keep this route at the end of this file, only before the module.exports!
 // A 404 route should only trigger if no preceding routes or middleware was run.
-// So, put this below where any other routes are placed within this file.
 app.get("*", (request, response) => {
     response.status(404).json({
         message: "No route with that path found!",

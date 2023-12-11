@@ -4,24 +4,32 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getAllUsers, getUserByUsername } = require('./UserFunctions');
+const { getAllUsers, getUserByUsername, createNewUser, deleteUserById, updateUserById } = require('./functions/UserFunctions');
 
 
-// Configure routes attached to the router instance
+// Checklist: should include CREATE, READ, UPDATE, DELETE
 
-// Show all roles
-router.get('/', async (request, response) => {
-    let responseData = {};
-
-    responseData = await getAllUsers();
-
+// CREATE
+// request.body must include required fields (TBD when creating users model)
+router.post('/newUser', async (request, response) => {
+    let responseData = await createNewUser(request.body);
     response.json({
         data: responseData
     });
 });
 
-// Show all users with a matching role
-// Uses route params, notice the request.params too!
+// READ
+
+// Show all users
+router.get('/', async (request, response) => {
+    let responseData = {};
+    responseData = await getAllUsers();
+    response.json({
+        data: responseData
+    });
+});
+
+// shows a user's data which matches a specified username
 router.get('/:username', async (request, response) => {
     let responseData = {};
 
@@ -32,6 +40,24 @@ router.get('/:username', async (request, response) => {
     });
 });
 
+// UPDATE
+// Updates the user properties provided in the request.body according to the userId
+router.patch("/:userId", async(request, response) => {
+    let updatedUser = await updateUserById(request.params.userId, request.body)
+    response.json({
+        message: updatedUser
+    })
+})
+
+// DELETE
+// Deletes a user with matching _id value
+router.delete("/:userId", async(request, response) => {
+    let deletedUser = await deleteUserById(request.params.userId)
+    let confirmation = `deleting user: ${deletedUser.username}`
+    response.json({
+        message: confirmation
+    })
+})
 
 // Export the router so that other files can use it:
 module.exports = router;

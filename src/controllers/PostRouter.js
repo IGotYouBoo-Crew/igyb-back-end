@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getAllPosts, getPostById } = require("./PostFunctions");
+const { getAllPosts, getPostById } = require("./functions/PostFunctions");
 
 
 

@@ -2,9 +2,18 @@
 // create functionality involving them.
 const { User } = require('../../models/UserModel');
 
+// checklist: Create, Read, Update, Delete
+
+// CREATE
+async function createNewUser(data){
+    return await User.create(data).catch((error) => error)
+}
+
+// READ
 // Model.find({}) returns all documents in a collection.
 async function getAllUsers(){
     return await User.find({}).populate("role");
+    
 }
 
 async function getUserByUsername(username){
@@ -12,17 +21,19 @@ async function getUserByUsername(username){
     return await User.findOne({username: username}).exec()
 }
 
-async function getUserById(id){
-    // finds one user with matching username
-    return await User.findOne({_id: id}).exec()
+async function getUserById(userId){
+    // finds user with matching userId
+    return await User.findById(userId).exec()
 }
 
-async function createNewUser(data){
-    return await User.create(data).catch((error) => error)
+// UPDATE
+async function updateUserById(userId, updatedUserData){
+    return await User.findByIdAndUpdate(userId, updatedUserData, { runValidators: true, returnDocument: 'after' }).exec()
 }
 
+// DELETE
 async function deleteUserById(userId){
-    return await User.deleteOne({_id: userId}).exec()
+    return await User.findByIdAndDelete(userId).exec()
 }
 
 // Export the functions for our routes to use.
@@ -31,5 +42,6 @@ module.exports = {
     getUserByUsername,
     getUserById,
     deleteUserById,
+    updateUserById,
     createNewUser
 }

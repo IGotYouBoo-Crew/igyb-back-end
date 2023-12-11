@@ -13,6 +13,13 @@ Currently, this is a skeleton of the eventual backend.
 - "dev-clean-seed"
     - NODE_ENV=development WIPE=true node src/seed.js
     - Wipes development database and reseeds it with fresh data
+- "test"
+    - jest --runInBand --forceExit
+    - Runs tests in test suite in order, then ends jest when completed
+        - --forceExit avoids "open handle" error which is caused by supertest sometimes. It isn't actually an error, just a weird interaction between the jest and supertest when using async/await
+- "reseed-and-test"
+    - NODE_ENV=test WIPE=true node src/seed.js && jest --runInBand --forceExit
+    - Wipes test database and reseeds it with fresh data, then runs tests in test suite
 
 ## Available endpoints:
 - "/"

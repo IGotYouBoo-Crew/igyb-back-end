@@ -4,25 +4,33 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getAllPosts, getPostById } = require("./functions/PostFunctions");
+const { getAllPosts, updatePostById, deletePostById, getPostById, createNewPost } = require("./functions/PostFunctions");
 
 
 
-// Configure routes attached to the router instance
+// Checklist: should include CREATE, READ, UPDATE, DELETE
 
-// Show all posts
-router.get('/', async (request, response) => {
-    let responseData = {};
-
-    responseData = await getAllPosts();
-
+// CREATE
+// request.body must include required fields (TBD when creating posts model)
+router.post('/newPost', async (request, response) => {
+    let responseData = await createNewPost(request.body);
     response.json({
         data: responseData
     });
 });
 
-// Show all users with a matching role
-// Uses route params, notice the request.params too!
+// READ
+
+// Show all posts
+router.get('/', async (request, response) => {
+    let responseData = {};
+    responseData = await getAllPosts();
+    response.json({
+        data: responseData
+    });
+});
+
+// shows a post's data which matches a specified title
 router.get('/:postId', async (request, response) => {
     let responseData = {};
 
@@ -32,6 +40,25 @@ router.get('/:postId', async (request, response) => {
         data: responseData
     });
 });
+
+// UPDATE
+// Updates the post properties provided in the request.body according to the postId
+router.patch("/:postId", async(request, response) => {
+    let updatedPost = await updatePostById(request.params.postId, request.body)
+    response.json({
+        message: updatedPost
+    })
+})
+
+// DELETE
+// Deletes a post with matching _id value
+router.delete("/:postId", async(request, response) => {
+    let deletedPost = await deletePostById(request.params.postId)
+    let confirmation = `deleting post: ${deletedPost.title}`
+    response.json({
+        message: confirmation
+    })
+})
 
 
 // Export the router so that other files can use it:

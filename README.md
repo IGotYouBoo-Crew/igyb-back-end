@@ -35,23 +35,62 @@ Currently, this is a skeleton of the eventual backend.
         - expected result:
         `{ data: [list of users with :roleName role] }`
 - "/account"
-    - "/" 
+    - GET "/" 
         - expected result:
         `{ data: [list of all users] }`
-    - "/:username" 
+    - GET "/:username" 
         - expected result:
         `{ data: user with username: ':username' }`
+    - POST "/newUser"
+        - Request body:
+            - JSON of user details according to User model (TBD)
+        - expected result:
+        `{ data: { userObject } }`
+    - PATCH "/:userId"
+        - Request body: 
+            - `{ attributeToBeUpdated: newValue, attr2: newValue2 }`
+        - expected response:
+            `{ message: updatedUserObject }`
+    - DELETE "/:userId"
+        - expected response: 
+        `{ message: "deleted user: ${username}" }`
 - "/posts"
-    - "/" 
+    - GET "/" 
         - expected result:
         `{ data: [list of all posts] }`
-    - "/:postId" 
+    - GET "/:postId" 
         - expected result:
-        `{ data: post with id: ':postId' }`
+        `{ data: post with _id: 'postId' }`
+    - POST "/newPost"
+        - Request body:
+            - JSON of post details according to Post model (TBD)
+        - expected result:
+        `{ data: { postObject } }`
+    - PATCH "/:postId"
+        - Request body: 
+            - `{ attributeToBeUpdated: newValue, attr2: newValue2 }`
+        - expected response:
+            `{ message: updatedPostObject }`
+    - DELETE "/:postId"
+        - expected response: 
+        `{ message: "deleted post: ${post.title}" }`
 - "/events"
-    - "/" 
+    - GET "/" 
         - expected result:
         `{ data: [list of all events] }`
-    - "/:postId" 
+    - GET "/:eventId" 
         - expected result:
-        `{ data: post with id: ':eventId' }`
+        `{ data: event with _id_: 'eventId' }`
+    - POST "/newUser"
+        - Request body:
+            - JSON of event details according to User model (TBD)
+        - expected result:
+        `{ data: { eventObject } }`
+    - PATCH "/:eventId"
+        - Request body: 
+            - `{ attributeToBeUpdated: newValue, attr2: newValue2 }`
+        - expected response:
+            `{ message: updatedUserObject }`
+    - DELETE "/:eventId"
+        - expected response: 
+        `{ message: "deleted event: ${event.title}" }`

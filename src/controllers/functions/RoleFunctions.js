@@ -1,7 +1,7 @@
 // Require specific models so that we can 
 // create functionality involving them.
-const { Role } = require('../models/RoleModel');
-const { User } = require('../models/UserModel');
+const { Role } = require('../../models/RoleModel');
+const { User } = require('../../models/UserModel');
 
 // Model.find({}) returns all documents in a collection.
 async function getAllRoles(){

@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getAllUsers, getUserByUsername } = require('./UserFunctions');
+const { getAllUsers, getUserByUsername, createNewUser, getUserById } = require('./functions/UserFunctions');
 
 
 // Configure routes attached to the router instance
@@ -26,6 +26,15 @@ router.get('/:username', async (request, response) => {
     let responseData = {};
 
     responseData = await getUserByUsername(request.params.username);
+
+    response.json({
+        data: responseData
+    });
+});
+
+
+router.post('/newUser', async (request, response) => {
+    let responseData = await createNewUser(request.body);
 
     response.json({
         data: responseData

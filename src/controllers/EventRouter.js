@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getAllEvents, getEventById } = require('./EventFunctions');
+const { getAllEvents, getEventById } = require('./functions/EventFunctions');
 
 
 

@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Import our new functions:
-const { getUsersWithRole, getAllRoles } = require('./RoleFunctions');
+const { getUsersWithRole, getAllRoles } = require('./functions/RoleFunctions');
 
 
 // Configure routes attached to the router instance

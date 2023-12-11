@@ -1,6 +1,6 @@
 // Require specific models so that we can 
 // create functionality involving them.
-const { Post } = require('../models/PostModel');
+const { Post } = require('../../models/PostModel');
 
 // Model.find({}) returns all documents in a collection.
 async function getAllPosts(){

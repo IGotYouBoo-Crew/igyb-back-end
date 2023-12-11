@@ -1,6 +1,6 @@
 // Require specific models so that we can 
 // create functionality involving them.
-const { Event } = require('../models/EventModel');
+const { Event } = require('../../models/EventModel');
 
 // Model.find({}) returns all documents in a collection.
 async function getAllEvents(){

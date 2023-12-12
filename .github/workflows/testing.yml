@@ -22,7 +22,12 @@ jobs:
         - name: Install server dependencies
           run: npm install
 
-        - name: Seed db and run tests
+        - name: Seed db
+          run: npm run test-seed
+          env:
+            CI: true
+
+        - name: run tests
           run: npm run test
           env:
             CI: true

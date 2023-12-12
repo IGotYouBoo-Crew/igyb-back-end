@@ -22,7 +22,6 @@ async function getUsersWithRole(roleName){
 
 async function getRoleIdByName(roleName){
     let roleQuery = await Role.findOne({name: roleName}).exec();
-    console.log(roleQuery)
     return roleQuery._id.toString()
 }
 

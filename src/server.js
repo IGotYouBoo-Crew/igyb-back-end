@@ -6,8 +6,7 @@ dotenv.config();
 // Import the Express package and configure some needed data.
 const express = require("express");
 const app = express();
-// If no process.env.X is found, assign a default value instead.
-const PORT = process.env.PORT || 3000;
+
 
 // Configure some basic Helmet settings on the server instance.
 const helmet = require("helmet");
@@ -109,6 +108,5 @@ app.get("*", (request, response) => {
 
 // Export everything needed to run the server.
 module.exports = {
-    PORT,
     app,
 };

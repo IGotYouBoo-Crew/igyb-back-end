@@ -1,11 +1,12 @@
 // Test the routes from server.js
+const { default: mongoose } = require("mongoose");
 const { databaseConnect } = require("../src/database");
 const { app } = require("../src/server");
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
 
 
-beforeAll(async () => {
+beforeEach(async () => {
     server = app.listen(3030, async () => {
         await databaseConnect();
         console.log(`
@@ -16,9 +17,14 @@ beforeAll(async () => {
     });
 });
 
-afterAll(() => {
+afterEach(() => {
+    console.log("closing connection")
     server.close();
 });
+
+afterAll(() => {
+    mongoose.disconnect()
+})
 
 describe("server root route exists and returns status hello world", () => {
     test("root route exists and returns status 200", async () => {
@@ -160,5 +166,8 @@ describe("EventsController routes work and accept/return data correctly", () => 
         const responseResult = await request(app).delete("/events/" + testEventId)
         
         expect(responseResult.body.message).toEqual("deleting event: NewEvent")
+    })
+    test("done", () =>{
+        console.log("tests finished")
     })
 });

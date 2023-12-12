@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "seed-and-test": "NODE_ENV=test node src/seed.js && jest --runInBand --forceExit",
-    "test": "NODE_ENV=test jest --runInBand --forceExit",
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
     "reseed-and-test": "NODE_ENV=test WIPE=true node src/seed.js && jest --runInBand --forceExit",
     "start-dev": "NODE_ENV=development nodemon src/index.js",
     "dev-clean-seed": "NODE_ENV=development WIPE=true node src/seed.js",

@@ -7,6 +7,7 @@
     "seed-and-test": "NODE_ENV=test node src/seed.js && jest --runInBand",
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
     "reseed-and-test": "NODE_ENV=test WIPE=true node src/seed.js && jest --runInBand",
+    "ci-reseed-and-test": "NODE_ENV=ciTest WIPE=true node src/seed.js && jest --runInBand",
     "start-dev": "NODE_ENV=development nodemon src/index.js",
     "seed-prod": "NODE_ENV=production node src/seed.js",
     "dev-clean-seed": "NODE_ENV=development WIPE=true node src/seed.js",

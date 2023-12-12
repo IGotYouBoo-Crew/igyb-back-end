@@ -18,7 +18,6 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-    console.log("closing connection")
     server.close();
 });
 

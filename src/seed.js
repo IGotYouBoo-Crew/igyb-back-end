@@ -66,11 +66,11 @@ seedDb()
 
 function seedDb() {
     databaseConnect()
-        .then(() => {
-            console.log("Database connected successfully when seeding!");
-        })
         .catch((error) => {
             console.log(`An error occurred while connecting to the database:\n${error}`);
+        })
+        .then(() => {
+            console.log("Database connected successfully when seeding!");
         })
         .then(async () => {
             if (process.env.WIPE === "true") {

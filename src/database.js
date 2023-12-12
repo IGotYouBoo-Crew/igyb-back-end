@@ -11,7 +11,7 @@ switch (process.env.NODE_ENV.toLowerCase()) {
         DB_URI = "mongodb://localhost:27017/IGotYouBoo-dev";
         break;
     case "production":
-        DB_URI = process.env.DATABASE_URI;
+        DB_URI = process.env.DB_URI;
         break;
     default:
         console.error("Incorrect JS environment specified, database will not be connected.");
@@ -21,7 +21,7 @@ switch (process.env.NODE_ENV.toLowerCase()) {
 async function databaseConnect() {
     try {
         // db connection can take time, wait is required
-        console.log("connecting to database")
+        console.log("connecting to database at url: " + DB_URI)
         await mongoose.connect(DB_URI);
         console.log("Database connected");
     } catch (error) {

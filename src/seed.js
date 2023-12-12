@@ -53,11 +53,13 @@ const events = [
     {
         title: "first event",
         content: "this is the first fake event",
+        date: "25th December 2023",
         author: null,
     },
     {
         title: "second event",
         content: "this is the second fake event",
+        date: "26th December 2023",
         author: null,
     },
 ];

@@ -9,7 +9,7 @@ switch (process.env.NODE_ENV.toLowerCase()) {
         DB_URI = "mongodb://localhost:27017/IGotYouBoo-test";
         break;
     case "citest":
-        DB_URI = "mongodb://mongo:27017/IGotYouBoo-test";
+        DB_URI = "mongodb://localhost:27017/IGotYouBoo-test";
         break;
     case "development":
         DB_URI = "mongodb://localhost:27017/IGotYouBoo-dev";

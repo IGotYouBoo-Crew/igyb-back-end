@@ -23,6 +23,9 @@ jobs:
           uses: supercharge/mongodb-github-action@1.10.0
           with:
             mongodb-version: latest
+            mongodb-username: admin
+            mongodb-password: password
+            mongodb-db: IGotYouBoo-test
 
         - name: Install server dependencies
           run: npm install

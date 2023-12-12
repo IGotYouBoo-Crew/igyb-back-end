@@ -5,7 +5,7 @@ let DB_URI = "";
 
 switch (process.env.NODE_ENV.toLowerCase()) {
     case "test":
-        DB_URI = "mongodb://localhost:27017/IGotYouBoo-test";
+        DB_URI = "mongodb://0.0.0.0:27017/IGotYouBoo-test";
         break;
     case "development":
         DB_URI = "mongodb://localhost:27017/IGotYouBoo-dev";

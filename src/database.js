@@ -22,7 +22,7 @@ async function databaseConnect() {
     try {
         // db connection can take time, wait is required
         console.log("connecting to database at url: " + DB_URI)
-        await mongoose.connect(DB_URI).catch(console.log("ruh roh"));
+        await mongoose.connect(DB_URI).catch((e) => console.log(e));
         console.log("Database connected");
     } catch (error) {
         console.log(`databaseConnect failed to connect to DB: \n${JSON.stringify(error)}`);

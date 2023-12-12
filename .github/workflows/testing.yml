@@ -31,6 +31,6 @@ jobs:
           run: npm install
 
         - name: Seed and test db
-          run: npm run ci-reseed-and-test
+          run: npm run reseed-and-test
           env:
             CI: true

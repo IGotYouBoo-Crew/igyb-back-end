@@ -5,6 +5,7 @@ var { app, PORT } = require("./server");
 
 const { databaseConnect } = require("./database");
 
+
 // Run the server
 app.listen(PORT, async () => {
     await databaseConnect();

@@ -123,13 +123,15 @@ describe("EventsController routes work and accept/return data correctly", () => 
     test("POST request.body of newEventData returns newEventData", async () => {
         let newEventData = {
             "title": "NewEvent",
-            "content": "Oh boy, I loooove events"
+            "content": "Oh boy, I loooove events",
+            "date": "25th December 2023"
         };
         const responseResult = await request(app).post("/events/newEvent").send(newEventData);
         testEventId = responseResult.body.data._id
 
         expect(responseResult.body.data).toHaveProperty("title", newEventData.title);
         expect(responseResult.body.data).toHaveProperty("content", newEventData.content);
+        expect(responseResult.body.data).toHaveProperty("date", newEventData.date);
         expect(responseResult.body.data).toHaveProperty("_id", testEventId);
     });
     // READ
@@ -138,6 +140,7 @@ describe("EventsController routes work and accept/return data correctly", () => 
         
         expect(responseResult.body.data).toHaveProperty("title", "NewEvent");
         expect(responseResult.body.data).toHaveProperty("content", "Oh boy, I loooove events");
+        expect(responseResult.body.data).toHaveProperty("date", "25th December 2023");
         expect(responseResult.body.data).toHaveProperty("_id", testEventId);
     });
     // UPDATE

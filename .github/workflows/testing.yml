@@ -2,7 +2,9 @@ name: Express Server Testing
 
 on:
   push:
-    branches: [ciTesting]
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
   workflow_dispatch:
 
 jobs:

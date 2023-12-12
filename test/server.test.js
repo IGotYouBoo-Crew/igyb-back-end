@@ -33,7 +33,7 @@ describe("server root route exists and returns status hello world", () => {
     test("gets database details", async () => {
         const responseResult = await request(app).get("/databaseHealth");
         console.log(responseResult.body)
-        expect(responseResult.body).toHaveProperty("databaseName");
+        expect(responseResult.body).toHaveProperty("dbModels");
     });
 });
 

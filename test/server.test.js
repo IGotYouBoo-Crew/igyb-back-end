@@ -30,6 +30,10 @@ describe("server root route exists and returns status hello world", () => {
         const responseResult = await request(app).get("/");
         expect(responseResult.body.message).toEqual("Hello world!");
     });
+    test("gets database details", async () => {
+        const responseResult = await request(app).get("/databaseHealth");
+        expect(responseResult.body.message).toHaveProperty("databaseName");
+    });
 });
 
 describe("UserController routes work and accept/return data correctly", () => {

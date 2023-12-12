@@ -9,11 +9,6 @@ const request = require("supertest");
 beforeEach(async () => {
     server = app.listen(3030, async () => {
         await databaseConnect();
-        console.log(`
-        I Got You Boo API is now running!
-        
-        Congrats!
-        `);
     });
 });
 

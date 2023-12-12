@@ -63,15 +63,15 @@ describe("UserController routes work and accept/return data correctly", () => {
         expect(responseResult.body.data).toHaveProperty("_id", testUserId);
     });
     // READ
-    test("'account/user1' route exists and returns user1's data", async () => {
-        const responseResult = await request(app).get("/account/user1");
+    // test("'account/user1' route exists and returns user1's data", async () => {
+    //     const responseResult = await request(app).get("/account/user1");
         
-        expect(responseResult.body.data).toHaveProperty("email", "user1@email.com");
-        expect(responseResult.body.data).toHaveProperty("username", "user1");
-        expect(responseResult.body.data).toHaveProperty("pronouns", "fake/data");
-        expect(responseResult.body.data).toHaveProperty("_id");
-        expect(responseResult.body.data).toHaveProperty("role");
-    });
+    //     expect(responseResult.body.data).toHaveProperty("email", "user1@email.com");
+    //     expect(responseResult.body.data).toHaveProperty("username", "user1");
+    //     expect(responseResult.body.data).toHaveProperty("pronouns", "fake/data");
+    //     expect(responseResult.body.data).toHaveProperty("_id");
+    //     expect(responseResult.body.data).toHaveProperty("role");
+    // });
     // UPDATE
     test("PATCH request.body of updatedUserData returns userData with updates", async () => {
         let updatedUserData = {

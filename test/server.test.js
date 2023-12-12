@@ -32,7 +32,8 @@ describe("server root route exists and returns status hello world", () => {
     });
     test("gets database details", async () => {
         const responseResult = await request(app).get("/databaseHealth");
-        expect(responseResult.body.message).toHaveProperty("databaseName");
+        console.log(responseResult)
+        expect(responseResult.body).toHaveProperty("databaseName");
     });
 });
 
@@ -47,6 +48,7 @@ describe("UserController routes work and accept/return data correctly", () => {
         };
         
         const responseResult = await request(app).post("/account/newUser").send(newUserData);
+        console.log(responseResult)
         testUserId = responseResult.body.data._id
 
         expect(responseResult.body.data).toHaveProperty("email", newUserData.email);

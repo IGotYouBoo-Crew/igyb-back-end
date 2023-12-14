@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { Role } = require("./RoleModel");
 
 const UserSchema = new mongoose.Schema({
     email: String,

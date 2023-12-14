@@ -6,7 +6,6 @@ const { Post } = require("./models/PostModel");
 const { Role } = require("./models/RoleModel");
 const dotenv = require("dotenv");
 const { Event } = require("./models/EventModel");
-const { getAllRoles } = require("./controllers/functions/RoleFunctions");
 
 dotenv.config;
 
@@ -91,7 +90,6 @@ function seedDb() {
         .then(async () => {
             // add new data
             let rolesCreated = await Role.insertMany(roles);
-            console.log(await getAllRoles())
             for (const user of users) {
                 user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id;
             }

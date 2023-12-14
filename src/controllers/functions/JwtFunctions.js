@@ -28,6 +28,9 @@ async function verifyUserJwt(userJwt) {
     console.log(verifiedJwt)
     let userData = decryptObject(verifiedJwt.payload.data)
     let knownUser = await getUserByUsername(userData.username)
+    console.log(userData)
+    console.log(knownUser.password)
+    console.log(userData.password)
     if(knownUser.password === userData.password && knownUser.email === userData.email) {
         // creates a new jwt from the encrypted data, which saves having to re-encrypt it again
         return createJwt({data: verifiedJwt.payload.data})

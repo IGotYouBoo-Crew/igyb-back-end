@@ -109,7 +109,7 @@ app.get("*", (request, response) => {
 });
 
 app.use((error, request, response, next) => {
-    console.log(response.statusCode);
+    console.log(`Error: ${error}`)
     if (response.headersSent) {
         return next(error);
     }

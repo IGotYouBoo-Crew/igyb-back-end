@@ -12,12 +12,13 @@ const { getRoleIdByName } = require('./functions/RoleFunctions');
 // Middleware
 const validateUserJwt = async (request, response, next) => {
     try {
+        // throws error if no jwt attached
         if (!request.headers.jwt){
             response.status(401)
             throw new Error("no JWT supplied")
         }
+        // verifies jwt and continues to next middleware
         let givenJwt = request.headers.jwt
-        console.log(givenJwt)
         request.headers.jwt = await verifyUserJwt(givenJwt)
         next()
         
@@ -26,13 +27,39 @@ const validateUserJwt = async (request, response, next) => {
     }
 }
 
-const verifyUserRole = async (request, response, next) => {
-    let givenJwt = request.headers.jwt
-    let userData = await getUserDataFromJwt(givenJwt)
-    request.headers.userId = userData._id
-    request.headers.userRole = userData.role
+// verifies JWT and adds user role and user id to the request headers -> to be used for other validation steps
+const verifyUserRoleAndId = async (request, response, next) => {
+    try {
+        if(!request.headers.jwt) {
+            response.status(401)
+            throw new Error("No JWT Attached")
+        }
+        let givenJwt = request.headers.jwt
+        let userData = await getUserDataFromJwt(givenJwt)
+        request.headers.userId = userData._id
+        request.headers.userRole = userData.role
+        next()
+        
+    } catch (error) {
+        next(error)
+    }
+}
 
-    next()
+const onlyAllowOpOrAdmin = async (request, response, next) => {
+    try {
+        if (!request.headers.userId || !request.headers.userRole || !request.headers.jwt){
+            throw new Error("You forgot to run verifyUserRoleAndId middleware first you dummy")
+        }
+        if (request.params.userId === request.headers.userId || request.headers.userRole === await getRoleIdByName("Admin") ){
+            next()
+        } else {
+            response.status(403)
+            throw new Error("You are not authorised to make these changes to another user's account")
+        }
+
+    } catch (error) {
+        next(error)
+    }
 }
 
 
@@ -82,7 +109,7 @@ router.patch("/:userId", async(request, response) => {
 
 // DELETE
 // Deletes a user with matching _id value
-router.delete("/:userId", async(request, response) => {
+router.delete("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async(request, response) => {
     let deletedUser = await deleteUserById(request.params.userId)
     let confirmation = `deleting user: ${deletedUser.username}`
     response.json({
@@ -97,8 +124,7 @@ router.post('/signIn', async (request, response) => {
     })
 })
 
-router.post('/someOtherProtectedRoute', validateUserJwt, verifyUserRole,  async (request, response) => {
-    console.log('flag for route handler')
+router.post('/someOtherProtectedRoute', verifyUserRoleAndId,  async (request, response) => {
     response.json({
         refreshedJWT: request.headers.jwt,
         userRole: request.headers.userRole,

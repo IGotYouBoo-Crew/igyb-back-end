@@ -71,6 +71,8 @@ describe("UserController routes work and accept/return data correctly", () => {
     // READ
     test("'account/user1' route exists and returns user1's data", async () => {
         const responseResult = await request(app).get("/account/user1");
+
+        userOneId = responseResult.body.data._id
         
         expect(responseResult.body.data).toHaveProperty("email", "user1@email.com");
         expect(responseResult.body.data).toHaveProperty("username", "user1");
@@ -93,8 +95,7 @@ describe("UserController routes work and accept/return data correctly", () => {
     // Auth testing testing
     test("no jwt fails with error handling", async () => {
         const responseResult = await request(app).post("/account/someOtherProtectedRoute")
-
-        expect(responseResult.body.errors).toEqual("Error: no JWT supplied")
+        expect(responseResult.body.errors).toEqual("Error: No JWT Attached")
     })
     test("jwt passes", async () => {
         const responseResult = await request(app).post("/account/someOtherProtectedRoute").set("jwt", jwt)
@@ -105,8 +106,13 @@ describe("UserController routes work and accept/return data correctly", () => {
     })
 
     // DELETE
+    test("DELETE userData fails when not original user", async () => {
+        const responseResult = await request(app).delete("/account/" + userOneId).set("jwt", jwt)
+        
+        expect(responseResult.body.errors).toEqual("Error: You are not authorised to make these changes to another user's account")
+    })
     test("DELETE userData returns message with username", async () => {
-        const responseResult = await request(app).delete("/account/" + testUserId)
+        const responseResult = await request(app).delete("/account/" + testUserId).set("jwt", jwt)
         
         expect(responseResult.body.message).toEqual("deleting user: User4")
     })

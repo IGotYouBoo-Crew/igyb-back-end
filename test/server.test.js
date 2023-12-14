@@ -100,8 +100,10 @@ describe("UserController routes work and accept/return data correctly", () => {
         const responseResult = await request(app).post("/account/someOtherProtectedRoute").set("jwt", jwt)
 
         expect(responseResult.body).toHaveProperty("refreshedJWT")
+        expect(responseResult.body).toHaveProperty("userRole")
+        expect(responseResult.body).toHaveProperty("userId", testUserId)
     })
-    
+
     // DELETE
     test("DELETE userData returns message with username", async () => {
         const responseResult = await request(app).delete("/account/" + testUserId)

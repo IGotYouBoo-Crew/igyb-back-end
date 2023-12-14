@@ -28,7 +28,7 @@ const validateUserJwt = async (request, response, next) => {
 
 const verifyUserRole = async (request, response, next) => {
     let givenJwt = request.headers.jwt
-    let userData = getUserDataFromJwt(givenJwt)
+    let userData = await getUserDataFromJwt(givenJwt)
     request.headers.userId = userData._id
     request.headers.userRole = userData.role
 

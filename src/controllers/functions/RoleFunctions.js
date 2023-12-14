@@ -13,17 +13,20 @@ async function getAllRoles(){
 async function getUsersWithRole(roleName){
 
     // Get the role ID for the role specified.
-    let roleID = await Role.findOne({name: roleName}).exec();
-
+    let roleID = await getRoleIdByName(roleName);
+    
     // Filter through the Users to find only the ones
     // with the matching role ID.
-    let usersFound = await User.find({role: roleID}).exec();
+    return await User.find({role: roleID}).exec();
+}
 
-    return usersFound;
+async function getRoleIdByName(roleName){
+    return await Role.findOne({name: roleName}).exec();
 }
 
 // Export the functions for our routes to use.
 module.exports = {
     getAllRoles,
-    getUsersWithRole
+    getUsersWithRole,
+    getRoleIdByName
 }

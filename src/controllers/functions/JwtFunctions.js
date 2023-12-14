@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const { getUserByUsername } = require('./UserFunctions');
+const { decryptObject, encryptString } = require('./EncryptionFunctions');
 dotenv.config();
 
 // JWT stuff
@@ -18,21 +20,19 @@ function createUserJwt(userDetails) {
 // verify user's submitted JWT, and the contents within
 function verifyJwt(userJwt) {
     let verifiedJwt = jwt.verify(userJwt, JWT_KEY, { complete: true })
-    console.log(verifiedJwt)
     return(verifiedJwt)
 };
+
 async function verifyUserJwt(userJwt) {
-    let verifiedJwt = jwt.verify(userJwt, JWT_KEY, { complete: true })
+    let verifiedJwt = verifyJwt(userJwt)
     let decryptedPayload = decryptObject(verifiedJwt.payload.data)
-    console.log(decryptedPayload)
-    let knownUser = await User.findById(decryptedPayload._id).exec()
+    let knownUser = await getUserByUsername(decryptedPayload.username)
     if(knownUser.password === decryptedPayload.password && knownUser.email === decryptedPayload.email) {
         // creates a new jwt from the encrypted data, which saves having to re-encrypt it again
         return createJwt({data: verifiedJwt.payload.data})
     } else {
         throw new Error ({message: "invalid user Token"})
     }
-
 }
 
 

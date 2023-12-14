@@ -2,6 +2,7 @@
 const { default: mongoose } = require("mongoose");
 const { databaseConnect } = require("../src/database");
 const { app } = require("../src/server");
+let bcrypt = require('bcrypt')
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
 
@@ -50,9 +51,10 @@ describe("UserController routes work and accept/return data correctly", () => {
         const responseResult = await request(app).post("/account/newUser").send(newUserData);
         console.log(responseResult.body)
         testUserId = responseResult.body.data._id
+        let compareEncryptedPassword = bcrypt.compareSync(newUserData.password, responseResult.body.data.password)
 
         expect(responseResult.body.data).toHaveProperty("email", newUserData.email);
-        expect(responseResult.body.data).toHaveProperty("password", newUserData.password);
+        expect(compareEncryptedPassword).toEqual(true)
         expect(responseResult.body.data).toHaveProperty("username", newUserData.username);
         expect(responseResult.body.data).toHaveProperty("pronouns", newUserData.pronouns);
         expect(responseResult.body.data).toHaveProperty("_id", testUserId);

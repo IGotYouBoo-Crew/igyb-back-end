@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { getRoleIdByName } = require("../controllers/functions/RoleFunctions");
+const { Role } = require("./RoleModel");
 
 const UserSchema = new mongoose.Schema({
     email: String,

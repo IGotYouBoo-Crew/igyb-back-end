@@ -5,6 +5,7 @@ const router = express.Router();
 
 // Import our new functions:
 const { getAllUsers, getUserByUsername, createNewUser, deleteUserById, updateUserById } = require('./functions/UserFunctions');
+const { createUserJwt, verifyUserJwt } = require('./functions/AuthFunctions');
 
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -56,6 +57,14 @@ router.delete("/:userId", async(request, response) => {
     let confirmation = `deleting user: ${deletedUser.username}`
     response.json({
         message: confirmation
+    })
+})
+
+router.post('/signIn', async (request, response) => {
+    let newJWT = createUserJwt(request.body.data);
+    verifyUserJwt(newJWT)
+    response.json({
+        done: newJWT
     })
 })
 

@@ -1,12 +1,15 @@
 // Require specific models so that we can 
 // create functionality involving them.
 const { User } = require('../../models/UserModel');
+const { hashString } = require('./AuthFunctions');
 
 // checklist: Create, Read, Update, Delete
 
 // CREATE
-async function createNewUser(data){
-    return await User.create(data).catch((error) => error)
+async function createNewUser(userDetails){
+    // hash user password
+    userDetails.password = await hashString(userDetails.password)
+    return await User.create(userDetails).catch((error) => error)
 }
 
 // READ

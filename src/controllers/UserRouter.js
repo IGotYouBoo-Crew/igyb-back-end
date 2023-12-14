@@ -11,16 +11,26 @@ const { getRoleIdByName } = require('./functions/RoleFunctions');
 
 // Middleware
 const validateUserJwt = async (request, response, next) => {
-    let givenJwt = request.headers.jwt
-    request.headers.jwt = await verifyUserJwt(givenJwt)
-    next()
+    try {
+        if (!request.headers.jwt){
+            response.status(401)
+            throw new Error("no JWT supplied")
+        }
+        let givenJwt = request.headers.jwt
+        console.log(givenJwt)
+        request.headers.jwt = await verifyUserJwt(givenJwt)
+        next()
+        
+    } catch (error) {
+        next(error)
+    }
 }
 
 const verifyUserRole = async (request, response, next) => {
     let givenJwt = request.headers.jwt
     let userData = getUserDataFromJwt(givenJwt)
     request.headers.userId = userData._id
-    request.headers.userRole = await getRoleIdByName(userData.role)
+    request.headers.userRole = userData.role
 
     next()
 }
@@ -88,12 +98,14 @@ router.post('/signIn', async (request, response) => {
 })
 
 router.post('/someOtherProtectedRoute', validateUserJwt, verifyUserRole,  async (request, response) => {
+    console.log('flag for route handler')
     response.json({
         refreshedJWT: request.headers.jwt,
         userRole: request.headers.userRole,
         userId: request.headers.userId
     })
 })
+
 
 // Export the router so that other files can use it:
 module.exports = router;

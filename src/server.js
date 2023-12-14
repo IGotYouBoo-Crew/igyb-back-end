@@ -10,7 +10,6 @@ const app = express();
 // If no process.env.X is found, assign a default value instead.
 const PORT = process.env.PORT || 3000;
 
-
 // Configure some basic Helmet settings on the server instance.
 const helmet = require("helmet");
 app.use(helmet());
@@ -106,6 +105,19 @@ app.get("*", (request, response) => {
     response.status(404).json({
         message: "No route with that path found!",
         attemptedPath: request.path,
+    });
+});
+
+app.use((error, request, response, next) => {
+    console.log(response.statusCode);
+    if (response.headersSent) {
+        return next(error);
+    }
+    if (response.statusCode === 200) {
+        response.status(500);
+    }
+    response.json({
+        errors: error.toString(),
     });
 });
 

@@ -42,7 +42,7 @@ describe("server root route exists and returns status hello world", () => {
 
 describe("UserController routes work and accept/return data correctly", () => {
     // CREATE
-    test("POST request.body of newUserData returns newUserData", async () => {
+    test("POST request.body of newUserData returns newUserData and JWT", async () => {
         let newUserData = {
             "email": "postedUser@email.com",
             "password": "fakepassword",
@@ -52,7 +52,9 @@ describe("UserController routes work and accept/return data correctly", () => {
         
         const responseResult = await request(app).post("/account/newUser").send(newUserData);
         const responseData = responseResult.body.data
+        // global variable used to access same document later for Update and Delete actions
         testUserId = responseData._id
+        jwt = responseResult.body.JWT
         let compareEncryptedPassword = bcrypt.compareSync(newUserData.password, responseData.password)
         let superstarRoleID = await getRoleIdByName("Superstar")
         
@@ -86,6 +88,20 @@ describe("UserController routes work and accept/return data correctly", () => {
         
         expect(responseResult.body.message).toHaveProperty("pronouns", "she/her")
     })
+
+
+    // Auth testing testing
+    test("no jwt fails with error handling", async () => {
+        const responseResult = await request(app).post("/account/someOtherProtectedRoute")
+
+        expect(responseResult.body.errors).toEqual("Error: no JWT supplied")
+    })
+    test("jwt passes", async () => {
+        const responseResult = await request(app).post("/account/someOtherProtectedRoute").set("jwt", jwt)
+
+        expect(responseResult.body).toHaveProperty("refreshedJWT")
+    })
+    
     // DELETE
     test("DELETE userData returns message with username", async () => {
         const responseResult = await request(app).delete("/account/" + testUserId)

@@ -1,38 +1,7 @@
-const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt')
 const dotenv = require('dotenv');
-const { getUserById } = require('./UserFunctions');
 dotenv.config();
-
-// JWT stuff
-let JWT_KEY = process.env.JWT_KEY
-// Makes a JWT
-function createJwt(dataForPayload){
-    return jwt.sign(dataForPayload, JWT_KEY, { expiresIn: "30d" })
-}
-
-// encrypts user data, then generates JWT
-function createUserJwt(userDetails) {
-    let encryptedUserData = encryptString(JSON.stringify(userDetails))
-    return createJwt({data: encryptedUserData})
-}
-
-// verify user's submitted JWT, and the contents within
-function verifyUserJwt(userJwt) {
-    let verifiedJwt = jwt.verify(userJwt, JWT_KEY, { complete: true })
-    let decryptedPayload = JSON.parse(decryptObject(verifiedJwt.payload.data))
-    let knownUser = getUserById(decryptedPayload._id)
-    if(knownUser.password === decryptedPayload.password && knownUser.email === decryptedPayload.email) {
-        // creates a new jwt from the encrypted data, which saves having to re-encrypt it again
-        return createJwt({data: verifiedJwt.payload.data})
-    } else {
-        throw new Error ({message: "invalid user Token"})
-    }
-
-}
-
-
 
 // Encryption stuff
 let encAlgorithm = 'aes-256-cbc';
@@ -70,8 +39,6 @@ async function checkUnhashedData(unhashedData, hashedData) {
 
 
 module.exports = {
-    createUserJwt,
-    verifyUserJwt,
     encryptString,
     decryptString,
     decryptObject,

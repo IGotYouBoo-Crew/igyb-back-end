@@ -1,7 +1,7 @@
 // Require specific models so that we can 
 // create functionality involving them.
 const { User } = require('../../models/UserModel');
-const { hashString } = require('./AuthFunctions');
+const { hashString } = require('./EncryptionFunctions');
 
 // checklist: Create, Read, Update, Delete
 

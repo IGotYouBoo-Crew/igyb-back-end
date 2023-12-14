@@ -5,7 +5,16 @@ const router = express.Router();
 
 // Import our new functions:
 const { getAllUsers, getUserByUsername, createNewUser, deleteUserById, updateUserById } = require('./functions/UserFunctions');
-const { createUserJwt, verifyUserJwt } = require('./functions/AuthFunctions');
+const { createUserJwt, verifyUserJwt } = require('./functions/JwtFunctions');
+
+
+// Middleware
+const validateUserJwt = async (request, response, next) => {
+    let givenJwt = request.headers.jwt
+    request.headers.jwt = await verifyUserJwt(givenJwt)
+    next()
+}
+
 
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -14,8 +23,10 @@ const { createUserJwt, verifyUserJwt } = require('./functions/AuthFunctions');
 // request.body must include required fields (TBD when creating users model)
 router.post('/newUser', async (request, response) => {
     let responseData = await createNewUser(request.body);
+    let newJWT = createUserJwt(responseData)
     response.json({
-        data: responseData
+        data: responseData,
+        JWT: newJWT
     });
 });
 
@@ -62,9 +73,14 @@ router.delete("/:userId", async(request, response) => {
 
 router.post('/signIn', async (request, response) => {
     let newJWT = createUserJwt(request.body.data);
-    verifyUserJwt(newJWT)
     response.json({
         done: newJWT
+    })
+})
+
+router.post('/someOtherProtectedRoute', validateUserJwt, async (request, response) => {
+    response.json({
+        refreshedJWT: request.headers.jwt
     })
 })
 

@@ -5,6 +5,8 @@ const { app } = require("../src/server");
 let bcrypt = require('bcrypt')
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
+const { getRoleIdByName } = require("../src/controllers/functions/RoleFunctions");
+const { verifyJwt } = require("../src/controllers/functions/JwtFunctions");
 
 
 beforeEach(async () => {
@@ -49,15 +51,20 @@ describe("UserController routes work and accept/return data correctly", () => {
         };
         
         const responseResult = await request(app).post("/account/newUser").send(newUserData);
-        console.log(responseResult.body)
-        testUserId = responseResult.body.data._id
-        let compareEncryptedPassword = bcrypt.compareSync(newUserData.password, responseResult.body.data.password)
+        const responseData = responseResult.body.data
+        testUserId = responseData._id
+        let compareEncryptedPassword = bcrypt.compareSync(newUserData.password, responseData.password)
+        let superstarRoleID = await getRoleIdByName("Superstar")
+        
 
-        expect(responseResult.body.data).toHaveProperty("email", newUserData.email);
+        expect(responseResult.body).toHaveProperty("JWT")
+        expect(verifyJwt(responseResult.body.JWT)).toHaveProperty("signature")
         expect(compareEncryptedPassword).toEqual(true)
-        expect(responseResult.body.data).toHaveProperty("username", newUserData.username);
-        expect(responseResult.body.data).toHaveProperty("pronouns", newUserData.pronouns);
-        expect(responseResult.body.data).toHaveProperty("_id", testUserId);
+        expect(responseData).toHaveProperty("email", newUserData.email);
+        expect(responseData).toHaveProperty("role", superstarRoleID)
+        expect(responseData).toHaveProperty("username", newUserData.username);
+        expect(responseData).toHaveProperty("pronouns", newUserData.pronouns);
+        expect(responseData).toHaveProperty("_id", testUserId);
     });
     // READ
     test("'account/user1' route exists and returns user1's data", async () => {

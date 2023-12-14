@@ -5,7 +5,8 @@ const router = express.Router();
 
 // Import our new functions:
 const { getAllUsers, getUserByUsername, createNewUser, deleteUserById, updateUserById } = require('./functions/UserFunctions');
-const { createUserJwt, verifyUserJwt } = require('./functions/JwtFunctions');
+const { createUserJwt, verifyUserJwt, getUserDataFromJwt } = require('./functions/JwtFunctions');
+const { getRoleIdByName } = require('./functions/RoleFunctions');
 
 
 // Middleware
@@ -15,6 +16,14 @@ const validateUserJwt = async (request, response, next) => {
     next()
 }
 
+const verifyUserRole = async (request, response, next) => {
+    let givenJwt = request.headers.jwt
+    let userData = getUserDataFromJwt(givenJwt)
+    request.headers.userId = userData._id
+    request.headers.userRole = await getRoleIdByName(userData.role)
+
+    next()
+}
 
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -78,9 +87,11 @@ router.post('/signIn', async (request, response) => {
     })
 })
 
-router.post('/someOtherProtectedRoute', validateUserJwt, async (request, response) => {
+router.post('/someOtherProtectedRoute', validateUserJwt, verifyUserRole,  async (request, response) => {
     response.json({
-        refreshedJWT: request.headers.jwt
+        refreshedJWT: request.headers.jwt,
+        userRole: request.headers.userRole,
+        userId: request.headers.userId
     })
 })
 

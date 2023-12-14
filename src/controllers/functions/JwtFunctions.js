@@ -25,9 +25,9 @@ function verifyJwt(userJwt) {
 
 async function verifyUserJwt(userJwt) {
     let verifiedJwt = verifyJwt(userJwt)
-    let decryptedPayload = decryptObject(verifiedJwt.payload.data)
-    let knownUser = await getUserByUsername(decryptedPayload.username)
-    if(knownUser.password === decryptedPayload.password && knownUser.email === decryptedPayload.email) {
+    let userData = decryptObject(verifiedJwt.payload.data)
+    let knownUser = await getUserByUsername(userData.username)
+    if(knownUser.password === userData.password && knownUser.email === userData.email) {
         // creates a new jwt from the encrypted data, which saves having to re-encrypt it again
         return createJwt({data: verifiedJwt.payload.data})
     } else {
@@ -35,10 +35,15 @@ async function verifyUserJwt(userJwt) {
     }
 }
 
+async function getUserDataFromJwt(userJwt) {
+    let verifiedJwt = verifyJwt(userJwt)
+    return decryptObject(verifiedJwt.payload.data)
+}
 
 module.exports = {
     createJwt,
     createUserJwt,
     verifyJwt,
     verifyUserJwt,
+    getUserDataFromJwt
 }

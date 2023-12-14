@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { getRoleIdByName } = require("../controllers/functions/RoleFunctions");
+const { Role } = require("./RoleModel");
 
 const UserSchema = new mongoose.Schema({
     email: String,
@@ -9,9 +9,6 @@ const UserSchema = new mongoose.Schema({
     role: {
         type: mongoose.Types.ObjectId,
         ref: "Role",
-        default: () => {
-            return getRoleIdByName("Superstar") || null;
-        },
     },
 });
 

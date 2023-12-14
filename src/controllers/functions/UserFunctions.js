@@ -2,6 +2,7 @@
 // create functionality involving them.
 const { User } = require('../../models/UserModel');
 const { hashString } = require('./EncryptionFunctions');
+const { getRoleIdByName } = require('./RoleFunctions');
 
 // checklist: Create, Read, Update, Delete
 
@@ -9,7 +10,8 @@ const { hashString } = require('./EncryptionFunctions');
 async function createNewUser(userDetails){
     // hash user password
     userDetails.password = await hashString(userDetails.password)
-    return await User.create(userDetails).catch((error) => error)
+    !userDetails.role ? userDetails.role = await getRoleIdByName("Superstar") : ""
+    return await User.create(userDetails).catch((error) => console.log(error))
 }
 
 // READ
@@ -21,12 +23,12 @@ async function getAllUsers(){
 
 async function getUserByUsername(username){
     // finds one user with matching username
-    return await User.findOne({username: username}).exec()
+    return await User.findOne({username: username}).populate("role").exec()
 }
 
 async function getUserById(userId){
     // finds user with matching userId
-    return await User.findById(userId).exec()
+    return await User.findById(userId).populate("role").exec()
 }
 
 // UPDATE

@@ -7,6 +7,9 @@ dotenv.config();
 const express = require("express");
 const app = express();
 
+const cookieParser = require("cookie-parser")
+app.use(cookieParser())
+
 // If no process.env.X is found, assign a default value instead.
 const PORT = process.env.PORT || 3000;
 

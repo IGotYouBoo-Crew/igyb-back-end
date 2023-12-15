@@ -16,8 +16,8 @@ afterEach(() => {
 });
 
 afterAll(() => {
-    mongoose.disconnect()
-})
+    mongoose.disconnect();
+});
 
 describe("server root route exists and returns status hello world", () => {
     test("root route exists and returns status 200", async () => {
@@ -31,7 +31,7 @@ describe("server root route exists and returns status hello world", () => {
     });
     test("gets database details", async () => {
         const responseResult = await request(app).get("/databaseHealth");
-        console.log(responseResult.body)
+        console.log(responseResult.body);
         expect(responseResult.body).toHaveProperty("dbModels");
     });
 });
@@ -40,11 +40,11 @@ describe("PostsController routes work and accept/return data correctly", () => {
     // CREATE
     test("POST request.body of newPostData returns newPostData", async () => {
         let newPostData = {
-            "title": "NewPost",
-            "content": "Oh boy, I loooove content"
+            title: "NewPost",
+            content: "Oh boy, I loooove content",
         };
         const responseResult = await request(app).post("/posts/newPost").send(newPostData);
-        testPostId = responseResult.body.data._id
+        testPostId = responseResult.body.data._id;
 
         expect(responseResult.body.data).toHaveProperty("title", newPostData.title);
         expect(responseResult.body.data).toHaveProperty("content", newPostData.content);
@@ -53,7 +53,7 @@ describe("PostsController routes work and accept/return data correctly", () => {
     // READ
     test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
         const responseResult = await request(app).get("/posts/" + testPostId);
-        
+
         expect(responseResult.body.data).toHaveProperty("title", "NewPost");
         expect(responseResult.body.data).toHaveProperty("content", "Oh boy, I loooove content");
         expect(responseResult.body.data).toHaveProperty("_id", testPostId);
@@ -61,29 +61,31 @@ describe("PostsController routes work and accept/return data correctly", () => {
     // UPDATE
     test("PATCH request.body of updatedPostData returns userData with updates", async () => {
         let updatedPostData = {
-            "content": "update: I hate content"
-        }
-        const responseResult = await request(app).patch("/posts/" + testPostId).send(updatedPostData)
-        
-        expect(responseResult.body.message).toHaveProperty("content", "update: I hate content")
-    })
+            content: "update: I hate content",
+        };
+        const responseResult = await request(app)
+            .patch("/posts/" + testPostId)
+            .send(updatedPostData);
+
+        expect(responseResult.body.message).toHaveProperty("content", "update: I hate content");
+    });
     // DELETE
     test("DELETE userData returns message with username", async () => {
-        const responseResult = await request(app).delete("/posts/" + testPostId)
-        
-        expect(responseResult.body.message).toEqual("deleting post: NewPost")
-    })
+        const responseResult = await request(app).delete("/posts/" + testPostId);
+
+        expect(responseResult.body.message).toEqual("deleting post: NewPost");
+    });
 });
 describe("EventsController routes work and accept/return data correctly", () => {
     // CREATE
     test("POST request.body of newEventData returns newEventData", async () => {
         let newEventData = {
-            "title": "NewEvent",
-            "content": "Oh boy, I loooove events",
-            "date": "25th December 2023"
+            title: "NewEvent",
+            content: "Oh boy, I loooove events",
+            date: "25th December 2023",
         };
         const responseResult = await request(app).post("/events/newEvent").send(newEventData);
-        testEventId = responseResult.body.data._id
+        testEventId = responseResult.body.data._id;
 
         expect(responseResult.body.data).toHaveProperty("title", newEventData.title);
         expect(responseResult.body.data).toHaveProperty("content", newEventData.content);
@@ -93,7 +95,7 @@ describe("EventsController routes work and accept/return data correctly", () => 
     // READ
     test("GET 'events/testEventId' route exists and returns testEventId's data", async () => {
         const responseResult = await request(app).get("/events/" + testEventId);
-        
+
         expect(responseResult.body.data).toHaveProperty("title", "NewEvent");
         expect(responseResult.body.data).toHaveProperty("content", "Oh boy, I loooove events");
         expect(responseResult.body.data).toHaveProperty("date", "25th December 2023");
@@ -102,19 +104,21 @@ describe("EventsController routes work and accept/return data correctly", () => 
     // UPDATE
     test("PATCH request.body of updatedEventData returns eventData with updates", async () => {
         let updatedEventData = {
-            "content": "update: I hate events"
-        }
-        const responseResult = await request(app).patch("/events/" + testEventId).send(updatedEventData)
-        
-        expect(responseResult.body.message).toHaveProperty("content", "update: I hate events")
-    })
+            content: "update: I hate events",
+        };
+        const responseResult = await request(app)
+            .patch("/events/" + testEventId)
+            .send(updatedEventData);
+
+        expect(responseResult.body.message).toHaveProperty("content", "update: I hate events");
+    });
     // DELETE
     test("DELETE event returns message with event title", async () => {
-        const responseResult = await request(app).delete("/events/" + testEventId)
-        
-        expect(responseResult.body.message).toEqual("deleting event: NewEvent")
-    })
-    test("done", () =>{
-        console.log("tests finished")
-    })
+        const responseResult = await request(app).delete("/events/" + testEventId);
+
+        expect(responseResult.body.message).toEqual("deleting event: NewEvent");
+    });
+    test("done", () => {
+        console.log("tests finished");
+    });
 });

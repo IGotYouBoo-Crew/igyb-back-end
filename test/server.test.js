@@ -247,7 +247,7 @@ describe("EventsController routes work and accept/return data correctly", () => 
         }
         const responseResult = await request(app).patch("/events/" + testEventId).send(updatedEventData)
         
-        expect(responseResult.body.message).toHaveProperty("content", "Jake Peralta is a legend")
+        expect(responseResult.body.message).toHaveProperty("content", "update: Jake Peralta is a legend")
     })
     // DELETE
     test("DELETE event returns message with event title", async () => {

@@ -31,7 +31,7 @@ const verifyUserRoleAndId = async (request, response, next) => {
         let givenJwt = request.cookies.access_token;
         let userData = await getUserDataFromJwt(givenJwt);
         request.headers.userId = userData._id;
-        request.headers.userRole = userData.role;
+        request.headers.userRole = userData.role._id;
         next();
     } catch (error) {
         next(error);
@@ -40,7 +40,7 @@ const verifyUserRoleAndId = async (request, response, next) => {
 
 const onlyAllowOpOrAdmin = async (request, response, next) => {
     try {
-        if (!request.headers.userId || !request.headers.userRole || !request.headers.jwt) {
+        if (!request.headers.userId || !request.headers.userRole || !request.cookies.access_token) {
             throw new Error("You forgot to run verifyUserRoleAndId middleware first you dummy");
         }
         if (

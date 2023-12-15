@@ -68,10 +68,41 @@ describe("UserController routes work and accept/return data correctly", () => {
         expect(responseData).toHaveProperty("pronouns", newUserData.pronouns);
         expect(responseData).toHaveProperty("_id", testUserId);
     });
+
+    test("POST request.body of newAdminData returns newAdminData and JWT", async () => {
+        let adminRoleID = await getRoleIdByName("Admin")
+        let newAdminData = {
+            "email": "postedAdmin@email.com",
+            "password": "fakeadminpassword",
+            "username": "Admin2",
+            "pronouns": "ad/min",
+            "role": adminRoleID
+            
+        };
+        
+        const responseResult = await request(app).post("/account/newUser").send(newAdminData);
+        const responseData = responseResult.body.data
+        console.log(responseData)
+        // global variable used to access same document later for Update and Delete actions
+        adminUserId = responseData._id
+        adminJwt = responseResult.body.JWT
+        let compareEncryptedPassword = bcrypt.compareSync(newAdminData.password, responseData.password)
+        
+
+        expect(responseResult.body).toHaveProperty("JWT")
+        expect(verifyJwt(responseResult.body.JWT)).toHaveProperty("signature")
+        expect(compareEncryptedPassword).toEqual(true)
+        expect(responseData).toHaveProperty("email", newAdminData.email);
+        expect(responseData).toHaveProperty("role", adminRoleID)
+        expect(responseData).toHaveProperty("username", newAdminData.username);
+        expect(responseData).toHaveProperty("pronouns", newAdminData.pronouns);
+        expect(responseData).toHaveProperty("_id", adminUserId);
+    });
     // READ
     test("'account/user1' route exists and returns user1's data", async () => {
         const responseResult = await request(app).get("/account/user1");
 
+        // global variable used later
         userOneId = responseResult.body.data._id
         
         expect(responseResult.body.data).toHaveProperty("email", "user1@email.com");
@@ -80,6 +111,7 @@ describe("UserController routes work and accept/return data correctly", () => {
         expect(responseResult.body.data).toHaveProperty("_id");
         expect(responseResult.body.data).toHaveProperty("role");
     });
+
     // UPDATE
     test("PATCH request.body of updatedUserData fails if user is not OP or admin", async () => {
         let updatedUserData = {
@@ -90,12 +122,20 @@ describe("UserController routes work and accept/return data correctly", () => {
         responseResult = await request(app).patch("/account/" + userOneId).send(updatedUserData).set("jwt", jwt)
         expect(responseResult.body).toHaveProperty("errors", "Error: You are not authorised to make these changes to another user's account")
     })
-    test("PATCH request.body of updatedUserData returns userData with updates", async () => {
+    
+    test("PATCH request.body of updatedUserData returns userData with updates if OP", async () => {
         let updatedUserData = {
             "pronouns": "she/her"
         }
         const responseResult = await request(app).patch("/account/" + testUserId).send(updatedUserData).set("jwt", jwt)
         expect(responseResult.body.message).toHaveProperty("pronouns", "she/her")
+    })
+    test("PATCH request.body of updatedUserData returns userData with updates if admin", async () => {
+        let updatedUserData = {
+            "pronouns": "xe/xer"
+        }
+        const responseResult = await request(app).patch("/account/" + adminUserId).send(updatedUserData).set("jwt", adminJwt)
+        expect(responseResult.body.message).toHaveProperty("pronouns", "xe/xer")
     })
 
 

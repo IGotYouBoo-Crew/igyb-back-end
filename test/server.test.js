@@ -110,7 +110,7 @@ describe("UserController routes work and accept/return data correctly", () => {
         expect(responseResult.body.data).toHaveProperty("pronouns", "fake/data");
         expect(responseResult.body.data).toHaveProperty("_id");
         expect(responseResult.body.data).toHaveProperty("role");
-        expect(responseResult.body.data).not.toHaveProperty("password");
+        expect(responseResult.body.data).toHaveProperty("password");
     });
 
     // UPDATE

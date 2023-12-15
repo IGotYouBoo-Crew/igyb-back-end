@@ -84,28 +84,5 @@ router.post("/someOtherProtectedRoute", verifyUserRoleAndId, async (request, res
     });
 });
 
-router.post('/signIn', async (request, response) => {
-    let newJWT = createUserJwt(request.body.data);
-<<<<<<< HEAD
-=======
-    verifyUserJwt(newJWT)
->>>>>>> 0f2d67a (Feat: implementing encryption/decryption, JWTs, and password hashing)
-    response.json({
-        done: newJWT
-    })
-})
-
-<<<<<<< HEAD
-router.post('/someOtherProtectedRoute', verifyUserRoleAndId,  async (request, response) => {
-    response.json({
-        refreshedJWT: request.headers.jwt,
-        userRole: request.headers.userRole,
-        userId: request.headers.userId
-    })
-})
-
-
-=======
->>>>>>> 0f2d67a (Feat: implementing encryption/decryption, JWTs, and password hashing)
 // Export the router so that other files can use it:
 module.exports = router;

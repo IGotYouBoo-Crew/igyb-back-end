@@ -84,5 +84,6 @@ router.post("/someOtherProtectedRoute", verifyUserRoleAndId, async (request, res
     });
 });
 
+
 // Export the router so that other files can use it:
 module.exports = router;

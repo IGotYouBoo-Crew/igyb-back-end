@@ -60,15 +60,22 @@ const posts = [
 ];
 const events = [
     {
+        host: "Captain Naomi",
+        image: "https://pbs.twimg.com/profile_images/1056752759402307584/vFjSXrWY_400x400.jpg",
         title: "first event",
-        content: "this is the first fake event",
         date: "25th December 2023",
+        start: "12:00",
+        finish: "14:00",
+        content: "this is the first fake event",
         author: null,
     },
     {
+        host: "Queen Ella",
         title: "second event",
+        date: "1st Jan 2024",
+        start: "08:00",
+        finish: "20:00",
         content: "this is the second fake event",
-        date: "26th December 2023",
         author: null,
     },
 ];

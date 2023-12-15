@@ -15,7 +15,7 @@ const validateUserJwt = async (request, response, next) => {
         // throws error if no jwt attached
         if (!request.headers.jwt){
             response.status(401)
-            throw new Error("no JWT supplied")
+            throw new Error("No JWT Attached")
         }
         // verifies jwt and continues to next middleware
         let givenJwt = request.headers.jwt
@@ -100,7 +100,7 @@ router.get('/:username', async (request, response) => {
 
 // UPDATE
 // Updates the user properties provided in the request.body according to the userId
-router.patch("/:userId", async(request, response) => {
+router.patch("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async(request, response) => {
     let updatedUser = await updateUserById(request.params.userId, request.body)
     response.json({
         message: updatedUser

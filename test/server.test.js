@@ -81,13 +81,20 @@ describe("UserController routes work and accept/return data correctly", () => {
         expect(responseResult.body.data).toHaveProperty("role");
     });
     // UPDATE
+    test("PATCH request.body of updatedUserData fails if user is not OP or admin", async () => {
+        let updatedUserData = {
+            "pronouns": "she/her"
+        }
+        let responseResult = await request(app).patch("/account/" + testUserId).send(updatedUserData)
+        expect(responseResult.body).toHaveProperty("errors", "Error: No JWT Attached")
+        responseResult = await request(app).patch("/account/" + userOneId).send(updatedUserData).set("jwt", jwt)
+        expect(responseResult.body).toHaveProperty("errors", "Error: You are not authorised to make these changes to another user's account")
+    })
     test("PATCH request.body of updatedUserData returns userData with updates", async () => {
         let updatedUserData = {
             "pronouns": "she/her"
         }
-
-        const responseResult = await request(app).patch("/account/" + testUserId).send(updatedUserData)
-        
+        const responseResult = await request(app).patch("/account/" + testUserId).send(updatedUserData).set("jwt", jwt)
         expect(responseResult.body.message).toHaveProperty("pronouns", "she/her")
     })
 
@@ -106,14 +113,12 @@ describe("UserController routes work and accept/return data correctly", () => {
     })
 
     // DELETE
-    test("DELETE userData fails when not original user", async () => {
+    test("DELETE userData fails when not original user or admin", async () => {
         const responseResult = await request(app).delete("/account/" + userOneId).set("jwt", jwt)
-        
         expect(responseResult.body.errors).toEqual("Error: You are not authorised to make these changes to another user's account")
     })
     test("DELETE userData returns message with username", async () => {
         const responseResult = await request(app).delete("/account/" + testUserId).set("jwt", jwt)
-        
         expect(responseResult.body.message).toEqual("deleting user: User4")
     })
 

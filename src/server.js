@@ -30,8 +30,12 @@ const cors = require("cors");
 var corsOptions = {
     origin: ["http://localhost:3000", "http://localhost:3000/", "http://localhost:3001", "http://localhost:3001/", "http://localhost:5000", "https://igotyouboo.netlify.com"],
     optionsSuccessStatus: 200,
+    credentials: true,
+    preflightContinue: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH' , 'DELETE', 'OPTIONS']
 };
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Configure some API-friendly request data formatting.
 app.use(express.json());

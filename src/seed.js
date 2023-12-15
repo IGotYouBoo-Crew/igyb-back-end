@@ -37,6 +37,14 @@ const users = [
     },
 ];
 
+const adminUser = {
+    email: "admin@email.com",
+    username: "Admin1",
+    password: "secretAdminPassword",
+    pronouns: "ad/min",
+    role: null,
+}
+
 const posts = [
     {
         title: "first post",
@@ -93,6 +101,8 @@ function seedDb() {
             for (const user of users) {
                 user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id;
             }
+            adminUser.role = rolesCreated[1].id
+            await User.create(adminUser)
             let usersCreated = await User.insertMany(users);
             for (const post of posts) {
                 post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;

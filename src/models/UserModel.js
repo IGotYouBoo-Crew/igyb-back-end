@@ -5,7 +5,10 @@ const UserSchema = new mongoose.Schema({
     password: String,
     username: String,
     pronouns: String,
-    role: { type: mongoose.Types.ObjectId, ref: "Role" },
+    role: {
+        type: mongoose.Types.ObjectId,
+        ref: "Role",
+    },
 });
 
 const User = mongoose.model("User", UserSchema);

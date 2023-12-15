@@ -17,7 +17,7 @@ async function createNewUser(userDetails){
 // READ
 // Model.find({}) returns all documents in a collection.
 async function getAllUsers(){
-    return await User.find({}).populate("role");
+    return await User.find({}, "-password").populate("role");
     
 }
 

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 const EventSchema = new mongoose.Schema({
     host: {type: String, required: true},
-    image: {type: URL, required: false},
+    image: {type: String, required: false},
     title: {type: String, required: true},
     date: {type: String, required: true},
     start: {type: String,
@@ -28,7 +28,7 @@ const EventSchema = new mongoose.Schema({
         message: (props) => `${props.value} is not valid time!`,
         },
         required: true}, 
-    ticketLink: {type: URL, required: false},
+    ticketLink: {type: String, required: false},
     content: {type: String, required: true},
     author: {type: mongoose.Types.ObjectId, ref: 'User'}
 });

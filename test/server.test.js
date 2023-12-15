@@ -153,6 +153,16 @@ describe("UserController routes work and accept/return data correctly", () => {
         expect(responseResult.body).toHaveProperty("userId", testUserId)
     })
 
+    test("I can access cookies in jest", async () => {
+        let loginDetails = {
+            "username": "User4",
+            "password": "fakepassword"
+        }
+        const responseResult = await request(app).post("/account/signIn").send(loginDetails)
+        cookie = responseResult.headers["set-cookie"]
+        expect(responseResult.headers).toHaveProperty("set-cookie")
+    })
+
     // DELETE
     test("DELETE userData fails when not original user or admin", async () => {
         const responseResult = await request(app).delete("/account/" + userOneId).set("jwt", jwt)

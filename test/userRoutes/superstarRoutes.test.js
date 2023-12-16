@@ -99,7 +99,7 @@ describe("Signed in UserController routes work and accept/return data correctly"
             .send(updatedUserData);
         expect(testResponse.body).toHaveProperty(
             "errors",
-            "Error: You are not authorised to make these changes to another user's account"
+            "Error: You are not authorised to access this route"
         );
     });
 
@@ -107,7 +107,6 @@ describe("Signed in UserController routes work and accept/return data correctly"
         let updatedUserData = {
             pronouns: "she/her",
         };
-        console.log("test user id:" + testUserId);
         const responseResult = await authenticatedSession
             .patch("/account/" + testUserId)
             .send(updatedUserData);

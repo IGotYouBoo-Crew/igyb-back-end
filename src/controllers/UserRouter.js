@@ -18,6 +18,7 @@ const {
     login,
     generateCookie,
     logout,
+    onlyAllowAdmin,
 } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -36,7 +37,7 @@ router.post("/newUser", async (request, response) => {
 // READ
 
 // Show all users
-router.get("/", async (request, response) => {
+router.get("/", verifyUserRoleAndId, onlyAllowAdmin, async (request, response) => {
     let responseData = {};
     responseData = await getAllUsers();
     response.json({
@@ -57,7 +58,8 @@ router.get("/:username", async (request, response) => {
 
 // UPDATE
 // Updates the user properties provided in the request.body according to the userId
-// I used :authorId here instead of :userId because it allows for a single middleware to perform all checks rather than write a specific only only for users protections
+// I used :authorId here instead of :userId because it allows for 
+// a single middleware to perform all checks rather than write a specific only only for users protections
 router.patch("/:authorId",verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
     let updatedUser = await updateUserById(request.params.authorId, request.body);
     response.json({
@@ -67,8 +69,10 @@ router.patch("/:authorId",verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (re
 
 // DELETE
 // Deletes a user with matching _id value
-router.delete("/:userId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
-    let deletedUser = await deleteUserById(request.params.userId);
+// I used :authorId here instead of :userId because it allows for 
+// a single middleware to perform all checks rather than write a specific only only for users protections
+router.delete("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
+    let deletedUser = await deleteUserById(request.params.authorId);
     let confirmation = `deleting user: ${deletedUser.username}`;
     response.json({
         message: confirmation,
@@ -81,14 +85,14 @@ router.post("/signIn", login, generateCookie, async (request, response) => {
     });
 });
 
-router.post("/signOut", logout, generateCookie, async (request, response) => {
+router.post("/signOut", logout, verifyUserRoleAndId, generateCookie, async (request, response) => {
     response.json({
         signed: "out",
     });
 });
 
 // This role is here so I can test my auth stuff
-router.post("/someOtherProtectedRoute", verifyUserRoleAndId, async (request, response) => {
+router.post("/someOtherProtectedRoute", verifyUserRoleAndId, generateCookie, async (request, response) => {
     response.json({
         refreshedJWT: request.headers.jwt,
         userRole: request.headers.userRole,

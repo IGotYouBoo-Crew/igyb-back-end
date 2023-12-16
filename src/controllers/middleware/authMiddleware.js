@@ -32,6 +32,7 @@ const verifyUserRoleAndId = async (request, response, next) => {
         let userData = await getUserDataFromJwt(givenJwt);
         request.headers.userId = userData._id;
         request.headers.userRole = userData.role._id;
+        request.headers.jwt = givenJwt;
         next();
     } catch (error) {
         next(error);
@@ -43,7 +44,7 @@ const onlyAllowAuthorOrAdmin = async (request, response, next) => {
     try {
         
         if (!request.headers.userId || !request.headers.userRole || !request.cookies.access_token) {
-            throw new Error("You forgot to run verifyUserRoleAndId middleware first you dummy");
+            throw new Error("You need to run verifyUserRoleAndId middleware first");
         }
         if (
             request.params.authorId === request.headers.userId ||
@@ -53,7 +54,28 @@ const onlyAllowAuthorOrAdmin = async (request, response, next) => {
         } else {
             response.status(403);
             throw new Error(
-                "You are not authorised to make these changes to another user's account"
+                "You are not authorised to access this route"
+            );
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+const onlyAllowAdmin = async (request, response, next) => {
+    try {
+        
+        if (!request.headers.userRole) {
+            throw new Error("You need to run verifyUserRoleAndId middleware first");
+        }
+        if (
+            request.headers.userRole === (await getRoleIdByName("Admin"))
+        ) {
+            next();
+        } else {
+            response.status(403);
+            throw new Error(
+                "You are not authorised to access this route"
             );
         }
     } catch (error) {
@@ -86,14 +108,22 @@ const login = async (request, response, next) => {
 
 
 const generateCookie = async (request, response, next) => {
-    let twoDays = 1000 * 60 * 60 * 24
-    let thirtySec = 1000 * 30
-    let expiry = twoDays
-    if (request.headers.logout){
-        expiry = 0
+    try{
+        if (!request.headers.jwt) {
+            throw new Error("You need to run verifyUserRoleAndId or login middleware first");
+        }
+        // 1000ms * 60sec * 60min * 24hr * 14days
+        let twoWeeks = 1209600000
+        let expiry = twoWeeks
+        // When logout middleware is passed first, sets cookie to expire
+        if (request.headers.logout){
+            expiry = 0
+        }
+        response.cookie("access_token", request.headers.jwt, { maxAge: expiry, httpOnly: true });
+        next()
+    } catch(error) {
+        next(error)
     }
-    response.cookie("access_token", request.headers.jwt, { maxAge: expiry, httpOnly: true });
-    next()
 }
 
 const logout = async (request, response, next) => {
@@ -107,5 +137,6 @@ module.exports = {
     onlyAllowAuthorOrAdmin,
     login,
     generateCookie,
-    logout
+    logout,
+    onlyAllowAdmin
 }

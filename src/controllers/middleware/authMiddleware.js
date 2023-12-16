@@ -83,9 +83,27 @@ const login = async (request, response, next) => {
 };
 
 
+const generateCookie = async (request, response, next) => {
+    let twoDays = 1000 * 60 * 60 * 24
+    let thirtySec = 1000 * 30
+    let expiry = twoDays
+    if (request.headers.logout){
+        expiry = 0
+    }
+    response.cookie("access_token", request.headers.jwt, { maxAge: expiry, httpOnly: true });
+    next()
+}
+
+const logout = async (request, response, next) => {
+    request.headers.logout = true
+    next()
+}
+
 module.exports = {
     validateUserJwt,
     verifyUserRoleAndId,
     onlyAllowOpOrAdmin,
-    login
+    login,
+    generateCookie,
+    logout
 }

@@ -111,7 +111,14 @@ describe("Signed in UserController routes work and accept/return data correctly"
         const responseResult = await authenticatedSession
             .patch("/account/" + testUserId)
             .send(updatedUserData);
-        console.log(responseResult.body);
         expect(responseResult.body.message).toHaveProperty("pronouns", "she/her");
     });
+
+    test("signout route signs out user", async () => {
+        const checkProtectedRoute = await authenticatedSession.post("/account/someOtherProtectedRoute")
+        expect(checkProtectedRoute.statusCode).toEqual(200)
+        await authenticatedSession.post("/account/signOut")
+        const failProtectedRoute = await authenticatedSession.post("/account/someOtherProtectedRoute")
+        expect(failProtectedRoute.statusCode).toEqual(401)
+    })
 });

@@ -12,7 +12,7 @@ const {
     updateUserById,
 } = require("./functions/UserFunctions");
 const { createUserJwt } = require("./functions/JwtFunctions");
-const { verifyUserRoleAndId, onlyAllowOpOrAdmin, login } = require("./middleware/authMiddleware");
+const { verifyUserRoleAndId, onlyAllowOpOrAdmin, login, generateCookie, logout } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
@@ -68,12 +68,17 @@ router.delete("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async (reques
     });
 });
 
-router.post("/signIn", login, async (request, response) => {
-    response.cookie("access_token", request.headers.jwt, { httpOnly: true });
+router.post("/signIn", login, generateCookie, async (request, response) => {
     response.json({
         done: request.headers.jwt,
     });
 });
+
+router.post("/signOut", logout, generateCookie, async(request, response) => {
+    response.json({
+        signed: "out"
+    })
+})
 
 // This role is here so I can test my auth stuff
 router.post("/someOtherProtectedRoute", verifyUserRoleAndId, async (request, response) => {

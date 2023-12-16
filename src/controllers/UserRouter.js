@@ -12,7 +12,13 @@ const {
     updateUserById,
 } = require("./functions/UserFunctions");
 const { createUserJwt } = require("./functions/JwtFunctions");
-const { verifyUserRoleAndId, onlyAllowOpOrAdmin, login, generateCookie, logout } = require("./middleware/authMiddleware");
+const {
+    verifyUserRoleAndId,
+    onlyAllowAuthorOrAdmin,
+    login,
+    generateCookie,
+    logout,
+} = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
@@ -51,8 +57,9 @@ router.get("/:username", async (request, response) => {
 
 // UPDATE
 // Updates the user properties provided in the request.body according to the userId
-router.patch("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async (request, response) => {
-    let updatedUser = await updateUserById(request.params.userId, request.body);
+// I used :authorId here instead of :userId because it allows for a single middleware to perform all checks rather than write a specific only only for users protections
+router.patch("/:authorId",verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
+    let updatedUser = await updateUserById(request.params.authorId, request.body);
     response.json({
         message: updatedUser,
     });
@@ -60,7 +67,7 @@ router.patch("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async (request
 
 // DELETE
 // Deletes a user with matching _id value
-router.delete("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async (request, response) => {
+router.delete("/:userId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
     let deletedUser = await deleteUserById(request.params.userId);
     let confirmation = `deleting user: ${deletedUser.username}`;
     response.json({
@@ -74,11 +81,11 @@ router.post("/signIn", login, generateCookie, async (request, response) => {
     });
 });
 
-router.post("/signOut", logout, generateCookie, async(request, response) => {
+router.post("/signOut", logout, generateCookie, async (request, response) => {
     response.json({
-        signed: "out"
-    })
-})
+        signed: "out",
+    });
+});
 
 // This role is here so I can test my auth stuff
 router.post("/someOtherProtectedRoute", verifyUserRoleAndId, async (request, response) => {
@@ -88,7 +95,6 @@ router.post("/someOtherProtectedRoute", verifyUserRoleAndId, async (request, res
         userId: request.headers.userId,
     });
 });
-
 
 // Export the router so that other files can use it:
 module.exports = router;

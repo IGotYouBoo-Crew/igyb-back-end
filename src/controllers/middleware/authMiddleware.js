@@ -38,13 +38,15 @@ const verifyUserRoleAndId = async (request, response, next) => {
     }
 };
 
-const onlyAllowOpOrAdmin = async (request, response, next) => {
+
+const onlyAllowAuthorOrAdmin = async (request, response, next) => {
     try {
+        
         if (!request.headers.userId || !request.headers.userRole || !request.cookies.access_token) {
             throw new Error("You forgot to run verifyUserRoleAndId middleware first you dummy");
         }
         if (
-            request.params.userId === request.headers.userId ||
+            request.params.authorId === request.headers.userId ||
             request.headers.userRole === (await getRoleIdByName("Admin"))
         ) {
             next();
@@ -102,7 +104,7 @@ const logout = async (request, response, next) => {
 module.exports = {
     validateUserJwt,
     verifyUserRoleAndId,
-    onlyAllowOpOrAdmin,
+    onlyAllowAuthorOrAdmin,
     login,
     generateCookie,
     logout

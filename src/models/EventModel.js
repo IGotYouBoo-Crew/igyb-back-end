@@ -12,7 +12,7 @@ const EventSchema = new mongoose.Schema({
             if (!v) {
             return true;
             }
-            return /([01]?[0-9]|2[0-3]):[0-5][0-9]/.test(v);
+            return /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(v);
         },
         message: (props) => `${props.value} is not valid time!`,
         },
@@ -23,7 +23,7 @@ const EventSchema = new mongoose.Schema({
             if (!v) {
             return true;
             }
-            return /([01]?[0-9]|2[0-3]):[0-5][0-9]/.test(v);
+            return /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(v);
         },
         message: (props) => `${props.value} is not valid time!`,
         },

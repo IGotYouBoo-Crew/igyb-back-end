@@ -1,5 +1,5 @@
 // Import our new functions:
-const { getUserByUsername } = require("../functions/UserFunctions");
+const { getUserByUsername, createNewUser } = require("../functions/UserFunctions");
 const { createUserJwt, verifyUserJwt, getUserDataFromJwt } = require("../functions/JwtFunctions");
 const { getRoleIdByName } = require("../functions/RoleFunctions");
 const { checkUnhashedData } = require("../functions/EncryptionFunctions");
@@ -31,28 +31,53 @@ const verifyUserRoleAndId = async (request, response, next) => {
         let givenJwt = request.cookies.access_token;
         let userData = await getUserDataFromJwt(givenJwt);
         request.headers.userId = userData._id;
-        request.headers.userRole = userData.role._id;
+        request.headers.username = userData.username;
+        request.headers.userRole = userData.role._id || userData.role;
+        request.headers.jwt = givenJwt;
         next();
     } catch (error) {
         next(error);
     }
 };
 
-const onlyAllowOpOrAdmin = async (request, response, next) => {
+const targetSelf = async (request, response, next) => {
+    try {
+        request.headers.userId ? request.params.authorId = request.headers.userId : new Error("no userId in header")
+        next()
+    } catch (error) {
+        next(error)
+    }
+}
+
+const onlyAllowAuthorOrAdmin = async (request, response, next) => {
     try {
         if (!request.headers.userId || !request.headers.userRole || !request.cookies.access_token) {
-            throw new Error("You forgot to run verifyUserRoleAndId middleware first you dummy");
+            throw new Error("You need to run verifyUserRoleAndId middleware first");
         }
         if (
-            request.params.userId === request.headers.userId ||
+            request.params.authorId === request.headers.userId ||
             request.headers.userRole === (await getRoleIdByName("Admin"))
         ) {
             next();
         } else {
             response.status(403);
-            throw new Error(
-                "You are not authorised to make these changes to another user's account"
-            );
+            throw new Error("You are not authorised to access this route");
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+const onlyAllowAdmin = async (request, response, next) => {
+    try {
+        if (!request.headers.userRole) {
+            throw new Error("You need to run verifyUserRoleAndId middleware first");
+        }
+        if (request.headers.userRole === (await getRoleIdByName("Admin"))) {
+            next();
+        } else {
+            response.status(403);
+            throw new Error("You are not authorised to access this route");
         }
     } catch (error) {
         next(error);
@@ -74,18 +99,62 @@ const login = async (request, response, next) => {
             response.status(400);
             throw new Error("Incorrect password");
         }
-
         request.headers.jwt = createUserJwt(targetUser);
+        request.headers.username = userData.username;
+        request.headers.role = targetUser.role._id
         next();
     } catch (error) {
         next(error);
     }
 };
 
+const generateCookie = async (request, response, next) => {
+    try {
+        if (!request.headers.jwt) {
+            throw new Error("You need to run verifyUserRoleAndId or login middleware first");
+        }
+        // 1000ms * 60sec * 60min * 24hr * 14days
+        let twoWeeks = 1209600000;
+        let expiry = twoWeeks;
+        // When logout middleware is passed first, sets cookie to expire
+        if (request.headers.logout) {
+            expiry = 0;
+        }
+        response.cookie("access_token", request.headers.jwt, { maxAge: expiry, httpOnly: true });
+        next();
+    } catch (error) {
+        next(error);
+    }
+};
+
+const logout = async (request, response, next) => {
+    request.headers.logout = true;
+    next();
+};
+
+const generateUser = async (request, response, next) => {
+    try {
+        let responseData = await createNewUser(request.body);
+        request.headers.data = responseData;
+        request.headers.jwt = createUserJwt(responseData);
+        request.headers.username = responseData.username;
+        next();
+    } catch (error) {
+        next(error.message)
+        // return response.status(400).json({
+        //     error: error.message,
+        // });
+    }
+};
 
 module.exports = {
     validateUserJwt,
     verifyUserRoleAndId,
-    onlyAllowOpOrAdmin,
-    login
-}
+    onlyAllowAuthorOrAdmin,
+    login,
+    generateCookie,
+    logout,
+    onlyAllowAdmin,
+    generateUser,
+    targetSelf
+};

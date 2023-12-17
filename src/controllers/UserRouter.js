@@ -11,26 +11,31 @@ const {
     deleteUserById,
     updateUserById,
 } = require("./functions/UserFunctions");
-const { createUserJwt } = require("./functions/JwtFunctions");
-const { verifyUserRoleAndId, onlyAllowOpOrAdmin, login } = require("./middleware/authMiddleware");
+const {
+    verifyUserRoleAndId,
+    onlyAllowAuthorOrAdmin,
+    login,
+    generateCookie,
+    logout,
+    onlyAllowAdmin,
+    generateUser,
+    targetSelf,
+} = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
 // CREATE
 // request.body must include required fields (TBD when creating users model)
-router.post("/newUser", async (request, response) => {
-    let responseData = await createNewUser(request.body);
-    let newJWT = createUserJwt(responseData);
+router.post("/newUser", generateUser, generateCookie, async (request, response) => {
     response.json({
-        data: responseData,
-        JWT: newJWT,
+        data: request.headers.data || "generateUser middleware not run",
     });
 });
 
 // READ
 
 // Show all users
-router.get("/", async (request, response) => {
+router.get("/", verifyUserRoleAndId, onlyAllowAdmin, async (request, response) => {
     let responseData = {};
     responseData = await getAllUsers();
     response.json({
@@ -51,8 +56,10 @@ router.get("/:username", async (request, response) => {
 
 // UPDATE
 // Updates the user properties provided in the request.body according to the userId
-router.patch("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async (request, response) => {
-    let updatedUser = await updateUserById(request.params.userId, request.body);
+// I used :authorId here instead of :userId because it allows for 
+// a single middleware to perform all checks rather than write a specific only only for users protections
+router.patch("/:authorId",verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
+    let updatedUser = await updateUserById(request.params.authorId, request.body);
     response.json({
         message: updatedUser,
     });
@@ -60,30 +67,46 @@ router.patch("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async (request
 
 // DELETE
 // Deletes a user with matching _id value
-router.delete("/:userId", verifyUserRoleAndId, onlyAllowOpOrAdmin, async (request, response) => {
-    let deletedUser = await deleteUserById(request.params.userId);
+// I used :authorId here instead of :userId because it allows for 
+// a single middleware to perform all checks rather than write a specific only only for users protections
+router.delete("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
+    let deletedUser = await deleteUserById(request.params.authorId);
     let confirmation = `deleting user: ${deletedUser.username}`;
     response.json({
         message: confirmation,
     });
 });
 
-router.post("/signIn", login, async (request, response) => {
-    response.cookie("access_token", request.headers.jwt, { httpOnly: true });
+// This deletes the user that sends the request.
+router.delete("/", verifyUserRoleAndId, targetSelf, onlyAllowAuthorOrAdmin, logout, generateCookie, async (request, response) => {
+    let deletedUser = await deleteUserById(request.params.authorId);
+    let confirmation = `deleting user: ${deletedUser.username}`;
     response.json({
-        done: request.headers.jwt,
+        message: confirmation,
+    });
+});
+
+router.post("/signIn", login, generateCookie, async (request, response) => {
+    response.json({
+        username: request.headers.username,
+        role: request.headers.role
+    });
+});
+
+router.post("/signOut", logout, verifyUserRoleAndId, generateCookie, async (request, response) => {
+    response.json({
+        signed: "out",
     });
 });
 
 // This role is here so I can test my auth stuff
-router.post("/someOtherProtectedRoute", verifyUserRoleAndId, async (request, response) => {
+router.post("/someOtherProtectedRoute", verifyUserRoleAndId, generateCookie, async (request, response) => {
     response.json({
         refreshedJWT: request.headers.jwt,
         userRole: request.headers.userRole,
         userId: request.headers.userId,
     });
 });
-
 
 // Export the router so that other files can use it:
 module.exports = router;

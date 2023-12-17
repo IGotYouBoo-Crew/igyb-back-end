@@ -37,7 +37,6 @@ describe("server root route exists and returns status hello world", () => {
     });
     test("gets database details", async () => {
         const responseResult = await request(app).get("/databaseHealth");
-        console.log(responseResult.body);
         expect(responseResult.body).toHaveProperty("dbModels");
     });
 });
@@ -56,16 +55,11 @@ describe("UserController routes work and accept/return data correctly", () => {
         const responseData = responseResult.body.data;
         // global variable used to access same document later for Update and Delete actions
         testUserId = responseData._id;
-        jwt = responseResult.body.JWT;
         let compareEncryptedPassword = bcrypt.compareSync(
             newUserData.password,
             responseData.password
         );
         let superstarRoleID = await getRoleIdByName("Superstar");
-
-        expect(responseResult.body).toHaveProperty("JWT");
-        // this verifies the JWT is signed
-        expect(verifyJwt(responseResult.body.JWT)).toHaveProperty("signature");
 
         // this verifies password has encrypted
         expect(compareEncryptedPassword).toEqual(true);
@@ -99,7 +93,6 @@ describe("UserController routes work and accept/return data correctly", () => {
     test("DELETE userData fails when not original user or admin", async () => {
         const responseResult = await request(app)
             .delete("/account/" + testUserId)
-            .set("jwt", jwt);
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
 });

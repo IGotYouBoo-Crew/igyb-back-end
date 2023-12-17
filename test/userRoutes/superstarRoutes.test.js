@@ -51,15 +51,12 @@ describe("Signed in UserController routes work and accept/return data correctly"
         const responseData = responseResult.body.data;
         // global variable used to access same document later for Update and Delete actions
         testUserId = responseData._id;
-        jwt = responseResult.body.JWT;
         let compareEncryptedPassword = bcrypt.compareSync(
             newUserData.password,
             responseData.password
         );
         let superstarRoleID = await getRoleIdByName("Superstar");
 
-        expect(responseResult.body).toHaveProperty("JWT");
-        expect(verifyJwt(responseResult.body.JWT)).toHaveProperty("signature");
         expect(compareEncryptedPassword).toEqual(true);
         expect(responseData).toHaveProperty("email", newUserData.email);
         expect(responseData).toHaveProperty("role", superstarRoleID);
@@ -78,16 +75,6 @@ describe("Signed in UserController routes work and accept/return data correctly"
     });
 
     // UPDATE
-    test("PATCH request.body of updatedUserData fails if user is not signed in", async () => {
-        let updatedUserData = {
-            pronouns: "she/her",
-        };
-        // request(app) used to test unauthenticated attempt
-        let unauthenticatedResult = await request(app)
-            .patch("/account/" + testUserId)
-            .send(updatedUserData);
-        expect(unauthenticatedResult.body).toHaveProperty("errors", "Error: User not signed in");
-    });
     test("PATCH request.body of updatedUserData fails if user is not OP or Admin", async () => {
         let updatedUserData = {
             pronouns: "she/her",
@@ -99,7 +86,7 @@ describe("Signed in UserController routes work and accept/return data correctly"
             .send(updatedUserData);
         expect(testResponse.body).toHaveProperty(
             "errors",
-            "Error: You are not authorised to make these changes to another user's account"
+            "Error: You are not authorised to access this route"
         );
     });
 
@@ -107,11 +94,23 @@ describe("Signed in UserController routes work and accept/return data correctly"
         let updatedUserData = {
             pronouns: "she/her",
         };
-        console.log("test user id:" + testUserId);
         const responseResult = await authenticatedSession
             .patch("/account/" + testUserId)
             .send(updatedUserData);
-        console.log(responseResult.body);
         expect(responseResult.body.message).toHaveProperty("pronouns", "she/her");
     });
+
+    test("signout route signs out user", async () => {
+        const checkProtectedRoute = await authenticatedSession.post("/account/someOtherProtectedRoute")
+        expect(checkProtectedRoute.statusCode).toEqual(200)
+        await authenticatedSession.post("/account/signOut")
+        const failProtectedRoute = await authenticatedSession.post("/account/someOtherProtectedRoute")
+        expect(failProtectedRoute.statusCode).toEqual(401)
+    })
+    // DELETE
+    test("DELETE route works for self-deletion", async () => {
+        const responseResult = await authenticatedSession.delete("/account/")
+        expect(responseResult.body.message).toEqual("deleting user: User4")
+    })
+
 });

@@ -58,8 +58,6 @@ describe("Signed in as admin UserController routes work and accept/return data c
         adminUserId = responseData._id.toString();
 
         // checks everything is in order
-        expect(responseResult.body).toHaveProperty("JWT");
-        expect(verifyJwt(responseResult.body.JWT)).toHaveProperty("signature");
         expect(compareEncryptedPassword).toEqual(true);
         expect(responseData).toHaveProperty("email", newAdminData.email);
         expect(responseData).toHaveProperty("role", adminRoleID);
@@ -87,8 +85,6 @@ describe("Signed in as admin UserController routes work and accept/return data c
         );
         let superstarRoleID = await getRoleIdByName("Superstar");
 
-        expect(responseResult.body).toHaveProperty("JWT");
-        expect(verifyJwt(responseResult.body.JWT)).toHaveProperty("signature");
         expect(compareEncryptedPassword).toEqual(true);
         expect(responseData).toHaveProperty("email", newUserData.email);
         expect(responseData).toHaveProperty("role", superstarRoleID);

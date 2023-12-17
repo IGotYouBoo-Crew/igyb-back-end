@@ -10,8 +10,9 @@ const { getRoleIdByName } = require('./RoleFunctions');
 async function createNewUser(userDetails){
     // hash user password
     userDetails.password = await hashString(userDetails.password)
+    // gives user Superstar role if none provided
     !userDetails.role ? userDetails.role = await getRoleIdByName("Superstar") : ""
-    return await User.create(userDetails).catch((error) => console.log(error))
+    return await User.create(userDetails)
 }
 
 // READ

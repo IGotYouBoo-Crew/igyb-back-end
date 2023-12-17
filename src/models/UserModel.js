@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
-const { Role } = require("./RoleModel");
 
 const UserSchema = new mongoose.Schema({
-    email: String,
-    password: String,
-    username: String,
+    email: {type: String, required: true, unique: true},
+    password: {type: String, required: true},
+    username: {type: String, required: true, unique: true},
     pronouns: String,
     role: {
         type: mongoose.Types.ObjectId,

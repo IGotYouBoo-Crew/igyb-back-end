@@ -106,6 +106,7 @@ function seedDb() {
         .then(async () => {
             // add new data
             let rolesCreated = await Role.insertMany(roles);
+            console.log(await Role.find({}))
             for (const user of users) {
                 user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id;
             }

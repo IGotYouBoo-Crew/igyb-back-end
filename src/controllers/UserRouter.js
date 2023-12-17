@@ -11,7 +11,6 @@ const {
     deleteUserById,
     updateUserById,
 } = require("./functions/UserFunctions");
-const { createUserJwt } = require("./functions/JwtFunctions");
 const {
     verifyUserRoleAndId,
     onlyAllowAuthorOrAdmin,
@@ -19,18 +18,17 @@ const {
     generateCookie,
     logout,
     onlyAllowAdmin,
+    generateUser,
+    targetSelf,
 } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
 // CREATE
 // request.body must include required fields (TBD when creating users model)
-router.post("/newUser", async (request, response) => {
-    let responseData = await createNewUser(request.body);
-    let newJWT = createUserJwt(responseData);
+router.post("/newUser", generateUser, generateCookie, async (request, response) => {
     response.json({
-        data: responseData,
-        JWT: newJWT,
+        data: request.headers.data || "generateUser middleware not run",
     });
 });
 
@@ -79,9 +77,18 @@ router.delete("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (
     });
 });
 
+// This deletes the user that sends the request.
+router.delete("/", verifyUserRoleAndId, targetSelf, onlyAllowAuthorOrAdmin, logout, generateCookie, async (request, response) => {
+    let deletedUser = await deleteUserById(request.params.authorId);
+    let confirmation = `deleting user: ${deletedUser.username}`;
+    response.json({
+        message: confirmation,
+    });
+});
+
 router.post("/signIn", login, generateCookie, async (request, response) => {
     response.json({
-        done: request.headers.jwt,
+        username: request.headers.username,
     });
 });
 

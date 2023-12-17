@@ -89,6 +89,7 @@ router.delete("/", verifyUserRoleAndId, targetSelf, onlyAllowAuthorOrAdmin, logo
 router.post("/signIn", login, generateCookie, async (request, response) => {
     response.json({
         username: request.headers.username,
+        role: request.headers.role
     });
 });
 

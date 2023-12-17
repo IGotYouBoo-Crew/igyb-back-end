@@ -101,6 +101,7 @@ const login = async (request, response, next) => {
         }
         request.headers.jwt = createUserJwt(targetUser);
         request.headers.username = userData.username;
+        request.headers.role = targetUser.role._id
         next();
     } catch (error) {
         next(error);

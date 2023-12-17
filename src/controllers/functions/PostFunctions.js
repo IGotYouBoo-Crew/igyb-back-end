@@ -1,12 +1,37 @@
 // Require specific models so that we can 
 // create functionality involving them.
 const { uploadPicture } = require('../middleware/uploadPictureMiddleware');
+const {fileRemover} = require('../../utils/fileRemover')
 const { Post } = require('../../models/PostModel');
+const {v4: uuidv4} = require('uuid');
 
 // CREATE
-async function createNewPost(data){
-    return await Post.create(data).catch((error) => error)
+// async function createNewPost(data){
+//     return await Post.create(data).catch((error) => error)
+// }
+
+const createPost = async (req, res, next) => {
+    try {
+        const post = new Post({
+            title: "sample title",
+            caption: `sample caption`,
+            slug: uuidv4(),
+            body: {
+                type: "doc",
+                content: [],
+            },
+            photo: "",
+            author: req.user._id,
+        });
+
+        const createdPost = await post.save();
+        return res.json(createdPost);
+        
+    } catch (error) {
+        next(error);
+    }
 }
+
 
 // READ
 // Model.find({}) returns all documents in a collection.
@@ -37,10 +62,11 @@ async function deletePostById(postId){
 
 // Export the functions for our routes to use.
 module.exports = {
+    createPost,
     getAllPosts,
     getPostByTitle,
     getPostById,
     deletePostById,
     updatePostById,
-    createNewPost
+    // createNewPost
 }

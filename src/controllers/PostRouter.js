@@ -9,19 +9,25 @@ const {
     updatePostById,
     deletePostById,
     getPostById,
-    createNewPost,
+    // createNewPost,
+    createPost
 } = require("./functions/PostFunctions");
+
+const { verifyUserRoleAndId } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
 // CREATE
 // request.body must include required fields (TBD when creating posts model)
-router.post("/newPost", async (request, response) => {
-    let responseData = await createNewPost(request.body);
-    response.json({
-        data: responseData,
-    });
-});
+// router.post("/newPost", async (request, response) => {
+//     let responseData = await createNewPost(request.body);
+//     response.json({
+//         data: responseData,
+//     });
+// });
+
+router.post("/", verifyUserRoleAndId, createPost);
+
 
 // READ
 

@@ -49,12 +49,16 @@ const adminUser = {
 const posts = [
     {
         title: "first post",
-        content: "this is the first fake post",
+        caption: "fist post caption",
+        slug: "123456",
+        body: "post 1 body...",
         author: null,
     },
     {
         title: "second post",
-        content: "this is the second fake post",
+        caption: "second post caption",
+        slug: "2468",
+        body: "post 2 body...",
         author: null,
     },
 ];

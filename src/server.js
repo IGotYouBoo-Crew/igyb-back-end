@@ -128,9 +128,8 @@ app.use((error, request, response, next) => {
     });
 });
 
-const errorResponseHandler = require('./controllers/middleware/errorHandler')
+const { errorResponseHandler, invalidPathHandler } = require('./controllers/middleware/errorHandler')
 app.use(errorResponseHandler)
-const invalidPathHandler = require('./controllers/middleware/errorHandler')
 app.use(invalidPathHandler)
 
 // Export everything needed to run the server.

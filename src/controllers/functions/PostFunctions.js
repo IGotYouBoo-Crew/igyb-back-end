@@ -1,5 +1,6 @@
 // Require specific models so that we can 
 // create functionality involving them.
+const { uploadPicture } = require('../middleware/uploadPictureMiddleware');
 const { Post } = require('../../models/PostModel');
 
 // CREATE

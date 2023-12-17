@@ -20,6 +20,7 @@ const {
     onlyAllowAdmin,
     generateUser,
     targetSelf,
+    recogniseCookie,
 } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -99,8 +100,15 @@ router.post("/signOut", logout, verifyUserRoleAndId, generateCookie, async (requ
     });
 });
 
+router.post("/cookieCheck", recogniseCookie, verifyUserRoleAndId, generateCookie, async (request, response) => {
+    response.json({
+        username: request.headers.username,
+        role: request.headers.userRole
+    })
+})
+
 // This role is here so I can test my auth stuff
-router.post("/someOtherProtectedRoute", verifyUserRoleAndId, generateCookie, async (request, response) => {
+router.post("/someOtherProtectedRoute",  verifyUserRoleAndId, generateCookie, async (request, response) => {
     response.json({
         refreshedJWT: request.headers.jwt,
         userRole: request.headers.userRole,

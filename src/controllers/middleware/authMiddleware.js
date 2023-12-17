@@ -1,5 +1,5 @@
 // Import our new functions:
-const { getUserByUsername, createNewUser } = require("../functions/UserFunctions");
+const { getUserByUsername, createNewUser, getUserById } = require("../functions/UserFunctions");
 const { createUserJwt, verifyUserJwt, getUserDataFromJwt } = require("../functions/JwtFunctions");
 const { getRoleIdByName } = require("../functions/RoleFunctions");
 const { checkUnhashedData } = require("../functions/EncryptionFunctions");
@@ -32,7 +32,9 @@ const verifyUserRoleAndId = async (request, response, next) => {
         let userData = await getUserDataFromJwt(givenJwt);
         request.headers.userId = userData._id;
         request.headers.username = userData.username;
-        request.headers.userRole = userData.role._id || userData.role;
+        request.headers.userRole = userData.role.name || userData.role;
+        request.headers.userRoleId = userData.role._id || userData.role;
+
         request.headers.jwt = givenJwt;
         next();
     } catch (error) {
@@ -56,10 +58,11 @@ const onlyAllowAuthorOrAdmin = async (request, response, next) => {
         }
         if (
             request.params.authorId === request.headers.userId ||
-            request.headers.userRole === (await getRoleIdByName("Admin"))
+            request.headers.userRole === ("Admin")
         ) {
             next();
         } else {
+            console.log(request.headers.userRole)
             response.status(403);
             throw new Error("You are not authorised to access this route");
         }
@@ -101,7 +104,7 @@ const login = async (request, response, next) => {
         }
         request.headers.jwt = createUserJwt(targetUser);
         request.headers.username = userData.username;
-        request.headers.role = targetUser.role._id
+        request.headers.role = targetUser.role.name
         next();
     } catch (error) {
         next(error);
@@ -126,6 +129,28 @@ const generateCookie = async (request, response, next) => {
         next(error);
     }
 };
+
+const recogniseCookie = async(request, response, next) => {
+    try {
+        if (!request.cookies.access_token) {
+            return response.json({
+                noCookie: "user not signed in"
+            })
+        }
+        let userData = await getUserDataFromJwt(request.cookies.access_token)
+        let targetUser = await getUserById(userData._id)
+        if (!targetUser || userData.password !== targetUser.password) {
+            throw new Error("Local cookie details do not match information on record")
+        }
+        request.headers.userId = userData._id;
+        request.headers.username = userData.username;
+        request.headers.userRole = userData.role.name || userData.role;
+        // request.headers.jwt = givenJwt;
+        next()
+    } catch (error) {
+        next(error)
+    }
+}
 
 const logout = async (request, response, next) => {
     request.headers.logout = true;
@@ -156,5 +181,6 @@ module.exports = {
     logout,
     onlyAllowAdmin,
     generateUser,
-    targetSelf
+    targetSelf,
+    recogniseCookie
 };

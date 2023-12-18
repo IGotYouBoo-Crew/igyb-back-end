@@ -11,7 +11,7 @@ const CommentSchema = new mongoose.Schema(
             type: String, 
             required: true
         },
-        postId: {
+        post: {
             type: mongoose.Types.ObjectId, 
             ref: 'Post', 
             required: true
@@ -26,7 +26,7 @@ const CommentSchema = new mongoose.Schema(
             default: null
         },
         replyOnUser: {
-            type: Schema.Types.ObjectId, 
+            type: mongoose.Types.ObjectId, 
             ref: 'User', 
             default: null,
         },

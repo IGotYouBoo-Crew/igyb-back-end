@@ -7,18 +7,19 @@ const router = express.Router();
 const {
     getAllPosts,
     // updatePostById,
-    deletePostById,
+    // deletePostById,
     getPostById,
     // createNewPost,
     createPost,
-    updatePost
+    updatePost,
+    deletePost
 } = require("./functions/PostFunctions");
 
 const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
-// CREATE
+// CREATE - OLD
 // request.body must include required fields (TBD when creating posts model)
 // router.post("/newPost", async (request, response) => {
 //     let responseData = await createNewPost(request.body);
@@ -34,6 +35,10 @@ router.post("/", verifyUserRoleAndId, createPost);
 // UPDATE
 
 router.put("/:slug/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updatePost);
+
+// DELETE
+
+router.delete("/:slug/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deletePost);
 
 // READ
 
@@ -57,7 +62,7 @@ router.get("/:postId", async (request, response) => {
     });
 });
 
-// UPDATE
+// UPDATE - OLD
 // Updates the post properties provided in the request.body according to the postId
 // router.patch("/:postId", async (request, response) => {
 //     let updatedPost = await updatePostById(request.params.postId, request.body);
@@ -66,15 +71,15 @@ router.get("/:postId", async (request, response) => {
 //     });
 // });
 
-// DELETE
+// DELETE - OLD
 // Deletes a post with matching _id value
-router.delete("/:postId", async (request, response) => {
-    let deletedPost = await deletePostById(request.params.postId);
-    let confirmation = `deleting post: ${deletedPost.title}`;
-    response.json({
-        message: confirmation,
-    });
-});
+// router.delete("/:postId", async (request, response) => {
+//     let deletedPost = await deletePostById(request.params.postId);
+//     let confirmation = `deleting post: ${deletedPost.title}`;
+//     response.json({
+//         message: confirmation,
+//     });
+// });
 
 // Export the router so that other files can use it:
 module.exports = router;

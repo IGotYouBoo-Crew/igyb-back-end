@@ -3,13 +3,16 @@
 const { uploadPicture } = require('../middleware/uploadPictureMiddleware');
 const {fileRemover} = require('../../utils/fileRemover')
 const { Post } = require('../../models/PostModel');
-const {v4: uuidv4} = require('uuid');
-const { User } = require('../../models/UserModel');
+const { Comment } = require('../../models/CommentModel')
 
-// CREATE
+const {v4: uuidv4} = require('uuid');
+
+// CREATE - OLD
 // async function createNewPost(data){
 //     return await Post.create(data).catch((error) => error)
 // }
+
+// CREATE 
 
 const createPost = async (request, response, next) => {
     try {
@@ -32,6 +35,8 @@ const createPost = async (request, response, next) => {
         next(error);
     }
 }
+
+// UPDATE 
 
 const updatePost = async (request, response, next) => {
     try {
@@ -86,6 +91,25 @@ const updatePost = async (request, response, next) => {
     }
 }
 
+// DELETE
+const deletePost = async (request, response, next) => {
+    try {
+        const post = await Post.findOneAndDelete({ slug: request.params.slug });
+
+        if(!post) {
+            const error = new Error("Post was not found");
+            return next(error);
+        }
+
+        await Comment.deleteMany({ post: post._id });
+
+        return response.json({
+            message: "Post is successfully deleted",
+        })
+    } catch (error) {
+        next(error);
+    }
+}
 
 // READ
 // Model.find({}) returns all documents in a collection.
@@ -104,24 +128,25 @@ async function getPostById(postId){
     return await Post.findById(postId).exec()
 }
 
-// UPDATE
+// UPDATE - OLD
 // async function updatePostById(postId, updatedPostData){
 //     return await Post.findByIdAndUpdate(postId, updatedPostData, { runValidators: true, returnDocument: 'after' }).exec()
 // }
 
-// DELETE
-async function deletePostById(postId){
-    return await Post.findByIdAndDelete(postId).exec()
-}
+// DELETE - OLD
+// async function deletePostById(postId){
+//     return await Post.findByIdAndDelete(postId).exec()
+// }
 
 // Export the functions for our routes to use.
 module.exports = {
     createPost,
     updatePost,
+    deletePost,
     getAllPosts,
     getPostByTitle,
     getPostById,
-    deletePostById,
+    // deletePostById,
     // updatePostById,
     // createNewPost
 }

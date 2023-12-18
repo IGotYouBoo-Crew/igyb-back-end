@@ -6,14 +6,15 @@ const router = express.Router();
 // Import our new functions:
 const {
     getAllPosts,
-    updatePostById,
+    // updatePostById,
     deletePostById,
     getPostById,
     // createNewPost,
-    createPost
+    createPost,
+    updatePost
 } = require("./functions/PostFunctions");
 
-const { verifyUserRoleAndId } = require("./middleware/authMiddleware");
+const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
@@ -26,8 +27,13 @@ const { verifyUserRoleAndId } = require("./middleware/authMiddleware");
 //     });
 // });
 
+// CREATE
+
 router.post("/", verifyUserRoleAndId, createPost);
 
+// UPDATE
+
+router.put("/:slug/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updatePost);
 
 // READ
 
@@ -53,12 +59,12 @@ router.get("/:postId", async (request, response) => {
 
 // UPDATE
 // Updates the post properties provided in the request.body according to the postId
-router.patch("/:postId", async (request, response) => {
-    let updatedPost = await updatePostById(request.params.postId, request.body);
-    response.json({
-        message: updatedPost,
-    });
-});
+// router.patch("/:postId", async (request, response) => {
+//     let updatedPost = await updatePostById(request.params.postId, request.body);
+//     response.json({
+//         message: updatedPost,
+//     });
+// });
 
 // DELETE
 // Deletes a post with matching _id value

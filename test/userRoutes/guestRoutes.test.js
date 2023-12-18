@@ -96,3 +96,41 @@ describe("UserController routes work and accept/return data correctly", () => {
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
 });
+
+describe("PostsController routes work and reject non users", () => {
+    // CREATE
+    test("POST request.body of newPostData returns newPostData", async () => {
+        let newPostData = {
+            title: "NewPost",
+            content: "Oh boy, I loooove content",
+        };
+        const responseResult = await request(app).post("/posts").send(newPostData);
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in")
+    });
+    // READ
+    // test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
+    //     const responseResult = await request(app).get("/posts/" + testPostId);
+
+    //     expect(responseResult.body.data).toHaveProperty("title", "NewPost");
+    //     expect(responseResult.body.data).toHaveProperty("content", "Oh boy, I loooove content");
+    //     expect(responseResult.body.data).toHaveProperty("_id", testPostId);
+    // });
+    // UPDATE
+    test("PUT request.body of updatedPostData returns userData with updates", async () => {
+        let updatedPostData = {
+            content: "update: I hate content",
+        };
+        const responseResult = await request(app)
+            .put("/posts/123456/1234")
+            .send(updatedPostData);
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in")
+    });
+    // DELETE
+    test("DELETE userData returns message with username", async () => {
+        const responseResult = await request(app).delete("/posts/123456/1234");
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in")
+    });
+});

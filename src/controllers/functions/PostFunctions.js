@@ -17,14 +17,13 @@ const {v4: uuidv4} = require('uuid');
 const createPost = async (request, response, next) => {
     try {
         const post = new Post({
-            title: "sample title",
-            caption: `sample caption`,
+            title: request.body.title,
+            caption: request.body.caption,
             slug: uuidv4(),
             body: {
                 type: "doc",
                 content: [],
             },
-            photo: "",
             author: request.headers.userId,
         });
 

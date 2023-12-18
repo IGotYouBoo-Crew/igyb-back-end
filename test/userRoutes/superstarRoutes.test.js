@@ -107,10 +107,65 @@ describe("Signed in UserController routes work and accept/return data correctly"
         const failProtectedRoute = await authenticatedSession.post("/account/someOtherProtectedRoute")
         expect(failProtectedRoute.statusCode).toEqual(401)
     })
+
+});
+
+describe("PostsController routes work and accept/return data correctly", () => {
+    // CREATE
+    test("POST request.body of newPostData returns newPostData", async () => {
+        let newPostData = {
+            "title": "new post",
+            "caption": "new post caption"
+        };
+        const responseResult = await authenticatedSession.post("/posts").send(newPostData);
+        console.log("flag")
+        console.log(responseResult.body)
+        testPostId = responseResult.body._id;
+        testPostSlug = responseResult.body.slug;
+        testPostAuthor = responseResult.body.author;
+
+        expect(responseResult.body).toHaveProperty("title", newPostData.title);
+        expect(responseResult.body).toHaveProperty("caption", newPostData.caption);
+        expect(responseResult.body).toHaveProperty("_id", testPostId);
+    });
+    // // READ
+    // test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
+    //     const responseResult = await request(app).get("/posts/" + testPostId);
+
+    //     expect(responseResult.body.data).toHaveProperty("title", "NewPost");
+    //     expect(responseResult.body.data).toHaveProperty("content", "Oh boy, I loooove content");
+    //     expect(responseResult.body.data).toHaveProperty("_id", testPostId);
+    // });
+
+    // UPDATE
+    // test("PUT request.body of updatedPostData returns userData with updates", async () => {
+    //     let updatedPostData = {
+    //         "title": "update new title"
+    //     };
+    //     const responseResult = await authenticatedSession
+    //         .put("/posts/" + testPostSlug + "/" + testPostAuthor)
+    //         .send(updatedPostData);
+
+    //     expect(responseResult.body).toHaveProperty("title", "update new title");
+    // });
+
+    // DELETE
+    test("DELETE postData returns message with username", async () => {
+        const responseResult = await authenticatedSession.delete("/posts/" + testPostSlug + "/" + testPostAuthor);
+
+        expect(responseResult.body.message).toEqual("Post is successfully deleted");
+    });
+
+    // DELETE
+    test("DELETE postData returns message with username", async () => {
+        const responseResult = await authenticatedSession.delete("/posts/123456/1234");
+
+        expect(responseResult.body.errors).toEqual("Error: You are not authorised to access this route")
+    });
+
     // DELETE
     test("DELETE route works for self-deletion", async () => {
         const responseResult = await authenticatedSession.delete("/account/")
         expect(responseResult.body.message).toEqual("deleting user: User4")
-    })
-
+    });
 });

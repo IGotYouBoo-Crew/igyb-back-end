@@ -5,12 +5,8 @@ const {fileRemover} = require('../../utils/fileRemover')
 const { Post } = require('../../models/PostModel');
 const { Comment } = require('../../models/CommentModel')
 
+// import external packages
 const {v4: uuidv4} = require('uuid');
-
-// CREATE - OLD
-// async function createNewPost(data){
-//     return await Post.create(data).catch((error) => error)
-// }
 
 // CREATE 
 
@@ -144,32 +140,20 @@ const getPost = async (request, response, next) => {
     }
 }
 
-// READ - OLD
-// Model.find({}) returns all documents in a collection.
-// async function getAllPosts(){
-//     return await Post.find({}).populate("author", "username");
-    
-// }
+const getAllPosts = async (request, response, next) => {
+    try {
+        const posts = await Post.find({}).populate([
+            {
+                path: "author",
+                select: ["username"]
+            }
+        ]);
 
-// async function getPostByTitle(postTitle){
-//     // finds one post with matching postTitle
-//     return await Post.findOne({title: postTitle}).exec()
-// }
-
-// async function getPostById(postId){
-//     // finds post with matching postId
-//     return await Post.findById(postId).exec()
-// }
-
-// UPDATE - OLD
-// async function updatePostById(postId, updatedPostData){
-//     return await Post.findByIdAndUpdate(postId, updatedPostData, { runValidators: true, returnDocument: 'after' }).exec()
-// }
-
-// DELETE - OLD
-// async function deletePostById(postId){
-//     return await Post.findByIdAndDelete(postId).exec()
-// }
+        response.json(posts);
+    } catch (error) {
+        next(error);
+    }
+}
 
 // Export the functions for our routes to use.
 module.exports = {
@@ -177,10 +161,5 @@ module.exports = {
     updatePost,
     deletePost,
     getPost,
-    // getAllPosts,
-    // getPostByTitle,
-    // getPostById,
-    // deletePostById,
-    // updatePostById,
-    // createNewPost
+    getAllPosts,
 }

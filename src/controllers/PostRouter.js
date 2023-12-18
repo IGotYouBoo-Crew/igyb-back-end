@@ -8,7 +8,8 @@ const {
     createPost,
     updatePost,
     deletePost,
-    getPost
+    getPost,
+    getAllPosts
 } = require("./functions/PostFunctions");
 
 // Import our auth middleware:
@@ -31,6 +32,7 @@ router.delete("/:slug/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, d
 // READ
 
 router.get("/:slug", getPost)
+router.get("/", getAllPosts)
 
 // Export the router so that other files can use it:
 module.exports = router;

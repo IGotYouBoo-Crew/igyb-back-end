@@ -6,7 +6,6 @@ let bcrypt = require("bcrypt");
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
 const { getRoleIdByName } = require("../../src/controllers/functions/RoleFunctions");
-const { verifyJwt } = require("../../src/controllers/functions/JwtFunctions");
 var session = require("supertest-session");
 
 var testSession = session(app);
@@ -45,10 +44,10 @@ describe("UserController routes work and accept/return data correctly", () => {
     // CREATE
     test("POST request.body of newUserData returns newUserData and JWT", async () => {
         let newUserData = {
-            email: "postedUser@email.com",
+            email: "testUser5@email.com",
             password: "fakepassword",
-            username: "User4",
-            pronouns: "he/him",
+            username: "User5",
+            pronouns: "she/her",
         };
 
         const responseResult = await request(app).post("/account/newUser").send(newUserData);
@@ -84,15 +83,14 @@ describe("UserController routes work and accept/return data correctly", () => {
     });
 
     // Auth testing testing
-    test("no jwt fails with error handling", async () => {
+    test("Guests cannot access protected routes", async () => {
         const responseResult = await request(app).post("/account/someOtherProtectedRoute");
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
 
     // DELETE
-    test("DELETE userData fails when not original user or admin", async () => {
-        const responseResult = await request(app)
-            .delete("/account/" + testUserId)
+    test("DELETE userData fails for guest", async () => {
+        const responseResult = await request(app).delete("/account/" + testUserId);
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
 });
@@ -106,7 +104,7 @@ describe("PostsController routes work and reject non users", () => {
         };
         const responseResult = await request(app).post("/posts").send(newPostData);
 
-        expect(responseResult.body.errors).toEqual("Error: User not signed in")
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
     // READ
     // test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
@@ -117,20 +115,18 @@ describe("PostsController routes work and reject non users", () => {
     //     expect(responseResult.body.data).toHaveProperty("_id", testPostId);
     // });
     // UPDATE
-    test("PUT request.body of updatedPostData returns userData with updates", async () => {
+    test("PUT request returns error", async () => {
         let updatedPostData = {
             content: "update: I hate content",
         };
-        const responseResult = await request(app)
-            .put("/posts/123456/1234")
-            .send(updatedPostData);
+        const responseResult = await request(app).put("/posts/123456/1234").send(updatedPostData);
 
-        expect(responseResult.body.errors).toEqual("Error: User not signed in")
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
     // DELETE
-    test("DELETE userData returns message with username", async () => {
+    test("DELETE userData returns error 'user not signed in'", async () => {
         const responseResult = await request(app).delete("/posts/123456/1234");
 
-        expect(responseResult.body.errors).toEqual("Error: User not signed in")
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
 });

@@ -11,17 +11,8 @@ const {
     deleteUserById,
     updateUserById,
 } = require("./functions/UserFunctions");
-const {
-    verifyUserRoleAndId,
-    onlyAllowAuthorOrAdmin,
-    login,
-    generateCookie,
-    logout,
-    onlyAllowAdmin,
-    generateUser,
-    targetSelf,
-    recogniseCookie,
-} = require("./middleware/authMiddleware");
+const { generateUser, generateCookie, targetSelf, logout, login, recogniseCookie, deleteUser, updateUser } = require("./middleware/userMiddleware");
+const { verifyUserRoleAndId, onlyAllowAdmin, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
@@ -46,8 +37,6 @@ router.get("/", verifyUserRoleAndId, onlyAllowAdmin, async (request, response) =
 
 // shows a user's data which matches a specified username
 router.get("/:username", async (request, response) => {
-    let responseData = {};
-
     responseData = await getUserByUsername(request.params.username);
 
     response.json({
@@ -59,8 +48,7 @@ router.get("/:username", async (request, response) => {
 // Updates the user properties provided in the request.body according to the userId
 // I used :authorId here instead of :userId because it allows for 
 // a single middleware to perform all checks rather than write a specific only only for users protections
-router.patch("/:authorId",verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
-    let updatedUser = await updateUserById(request.params.authorId, request.body);
+router.patch("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updateUser,  async (request, response) => {
     response.json({
         message: updatedUser,
     });
@@ -70,18 +58,16 @@ router.patch("/:authorId",verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (re
 // Deletes a user with matching _id value
 // I used :authorId here instead of :userId because it allows for 
 // a single middleware to perform all checks rather than write a specific only only for users protections
-router.delete("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, async (request, response) => {
-    let deletedUser = await deleteUserById(request.params.authorId);
-    let confirmation = `deleting user: ${deletedUser.username}`;
+router.delete("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deleteUser, async (request, response) => {
+    let confirmation = `deleting user: ${request.header.deletedUsername}`;
     response.json({
         message: confirmation,
     });
 });
 
 // This deletes the user that sends the request.
-router.delete("/", verifyUserRoleAndId, targetSelf, onlyAllowAuthorOrAdmin, logout, generateCookie, async (request, response) => {
-    let deletedUser = await deleteUserById(request.params.authorId);
-    let confirmation = `deleting user: ${deletedUser.username}`;
+router.delete("/", verifyUserRoleAndId, targetSelf, onlyAllowAuthorOrAdmin, logout, generateCookie, deleteUser, async (request, response) => {
+    let confirmation = `deleting user: ${request.header.deletedUsername}`;
     response.json({
         message: confirmation,
     });

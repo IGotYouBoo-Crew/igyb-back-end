@@ -6,7 +6,6 @@ let bcrypt = require("bcrypt");
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
 const { getRoleIdByName } = require("../../src/controllers/functions/RoleFunctions");
-const { verifyJwt } = require("../../src/controllers/functions/JwtFunctions");
 var session = require("supertest-session");
 
 var testSession = session(app);
@@ -93,8 +92,14 @@ describe("Signed in as admin UserController routes work and accept/return data c
         expect(responseData).toHaveProperty("_id", testUserId);
     });
 
+    // READ
+    test("Admin GET '/' route passes", async () => {
+        let responseData = await adminAuthSession.get("/account/");
+        expect(responseData.status).toEqual(200)
+    });
+
     // UPDATE
-    test("Admin PATCH request returns updated userData", async () => {
+    test("Admin PATCH request of another user returns updated userData", async () => {
         let updatedUserData = {
             pronouns: "she/her",
         };
@@ -114,8 +119,7 @@ describe("PostsController routes work and accept/return data correctly", () => {
             "body": "new post body"
         };
         const responseResult = await adminAuthSession.post("/posts").send(newPostData);
-        console.log("flag")
-        console.log(responseResult.body)
+
         testPostId = responseResult.body._id;
         testPostSlug = responseResult.body.slug;
         testPostAuthor = responseResult.body.author;
@@ -148,7 +152,9 @@ describe("PostsController routes work and accept/return data correctly", () => {
 
     // DELETE
     test("DELETE postData returns message with username", async () => {
-        const responseResult = await adminAuthSession.delete("/posts/" + testPostSlug + "/" + testPostAuthor);
+        const responseResult = await adminAuthSession.delete(
+            "/posts/" + testPostSlug + "/" + testPostAuthor
+        );
 
         expect(responseResult.body.message).toEqual("Post is successfully deleted");
     });
@@ -159,14 +165,17 @@ describe("PostsController routes work and accept/return data correctly", () => {
 
         expect(responseResult.body.message).toEqual("Post is successfully deleted");
     });
+});
 
+// THESE TESTS MUST GO LAST --> adminAuthSession relies on these accounts
+describe("Admin delete routes work for other users, and for self", () => {
     // DELETE
     test("Admin DELETE userData returns message with username", async () => {
         const responseResult = await adminAuthSession.delete("/account/" + testUserId);
         expect(responseResult.body.message).toEqual("deleting user: User4");
     });
     test("DELETE admin userData returns message with username", async () => {
-        const responseResult = await adminAuthSession.delete("/account/" + adminUserId);
+        const responseResult = await adminAuthSession.delete("/account/");
         expect(responseResult.body.message).toEqual("deleting user: Admin2");
     });
 });

@@ -6,7 +6,6 @@ let bcrypt = require("bcrypt");
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
 const { getRoleIdByName } = require("../../src/controllers/functions/RoleFunctions");
-const { verifyJwt } = require("../../src/controllers/functions/JwtFunctions");
 var session = require("supertest-session");
 
 var testSession = session(app);
@@ -101,13 +100,16 @@ describe("Signed in UserController routes work and accept/return data correctly"
     });
 
     test("signout route signs out user", async () => {
-        const checkProtectedRoute = await authenticatedSession.post("/account/someOtherProtectedRoute")
-        expect(checkProtectedRoute.statusCode).toEqual(200)
-        await authenticatedSession.post("/account/signOut")
-        const failProtectedRoute = await authenticatedSession.post("/account/someOtherProtectedRoute")
-        expect(failProtectedRoute.statusCode).toEqual(401)
-    })
-
+        const checkProtectedRoute = await authenticatedSession.post(
+            "/account/someOtherProtectedRoute"
+        );
+        expect(checkProtectedRoute.statusCode).toEqual(200);
+        await authenticatedSession.post("/account/signOut");
+        const failProtectedRoute = await authenticatedSession.post(
+            "/account/someOtherProtectedRoute"
+        );
+        expect(failProtectedRoute.statusCode).toEqual(401);
+    });
 });
 
 describe("PostsController routes work and accept/return data correctly", () => {
@@ -119,8 +121,8 @@ describe("PostsController routes work and accept/return data correctly", () => {
             "body": "new post body"
         };
         const responseResult = await authenticatedSession.post("/posts").send(newPostData);
-        console.log("flag")
-        console.log(responseResult.body)
+        console.log("flag");
+        console.log(responseResult.body);
         testPostId = responseResult.body._id;
         testPostSlug = responseResult.body.slug;
         testPostAuthor = responseResult.body.author;
@@ -153,7 +155,9 @@ describe("PostsController routes work and accept/return data correctly", () => {
 
     // DELETE
     test("DELETE postData returns message with username", async () => {
-        const responseResult = await authenticatedSession.delete("/posts/" + testPostSlug + "/" + testPostAuthor);
+        const responseResult = await authenticatedSession.delete(
+            "/posts/" + testPostSlug + "/" + testPostAuthor
+        );
 
         expect(responseResult.body.message).toEqual("Post is successfully deleted");
     });
@@ -162,12 +166,17 @@ describe("PostsController routes work and accept/return data correctly", () => {
     test("DELETE postData returns message with username", async () => {
         const responseResult = await authenticatedSession.delete("/posts/123456/1234");
 
-        expect(responseResult.body.errors).toEqual("Error: You are not authorised to access this route")
+        expect(responseResult.body.errors).toEqual(
+            "Error: You are not authorised to access this route"
+        );
     });
+});
 
+// THIS TEST MUST GO LAST --> authenticatedSession is reliant on this account
+describe("User can delete account", () => {
     // DELETE
     test("DELETE route works for self-deletion", async () => {
-        const responseResult = await authenticatedSession.delete("/account/")
-        expect(responseResult.body.message).toEqual("deleting user: User4")
+        const responseResult = await authenticatedSession.delete("/account/");
+        expect(responseResult.body.message).toEqual("deleting user: User4");
     });
 });

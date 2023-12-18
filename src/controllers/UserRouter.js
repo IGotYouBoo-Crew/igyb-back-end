@@ -7,9 +7,6 @@ const router = express.Router();
 const {
     getAllUsers,
     getUserByUsername,
-    createNewUser,
-    deleteUserById,
-    updateUserById,
 } = require("./functions/UserFunctions");
 const { generateUser, generateCookie, targetSelf, logout, login, recogniseCookie, deleteUser, updateUser } = require("./middleware/userMiddleware");
 const { verifyUserRoleAndId, onlyAllowAdmin, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
@@ -50,7 +47,7 @@ router.get("/:username", async (request, response) => {
 // a single middleware to perform all checks rather than write a specific only only for users protections
 router.patch("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updateUser,  async (request, response) => {
     response.json({
-        message: updatedUser,
+        message: request.header.updatedUser,
     });
 });
 

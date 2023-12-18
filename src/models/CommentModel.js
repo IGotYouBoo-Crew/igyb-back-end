@@ -16,10 +16,6 @@ const CommentSchema = new mongoose.Schema(
             ref: 'Post', 
             required: true
         },
-        check: {
-            type: Boolean, 
-            default: false
-        },
         parent: {
             type: mongoose.Types.ObjectId, 
             ref: 'Comment', 
@@ -31,7 +27,7 @@ const CommentSchema = new mongoose.Schema(
             default: null,
         },
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals:true } }
 );
 
 CommentSchema.virtual('replies', {

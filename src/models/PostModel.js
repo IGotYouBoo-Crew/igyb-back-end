@@ -28,7 +28,7 @@ const PostSchema = new mongoose.Schema(
             ref: 'User'
         },
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals: true } }
 );
 
 PostSchema.virtual('comments', {

@@ -32,6 +32,7 @@ router.delete("/:slug/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, d
 // READ
 
 router.get("/:slug", getPost)
+router.get("/", getAllPosts)
 
 router.get("/", getAllPosts)
 

@@ -31,8 +31,8 @@ router.delete("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, del
 
 // READ
 
-router.get("/:id", getEventById)
 router.get("/", getAllEvents)
+router.get("/:id", getEventById)
 
 
 // Export the router so that other files can use it:

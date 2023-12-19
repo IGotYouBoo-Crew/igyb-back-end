@@ -141,7 +141,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
 
         expect(responseResult.body).toHaveProperty("title", "new post");
         expect(responseResult.body).toHaveProperty("caption", "new post caption");
-        xpect(responseResult.body).toHaveProperty("body", "new post body");
+        expect(responseResult.body).toHaveProperty("body", "new post body");
         expect(responseResult.body).toHaveProperty("photo", "testimage.com");
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });
@@ -269,7 +269,7 @@ describe("Signed in as admin EventsController routes work and accept/return data
             ticketLink: "https://thewiggles.com/live",
             content: "I'm trying to create a test event and I'm a potato"
         };
-        const responseResult = await adminAuthSession.post("/events/").send(newEventData);
+        const responseResult = await authenticatedSession.post("/events/").send(newEventData);
 
         testEventId = responseResult.body._id;
         testEventAuthor = responseResult.body.author;

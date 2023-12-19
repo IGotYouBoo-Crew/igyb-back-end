@@ -8,6 +8,7 @@ const { Role } = require("./models/RoleModel");
 const dotenv = require("dotenv");
 const { Event } = require("./models/EventModel");
 const { getAllRoles } = require("./controllers/functions/RoleFunctions");
+const { hashString } = require("./controllers/functions/EncryptionFunctions");
 
 dotenv.config;
 
@@ -39,10 +40,13 @@ const users = [
     },
 ];
 
+let hashedPassword = async(adminPassword) => {
+    return await hashString(adminPassword)
+}
 const adminUser = {
     email: "admin@email.com",
     username: "Admin1",
-    password: "secretAdminPassword",
+    password: hashedPassword("adminPassword"),
     pronouns: "ad/min",
     role: null,
 }

@@ -178,7 +178,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
             "/posts/" + testPostId + "/" + testPostAuthor
         );
 
-        expect(responseResult.body.message).toEqual("Post is successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: update new title is successfully deleted");
     });
 
     // DELETE

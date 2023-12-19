@@ -166,13 +166,13 @@ describe("Signed in as admin PostsController routes work and accept/return data 
     test("DELETE postData returns success message", async () => {
         const responseResult = await adminAuthSession.delete("/posts/" + testPostId + "/" + testPostAuthor);
 
-        expect(responseResult.body.message).toEqual("Post is successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: update new title is successfully deleted");
     });
     test("DELETE postData returns success message", async () => {
         const testPost = await Post.findOne({title: "first post"}).exec();
         const responseResult = await adminAuthSession.delete("/posts/" + testPost._id + "/" + testPost.author);
 
-        expect(responseResult.body.message).toEqual("Post is successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: first post is successfully deleted");
     });
 });
 

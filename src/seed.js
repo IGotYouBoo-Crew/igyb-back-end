@@ -81,7 +81,7 @@ const events = [
     {
         host: "Captain Naomi",
         image: "https://img.freepik.com/premium-vector/potato-head-cartoon-pilot-mascot-cartoon-vector_193274-39483.jpg?w=2000",
-        title: "first event",
+        title: "first seeded event",
         date: "25th December 2023",
         start: "12:00",
         finish: "14:00",
@@ -91,7 +91,7 @@ const events = [
     {
         host: "Queen Ella",
         image: "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg",
-        title: "second event",
+        title: "second seeded event",
         date: "1st Jan 2024",
         start: "08:00",
         finish: "20:00",

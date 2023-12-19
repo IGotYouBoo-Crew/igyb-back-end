@@ -191,7 +191,7 @@ describe("CommentsController routes work and reject non users", () => {
 
 
 
-// Tests for events, with guests who are not logged in:
+// Tests for EVENTS, with guests who are not logged in:
 
 describe("EventsController routes work and reject non users", () => {
     
@@ -219,13 +219,13 @@ describe("EventsController routes work and reject non users", () => {
         expect(responseResult.statusCode).toEqual(200);
         expect(responseResult.body.length > 0).toEqual(true);
     });
-    test("GET 'events/testEventId' route exists and returns testEventId's data", async () => {
-        const testEvent = await Event.findOne({title: "second event"}).exec();
-        const responseResult = await request(app).get("/events/" + testEvent._id);
+    test("GET 'events/seededEventId' route exists and returns seededEventId's data", async () => {
+        const seededEvent = await Event.findOne({title: "second seeded event"}).exec();
+        const responseResult = await request(app).get("/events/" + seededEvent._id);
 
         expect(responseResult.body).toHaveProperty("host", "Queen Ella");
         expect(responseResult.body).toHaveProperty("image", "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg");
-        expect(responseResult.body).toHaveProperty("title", "second event");
+        expect(responseResult.body).toHaveProperty("title", "second seeded event");
         expect(responseResult.body).toHaveProperty("date", "1st Jan 2024");
         expect(responseResult.body).toHaveProperty("start", "08:00");
         expect(responseResult.body).toHaveProperty("finish", "20:00");

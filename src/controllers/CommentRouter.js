@@ -4,7 +4,11 @@ const express = require("express");
 const router = express.Router();
 
 // Import our new functions:
-const { createComment } = require("./functions/CommentFunctions");
+const { 
+    createComment,
+    updateComment,
+    deleteComment 
+} = require("./functions/CommentFunctions");
 
 // Import our auth middleware:
 const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
@@ -15,9 +19,11 @@ const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin } = require("./middleware/au
 router.post("/", verifyUserRoleAndId, createComment)
 
 // UPDATE
+router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updateComment)
 
 
 // DELETE
+router.delete("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deleteComment);
 
 
 // READ

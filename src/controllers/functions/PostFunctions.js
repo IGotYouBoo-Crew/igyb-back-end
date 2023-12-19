@@ -3,9 +3,6 @@
 const { Post } = require('../../models/PostModel');
 const { Comment } = require('../../models/CommentModel')
 
-// import external packages
-// const {v4: uuidv4} = require('uuid');
-
 // CREATE 
 
 const createPost = async (request, response, next) => {
@@ -33,7 +30,6 @@ const updatePost = async (request, response, next) => {
     try {
 
         const post = await Post.findById(request.params.id);
-        console.log(post)
 
         if(!post) {
             const error = new Error("Post was not found");
@@ -72,7 +68,7 @@ const deletePost = async (request, response, next) => {
         await Comment.deleteMany({ post: postToDelete._id });
 
         return response.json({
-            message: `Post: ${postToDelete.title} is successfully deleted`,
+            message: `Post: ${postToDelete.title} has been successfully deleted`,
         })
     } catch (error) {
         next(error);

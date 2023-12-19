@@ -154,6 +154,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
 
     // UPDATE
     test("PATCH request.body of updatedPostData returns postData with updates", async () => {
+
         let updatedPostData = {
             "title": "update new title"
         };
@@ -164,6 +165,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
         expect(responseResult.body).toHaveProperty("title", "update new title");
     });
     test("PATCH request.body of updatedPostData returns postData with updates", async () => {
+
         let updatedPostData = {
             "title": "update new title"
         };

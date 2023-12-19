@@ -168,6 +168,7 @@ describe("Signed in as admin PostsController routes work and accept/return data 
         const responseResult = await adminAuthSession.delete("/posts/" + testPostId + "/" + testPostAuthor);
 
         expect(responseResult.body.message).toEqual("Post: update new title has been successfully deleted");
+
     });
     test("DELETE postData returns success message", async () => {
         const testPost = await Post.findOne({title: "first post"}).exec();
@@ -222,7 +223,6 @@ describe("Signed in as admin CommentsController routes work and accept/return da
         expect(responseResult.body.message).toEqual(`Comment: ${testComment._id} has been successfully deleted`);
     });
 });
-
 
 // THESE TESTS MUST GO LAST --> adminAuthSession relies on these accounts
 describe("Admin delete routes work for other users, and for self", () => {

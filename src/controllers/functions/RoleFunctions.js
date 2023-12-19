@@ -25,9 +25,15 @@ async function getRoleIdByName(roleName){
     return roleQuery._id.toString()
 }
 
+async function getRoleNameById(roleId){
+    let roleQuery = await Role.findOne({_id: roleId}).exec();
+    return roleQuery.name
+}
+
 // Export the functions for our routes to use.
 module.exports = {
     getAllRoles,
     getUsersWithRole,
-    getRoleIdByName
+    getRoleIdByName,
+    getRoleNameById
 }

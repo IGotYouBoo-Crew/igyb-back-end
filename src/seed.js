@@ -3,6 +3,7 @@ const { databaseConnect } = require("./database");
 // import models needed
 const { User } = require("./models/UserModel");
 const { Post } = require("./models/PostModel");
+const { Comment } = require("./models/CommentModel");
 const { Role } = require("./models/RoleModel");
 const dotenv = require("dotenv");
 const { Event } = require("./models/EventModel");
@@ -62,6 +63,20 @@ const posts = [
         author: null,
     },
 ];
+
+const comments = [
+    {
+        desc: "first comment",
+        parentPostId: null,
+        author: null,
+    },
+    {
+        desc: "second comment",
+        parentPostId: null,
+        author: null,
+    },
+];
+
 const events = [
     {
         host: "Captain Naomi",
@@ -120,7 +135,14 @@ function seedDb() {
             for (const post of posts) {
                 post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
             }
-            await Post.insertMany(posts);
+            let postsCreated = await Post.insertMany(posts);
+            console.log(postsCreated);
+            for (const comment of comments) {
+                comment.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+                comment.parentPostId = postsCreated[Math.floor(Math.random() * postsCreated.length)].id;
+            }
+            let commentsCreated = await Comment.insertMany(comments);
+            console.log(commentsCreated);
             for (const event of events) {
                 event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
             }

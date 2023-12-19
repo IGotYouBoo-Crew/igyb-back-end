@@ -8,6 +8,7 @@ const request = require("supertest");
 const { getRoleIdByName } = require("../src/controllers/functions/RoleFunctions");
 var session = require("supertest-session");
 const { Post } = require("../src/models/PostModel");
+const { Comment } = require("../src/models/CommentModel");
 
 var testSession = session(app);
 var adminAuthSession;
@@ -166,13 +167,60 @@ describe("Signed in as admin PostsController routes work and accept/return data 
     test("DELETE postData returns success message", async () => {
         const responseResult = await adminAuthSession.delete("/posts/" + testPostId + "/" + testPostAuthor);
 
-        expect(responseResult.body.message).toEqual("Post: update new title is successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: update new title has been successfully deleted");
+
     });
     test("DELETE postData returns success message", async () => {
         const testPost = await Post.findOne({title: "first post"}).exec();
         const responseResult = await adminAuthSession.delete("/posts/" + testPost._id + "/" + testPost.author);
 
-        expect(responseResult.body.message).toEqual("Post: first post is successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: first post has been successfully deleted");
+    });
+});
+
+describe("Signed in as admin CommentsController routes work and accept/return data correctly", () => {
+
+    // CREATE
+    test("POST request.body of newCommentData returns newCommentData", async () => {
+        const testPost = await Post.findOne({title: "second post"}).exec();
+        let newCommentData = {
+            desc: "New Comment",
+            parentPostId: testPost._id,
+        };
+        const responseResult = await adminAuthSession.post("/comments").send(newCommentData);
+
+        testCommentId = responseResult.body._id;
+        testCommentAuthor = responseResult.body.author;
+
+        expect(responseResult.body).toHaveProperty("desc", newCommentData.desc);
+        expect(responseResult.body).toHaveProperty("parentPostId");
+        expect(responseResult.body).toHaveProperty("_id", testCommentId);
+
+    });
+
+    //UPDATE
+    test("PATCH request.body of updatedCommentData returns CommentData with updates", async () => {
+        let updatedCommentData = {
+            "desc": "updated comment description admin"
+        };
+        const responseResult = await adminAuthSession
+            .patch("/comments/" + testCommentId + "/" + testCommentAuthor)
+            .send(updatedCommentData);
+
+        expect(responseResult.body).toHaveProperty("desc", "updated comment description admin");
+    });
+
+    // DELETE
+    test("DELETE commentData returns success message", async () => {
+        const responseResult = await adminAuthSession.delete("/comments/" + testCommentId + "/" + testCommentAuthor);
+
+        expect(responseResult.body.message).toEqual(`Comment: ${testCommentId} has been successfully deleted`);
+    });
+    test("DELETE commentData returns success message", async () => {
+        const testComment = await Comment.findOne({desc: "first comment"}).exec();
+        const responseResult = await adminAuthSession.delete("/comments/" + testComment._id + "/" + testComment.author);
+
+        expect(responseResult.body.message).toEqual(`Comment: ${testComment._id} has been successfully deleted`);
     });
 });
 

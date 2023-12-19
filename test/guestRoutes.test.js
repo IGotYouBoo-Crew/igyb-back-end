@@ -8,6 +8,8 @@ const request = require("supertest");
 const { getRoleIdByName } = require("../src/controllers/functions/RoleFunctions");
 var session = require("supertest-session");
 const { Post } = require("../src/models/PostModel");
+const { Comment } = require("../src/models/CommentModel")
+
 
 var testSession = session(app);
 
@@ -141,9 +143,45 @@ describe("PostsController routes work and reject non users", () => {
     });
 
     // DELETE
-    test("DELETE userData returns error 'user not signed in'", async () => {
+    test("DELETE postData returns error 'user not signed in'", async () => {
 
         const responseResult = await request(app).delete("/posts/123456/1234");
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
+    });
+
+});
+
+describe("CommentsController routes work and reject non users", () => {
+    
+    // CREATE
+    test("POST request.body of newCommentData returns error message", async () => {
+        const testPost = await Post.findOne({title: "second post"}).exec();
+        let newCommentData = {
+            desc: "New Comment",
+            parentPostId: testPost._id,
+        };
+        const responseResult = await request(app).post("/comments").send(newCommentData);
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
+    });
+
+    // UPDATE
+    test("PATCH request.body of updatedCommentData returns error message", async () => {
+        let updatedCommentData = {
+            desc: "new desc",
+        };
+        const responseResult = await request(app)
+            .patch("/comments/123456/1234")
+            .send(updatedCommentData);
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
+    });
+
+    // DELETE
+    test("DELETE commentData returns error 'user not signed in'", async () => {
+
+        const responseResult = await request(app).delete("/comments/123456/1234");
 
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });

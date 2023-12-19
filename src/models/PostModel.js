@@ -11,7 +11,7 @@ const PostSchema = new mongoose.Schema(
             required: true
         },
         body: {
-            type: Object, 
+            type: String, 
             required: true
         },
         photo: {
@@ -29,7 +29,7 @@ const PostSchema = new mongoose.Schema(
 PostSchema.virtual('comments', {
     ref: "Comment",
     localField: '_id',
-    foreignField: 'post'
+    foreignField: 'parentPostId'
 });
 
 const Post = mongoose.model("Post", PostSchema);

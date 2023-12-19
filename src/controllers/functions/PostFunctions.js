@@ -1,10 +1,7 @@
 // Require specific models so that we can 
 // create functionality involving them.
 const { Post } = require('../../models/PostModel');
-const { Comment } = require('../../models/CommentModel')
-
-// import external packages
-// const {v4: uuidv4} = require('uuid');
+const { Comment } = require('../../models/CommentModel');
 
 // CREATE 
 
@@ -33,7 +30,6 @@ const updatePost = async (request, response, next) => {
     try {
 
         const post = await Post.findById(request.params.id);
-        console.log(post)
 
         if(!post) {
             const error = new Error("Post was not found");
@@ -72,7 +68,7 @@ const deletePost = async (request, response, next) => {
         await Comment.deleteMany({ post: postToDelete._id });
 
         return response.json({
-            message: `Post: ${postToDelete.title} is successfully deleted`,
+            message: `Post: ${postToDelete.title} has been successfully deleted`,
         })
     } catch (error) {
         next(error);
@@ -90,7 +86,7 @@ const getPost = async (request, response, next) => {
             {
                 path: 'comments',
                 match: {
-                    parent: null,
+                    parentComment: null,
                 },
                 populate: [
                     {

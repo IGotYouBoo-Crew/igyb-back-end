@@ -78,7 +78,6 @@ const onlyAllowAdmin = async (request, response, next) => {
     }
 };
 
-
 module.exports = {
     verifyUserRoleAndId,
     onlyAllowAuthorOrAdmin,

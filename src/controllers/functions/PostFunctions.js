@@ -32,15 +32,16 @@ const createPost = async (request, response, next) => {
 const updatePost = async (request, response, next) => {
     try {
 
-        const post = await Post.findOne({id: request.params._id});
+        const post = await Post.findById(request.params.id);
+        console.log(post)
 
         if(!post) {
             const error = new Error("Post was not found");
             next(error);
             return;
         } else {
-            const handleUpdatePostData = async (data) => {
-                const { title, caption, body, photo } = JSON.parse(data);
+            async function handleUpdatePostData(data) {
+                const { title, caption, body, photo } = data;
                 post.title = title || post.title;
                 post.caption = caption || post.caption;
                 post.body = body || post.body;

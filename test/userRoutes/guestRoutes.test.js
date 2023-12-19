@@ -109,29 +109,23 @@ describe("PostsController routes work and reject non users", () => {
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
 
-    // // READ
-    // test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
-    //     const testPost = await Post.findOne({title: "first post"});
-    //     console.log(testPost)
-    //     const responseResult = await request(app).get("/posts/" + testPost._id);
+    // READ
+    test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
+        const testPost = await Post.findOne({title: "second post"}).exec();
+        const responseResult = await request(app).get("/posts/" + testPost._id);
 
-    //     expect(responseResult.body).toHaveProperty("title", "first post");
-    //     expect(responseResult.body).toHaveProperty("caption", "new post caption");
-    //     expect(responseResult.body).toHaveProperty("body", "post 1 body...");
-    //     expect(responseResult.body).toHaveProperty("photo", "https://images.app.goo.gl/nBRuxwm7mfhvN1Hj6");
-    //     expect(responseResult.body).toHaveProperty("_id", testPost._id);
-    // });
+        expect(responseResult.body).toHaveProperty("title", "second post");
+        expect(responseResult.body).toHaveProperty("caption", "second post caption");
+        expect(responseResult.body).toHaveProperty("body", "post 2 body...");
+        expect(responseResult.body).toHaveProperty("photo", "https://www.dreamstime.com/photos-images/blog.html");
+        expect(responseResult.body).toHaveProperty("_id");
+    });
+    test("GET 'posts' route exists and returns all posts", async () => {
+        const responseResult = await request(app).get("/posts/");
 
-    // // READ
-    // test("GET 'posts' route exists and returns all posts", async () => {
-    //     const responseResult = await request(app).get("/posts/");
-
-    //     expect(responseResult.body).toHaveProperty("title", "new post");
-    //     expect(responseResult.body).toHaveProperty("caption", "new post caption");
-    //     expect(responseResult.body).toHaveProperty("body", "new post body");
-    //     expect(responseResult.body).toHaveProperty("photo", "testimage.com");
-    //     expect(responseResult.body).toHaveProperty("_id", testPostId);
-    // });
+        expect(responseResult.statusCode).toEqual(200);
+        expect(responseResult.body.length > 0).toEqual(true);
+    });
 
     // UPDATE
 

@@ -7,6 +7,7 @@ let bcrypt = require("bcrypt");
 const request = require("supertest");
 const { getRoleIdByName } = require("../../src/controllers/functions/RoleFunctions");
 var session = require("supertest-session");
+const { Post } = require("../../src/models/PostModel");
 
 var testSession = session(app);
 var adminAuthSession;
@@ -142,15 +143,12 @@ describe("Signed in as admin PostsController routes work and accept/return data 
         expect(responseResult.body).toHaveProperty("photo", "testimage.com");
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });
-    // test("GET 'posts' route exists and returns all posts", async () => {
-    //     const responseResult = await request(app).get("/posts/");
+    test("GET 'posts' route exists and returns all posts", async () => {
+        const responseResult = await request(app).get("/posts/");
 
-    //     expect(responseResult.body).toHaveProperty("title", "new post");
-    //     expect(responseResult.body).toHaveProperty("caption", "new post caption");
-    //     expect(responseResult.body).toHaveProperty("body", "new post body");
-    //     expect(responseResult.body).toHaveProperty("photo", "testimage.com");
-    //     expect(responseResult.body).toHaveProperty("_id", testPostId);
-    // });
+        expect(responseResult.statusCode).toEqual(200);
+        expect(responseResult.body.length > 0).toEqual(true);
+    });
 
     //UPDATE
     test("PATCH request.body of updatedPostData returns userData with updates", async () => {
@@ -171,7 +169,8 @@ describe("Signed in as admin PostsController routes work and accept/return data 
         expect(responseResult.body.message).toEqual("Post is successfully deleted");
     });
     test("DELETE postData returns success message", async () => {
-        const responseResult = await adminAuthSession.delete("/posts/123456/1234");
+        const testPost = await Post.findOne({title: "first post"}).exec();
+        const responseResult = await adminAuthSession.delete("/posts/" + testPost._id + "/" + testPost.author);
 
         expect(responseResult.body.message).toEqual("Post is successfully deleted");
     });

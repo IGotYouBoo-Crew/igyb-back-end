@@ -143,17 +143,12 @@ describe("Signed in user PostsController routes work and accept/return data corr
         expect(responseResult.body).toHaveProperty("photo", "testimage.com");
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });
+    test("GET 'posts' route exists and returns all posts", async () => {
+        const responseResult = await request(app).get("/posts/");
 
-    // READ
-    // test("GET 'posts' route exists and returns all posts", async () => {
-    //     const responseResult = await request(app).get("/posts/");
-
-    //     expect(responseResult.body).toHaveProperty("title", "new post");
-    //     expect(responseResult.body).toHaveProperty("caption", "new post caption");
-    //     expect(responseResult.body).toHaveProperty("body", "new post body");
-    //     expect(responseResult.body).toHaveProperty("photo", "testimage.com");
-    //     expect(responseResult.body).toHaveProperty("_id", testPostId);
-    // });
+        expect(responseResult.statusCode).toEqual(200);
+        expect(responseResult.body.length > 0).toEqual(true);
+    });
 
     // UPDATE
     test("PATCH request.body of updatedPostData returns userData with updates", async () => {

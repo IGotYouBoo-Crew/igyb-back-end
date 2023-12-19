@@ -40,13 +40,14 @@ const users = [
     },
 ];
 
-let hashedPassword = async(adminPassword) => {
-    return await hashString(adminPassword)
+let hashedPassword = async() => {
+    return await hashString("adminPassword")
 }
+
 const adminUser = {
     email: "admin@email.com",
     username: "Admin1",
-    password: hashedPassword("adminPassword"),
+    password: hashedPassword,
     pronouns: "ad/min",
     role: null,
 }

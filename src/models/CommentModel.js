@@ -11,12 +11,12 @@ const CommentSchema = new mongoose.Schema(
             type: String, 
             required: true
         },
-        post: {
+        parentPostId: {
             type: mongoose.Types.ObjectId, 
             ref: 'Post', 
             required: true
         },
-        parent: {
+        parentComment: {
             type: mongoose.Types.ObjectId, 
             ref: 'Comment', 
             default: null
@@ -33,7 +33,7 @@ const CommentSchema = new mongoose.Schema(
 CommentSchema.virtual('replies', {
     ref: "Comment",
     localField: '_id',
-    foreignField: 'parent'
+    foreignField: 'parentComment'
 });
 
 const Comment = mongoose.model("Comment", CommentSchema);

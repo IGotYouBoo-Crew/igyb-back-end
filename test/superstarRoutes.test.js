@@ -7,6 +7,8 @@ let bcrypt = require("bcrypt");
 const request = require("supertest");
 const { getRoleIdByName } = require("../src/controllers/functions/RoleFunctions");
 var session = require("supertest-session");
+const { Post } = require("../src/models/PostModel");
+const { Comment } = require("../src/models/CommentModel");
 
 var testSession = session(app);
 var authenticatedSession;
@@ -151,7 +153,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
     });
 
     // UPDATE
-    test("PATCH request.body of updatedPostData returns userData with updates", async () => {
+    test("PATCH request.body of updatedPostData returns postData with updates", async () => {
         let updatedPostData = {
             "title": "update new title"
         };
@@ -161,7 +163,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
 
         expect(responseResult.body).toHaveProperty("title", "update new title");
     });
-    test("PATCH request.body of updatedPostData returns userData with updates", async () => {
+    test("PATCH request.body of updatedPostData returns postData with updates", async () => {
         let updatedPostData = {
             "title": "update new title"
         };
@@ -180,10 +182,66 @@ describe("Signed in user PostsController routes work and accept/return data corr
 
         expect(responseResult.body.message).toEqual("Post: update new title has been successfully deleted");
     });
-
-    // DELETE
     test("DELETE postData returns message with username", async () => {
         const responseResult = await authenticatedSession.delete("/posts/123456/1234");
+
+        expect(responseResult.body.errors).toEqual(
+            "Error: You are not authorised to access this route"
+        );
+    });
+});
+
+describe("Signed in as superstar CommentsController routes work and accept/return data correctly", () => {
+
+    // CREATE
+    test("POST request.body of newCommentData returns newCommentData", async () => {
+        const testPost = await Post.findOne({title: "second post"}).exec();
+        let newCommentData = {
+            desc: "New Comment",
+            parentPostId: testPost._id,
+        };
+        const responseResult = await authenticatedSession.post("/comments").send(newCommentData);
+
+        testCommentId = responseResult.body._id;
+        testCommentAuthor = responseResult.body.author;
+
+        expect(responseResult.body).toHaveProperty("desc", newCommentData.desc);
+        expect(responseResult.body).toHaveProperty("parentPostId");
+        expect(responseResult.body).toHaveProperty("_id", testCommentId);
+
+    });
+
+    //UPDATE
+    test("PATCH request.body of updatedCommentData returns commentData with updates", async () => {
+        let updatedCommentData = {
+            "desc": "updated comment description admin"
+        };
+        const responseResult = await authenticatedSession
+            .patch("/comments/" + testCommentId + "/" + testCommentAuthor)
+            .send(updatedCommentData);
+
+        expect(responseResult.body).toHaveProperty("desc", "updated comment description admin");
+    });
+    test("PATCH request.body of updatedCommentData returns commentData with updates", async () => {
+        let updatedCommentData = {
+            "desc": "updated comment description admin"
+        };
+        const responseResult = await authenticatedSession
+            .patch("/comments/" + "/12345" + "/123")
+            .send(updatedCommentData);
+
+            expect(responseResult.body.errors).toEqual("Error: You are not authorised to access this route")
+    });
+
+    // DELETE
+    test("DELETE commentData returns success message", async () => {
+        const responseResult = await authenticatedSession.delete("/comments/" + testCommentId + "/" + testCommentAuthor);
+
+        expect(responseResult.body.message).toEqual(`Comment: ${testCommentId} has been successfully deleted`);
+    });
+    test("DELETE commentData returns success message", async () => {
+        const testComment = await Comment.findOne({desc: "first comment"}).exec();
+        const responseResult = await authenticatedSession.delete("/comments/" + testComment._id + "/" + testComment.author);
 
         expect(responseResult.body.errors).toEqual(
             "Error: You are not authorised to access this route"

@@ -7,11 +7,11 @@ const { Comment } = require("../../models/CommentModel")
 
 const createComment = async (request, response, next) => {
     try {
-        const {desc, id, parent, replyOnUser} = request.body
+        const {desc, parentPostId, parentComment, replyOnUser} = request.body
         
-        const post = await Post.findOne({id: id});
+        const findPost = await Post.findById(parentPostId);
 
-        if(!post) {
+        if(!findPost) {
             const error = new Error("Post was not found");
             return next(error);
         }
@@ -19,8 +19,8 @@ const createComment = async (request, response, next) => {
         const newComment = new Comment({
             author: request.headers.userId,
             desc,
-            post: post.id,
-            parent,
+            parentPostId: parentPostId,
+            parentComment,
             replyOnUser,
         });
 
@@ -78,57 +78,6 @@ const deleteComment = async (request, response, next) => {
         next(error);
     }
 }
-
-// READ
-const getComment = async (request, response, next) => {
-    try {
-        const comment = await Post.findById(request.params.id).populate([
-            {
-                path: 'author',
-                select: ["username"],
-            },
-            {
-                path: 'comments',
-                match: {
-                    parent: null,
-                },
-                populate: [
-                    {
-                        path: 'author',
-                        select: ['username']
-                    },
-                    {
-                        path: 'replies'
-                    }
-                ]            
-            }
-        ]);
-
-        if(!post) {
-            const error = new Error("Post was not found");
-            return next(error);
-        }
-
-        return response.json(post);
-    } catch (error) {
-        next(error);
-    }
-}
-
-// const getAllPosts = async (request, response, next) => {
-//     try {
-//         const posts = await Post.find({}).populate([
-//             {
-//                 path: "author",
-//                 select: ["username"]
-//             }
-//         ]);
-
-//         response.json(posts);
-//     } catch (error) {
-//         next(error);
-//     }
-// }
 
 // Export the functions for our routes to use.
 module.exports = {

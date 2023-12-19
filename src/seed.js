@@ -51,14 +51,12 @@ const posts = [
     {
         title: "first post",
         caption: "fist post caption",
-        body: "post 1 body...",
         photo: "https://images.app.goo.gl/nBRuxwm7mfhvN1Hj6",
         author: null,
     },
     {
         title: "second post",
         caption: "second post caption",
-        body: "post 2 body...",
         photo: "https://www.dreamstime.com/photos-images/blog.html",
         author: null,
     },
@@ -80,7 +78,7 @@ const comments = [
 const events = [
     {
         host: "Captain Naomi",
-        image: "https://pbs.twimg.com/profile_images/1056752759402307584/vFjSXrWY_400x400.jpg",
+        image: "https://img.freepik.com/premium-vector/potato-head-cartoon-pilot-mascot-cartoon-vector_193274-39483.jpg?w=2000",
         title: "first event",
         date: "25th December 2023",
         start: "12:00",
@@ -90,10 +88,12 @@ const events = [
     },
     {
         host: "Queen Ella",
+        image: "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg",
         title: "second event",
         date: "1st Jan 2024",
         start: "08:00",
         finish: "20:00",
+        ticketLink: "https://premier.ticketek.com.au/",
         content: "this is the second fake event",
         author: null,
     },
@@ -146,7 +146,8 @@ function seedDb() {
             for (const event of events) {
                 event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
             }
-            await Event.insertMany(events);
+            let eventsCreated = await Event.insertMany(events);
+            console.log(eventsCreated);
             console.log("New DB data created");
         })
         .then(() => {

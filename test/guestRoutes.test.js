@@ -104,7 +104,7 @@ describe("PostsController routes work and reject non users", () => {
     test("POST request.body of newPostData returns error message", async () => {
         let newPostData = {
             title: "NewPost",
-            content: "Oh boy, I loooove content",
+            caption: "Oh boy, I loooove content",
         };
         const responseResult = await request(app).post("/posts").send(newPostData);
 
@@ -118,7 +118,6 @@ describe("PostsController routes work and reject non users", () => {
 
         expect(responseResult.body).toHaveProperty("title", "second post");
         expect(responseResult.body).toHaveProperty("caption", "second post caption");
-        expect(responseResult.body).toHaveProperty("body", "post 2 body...");
         expect(responseResult.body).toHaveProperty("photo", "https://www.dreamstime.com/photos-images/blog.html");
         expect(responseResult.body).toHaveProperty("_id");
     });
@@ -133,7 +132,7 @@ describe("PostsController routes work and reject non users", () => {
 
     test("PATCH request.body of updatedPostData returns error message", async () => {
         let updatedPostData = {
-            content: "update: I hate content",
+            caption: "update: I hate content",
         };
         const responseResult = await request(app)
             .patch("/posts/123456/1234")
@@ -182,6 +181,74 @@ describe("CommentsController routes work and reject non users", () => {
     test("DELETE commentData returns error 'user not signed in'", async () => {
 
         const responseResult = await request(app).delete("/comments/123456/1234");
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
+    });
+
+});
+
+
+
+// Tests for events, with guests who are not logged in:
+
+describe("EventsController routes work and reject non users", () => {
+    
+    // CREATE
+    test("POST request.body of newEventData returns error message", async () => {
+        let newEventData = {
+            host: "Boiled Potato",
+            image: "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg",
+            title: "Guest Potato Test Event",
+            date: "26th December 2023",
+            start: "12:00",
+            finish: "15:00",
+            content: "I'm trying to create a test event but I'm a potato"
+        };
+        const responseResult = await request(app).post("/events/").send(newEventData);
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
+    });
+
+
+    // READ
+    test("GET 'events' route exists and returns all events", async () => {
+        const responseResult = await request(app).get("/events/");
+
+        expect(responseResult.statusCode).toEqual(200);
+        expect(responseResult.body.length > 0).toEqual(true);
+    });
+    test("GET 'events/testEventId' route exists and returns testEventId's data", async () => {
+        const testEvent = await Event.findOne({title: "second event"}).exec();
+        const responseResult = await request(app).get("/events/" + testEvent._id);
+
+        expect(responseResult.body).toHaveProperty("host", "Queen Ella");
+        expect(responseResult.body).toHaveProperty("image", "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg");
+        expect(responseResult.body).toHaveProperty("title", "second event");
+        expect(responseResult.body).toHaveProperty("date", "1st Jan 2024");
+        expect(responseResult.body).toHaveProperty("start", "08:00");
+        expect(responseResult.body).toHaveProperty("finish", "20:00");
+        expect(responseResult.body).toHaveProperty("ticketLink", "https://premier.ticketek.com.au/");
+        expect(responseResult.body).toHaveProperty("content", "this is the second fake event");
+        expect(responseResult.body).toHaveProperty("_id");
+    });
+
+
+    // UPDATE
+    test("PATCH request.body of updatedEventData returns error message", async () => {
+        let updatedEventData = {
+            content: "update: I'm still a potato'",
+        };
+        const responseResult = await request(app)
+            .patch("/events/123456/potato")
+            .send(updatedEventData);
+
+        expect(responseResult.body.errors).toEqual("Error: User not signed in");
+    });
+
+    // DELETE
+    test("DELETE eventData returns error 'user not signed in'", async () => {
+
+        const responseResult = await request(app).delete("/events/123456/potato");
 
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });

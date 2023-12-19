@@ -38,18 +38,18 @@ describe("server root route exists and returns status hello world", () => {
 
 // describe("EventsController routes work and accept/return data correctly", () => {
 //     // CREATE
-//     test("POST request.body of newEventData returns newEventData", async () => {
-//         let newEventData = {
-//             "host": "Coder Academy",
-//             "image": "https://pbs.twimg.com/profile_images/1056752759402307584/vFjSXrWY_400x400.jpg",
-//             "title": "New Test Event",
-//             "date": "25th December 2023",
-//             "start": "12:00",
-//             "finish": "15:00",
-//             "content": "Captain Holt approves",
-//         };
-//         const responseResult = await request(app).post("/events/newEvent").send(newEventData);
-//         testEventId = responseResult.body._id;
+    // test("POST request.body of newEventData returns newEventData", async () => {
+    //     let newEventData = {
+    //         "host": "Coder Academy",
+    //         "image": "https://pbs.twimg.com/profile_images/1056752759402307584/vFjSXrWY_400x400.jpg",
+    //         "title": "New Test Event",
+    //         "date": "25th December 2023",
+    //         "start": "12:00",
+    //         "finish": "15:00",
+    //         "content": "Captain Holt approves",
+    //     };
+    //     const responseResult = await request(app).post("/events").send(newEventData);
+    //     testEventId = responseResult.body._id;
 
 //         expect(responseResult.body).toHaveProperty("host", newEventData.host);
 //         expect(responseResult.body).toHaveProperty("image", newEventData.image);

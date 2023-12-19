@@ -120,8 +120,7 @@ function seedDb() {
             for (const post of posts) {
                 post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
             }
-            let postsCreated = await Post.insertMany(posts);
-            console.log(postsCreated);
+            await Post.insertMany(posts);
             for (const event of events) {
                 event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
             }

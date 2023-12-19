@@ -1,19 +1,20 @@
 // Test the routes from server.js
 const { default: mongoose } = require("mongoose");
-const { databaseConnect } = require("../../src/database");
-const { app } = require("../../src/server");
+const { databaseConnect } = require("../src/database");
+const { app } = require("../src/server");
 let bcrypt = require("bcrypt");
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
-const { getRoleIdByName } = require("../../src/controllers/functions/RoleFunctions");
+const { getRoleIdByName } = require("../src/controllers/functions/RoleFunctions");
 var session = require("supertest-session");
+const { Post } = require("../src/models/PostModel");
 
 var testSession = session(app);
-var authenticatedSession;
+var adminAuthSession;
 
 let loginDetails = {
-    username: "User4",
-    password: "fakepassword",
+    password: "fakeadminpassword",
+    username: "Admin2",
 };
 
 beforeEach(async () => {
@@ -22,8 +23,8 @@ beforeEach(async () => {
     });
     // This (attempts to) sign-in as User4 before each test is run
     await testSession.post("/account/signIn").send(loginDetails);
-    // If the test uses authenticatedSession, then it will use the signed-in session (with cookie)
-    authenticatedSession = testSession;
+    // If the test uses adminAuthSession, then it will use the signed-in session (with cookie)
+    adminAuthSession = testSession;
 });
 
 afterEach(() => {
@@ -34,10 +35,38 @@ afterAll(() => {
     mongoose.disconnect();
 });
 
-describe("Signed in UserController routes work and accept/return data correctly", () => {
+describe("Signed in as admin UserController routes work and accept/return data correctly", () => {
     // CREATE
-    // This test uses request(app) and not authenticatedSession because is used to create the user that we sign in as
-    // the authenticatedSession at this point is actually a 404 lol
+    // This test uses request(app) and not adminAuthSession because is used to create the user that we sign in as
+    // the adminAuthSession at this point is actually a 404 lol
+    test("POST request.body of newAdminData returns newAdminData and JWT", async () => {
+        let adminRoleID = await getRoleIdByName("Admin");
+        let newAdminData = {
+            email: "postedAdmin@email.com",
+            password: "fakeadminpassword",
+            username: "Admin2",
+            pronouns: "ad/min",
+            role: adminRoleID,
+        };
+
+        const responseResult = await request(app).post("/account/newUser").send(newAdminData);
+        const responseData = responseResult.body.data;
+        let compareEncryptedPassword = bcrypt.compareSync(
+            newAdminData.password,
+            responseData.password
+        );
+        adminUserId = responseData._id.toString();
+
+        // checks everything is in order
+        expect(compareEncryptedPassword).toEqual(true);
+        expect(responseData).toHaveProperty("email", newAdminData.email);
+        expect(responseData).toHaveProperty("role", adminRoleID);
+        expect(responseData).toHaveProperty("username", newAdminData.username);
+        expect(responseData).toHaveProperty("pronouns", newAdminData.pronouns);
+        expect(responseData).toHaveProperty("_id");
+    });
+
+    // This test creates a new User that we can then perform tests on.
     test("POST request.body of newUserData returns newUserData and JWT", async () => {
         let newUserData = {
             email: "postedUser@email.com",
@@ -64,55 +93,26 @@ describe("Signed in UserController routes work and accept/return data correctly"
         expect(responseData).toHaveProperty("_id", testUserId);
     });
 
-    // this test is run to get the userOneId --> used to test updating another user's account
-    test("'account/user1' route exists and returns user1's data", async () => {
-        const responseResult = await request(app).get("/account/user1");
-        expect(responseResult.body.data).toHaveProperty("username", "user1");
-        expect(responseResult.body.data).toHaveProperty("_id");
-        // global variable used later
-        userOneId = responseResult.body.data._id;
+    // READ
+    test("Admin GET '/' route passes", async () => {
+        let responseData = await adminAuthSession.get("/account/");
+        expect(responseData.status).toEqual(200)
     });
 
     // UPDATE
-    test("PATCH request.body of updatedUserData fails if user is not OP or Admin", async () => {
+    test("Admin PATCH request of another user returns updated userData", async () => {
         let updatedUserData = {
             pronouns: "she/her",
         };
-        // authenticatedSession used to test signed-in attempt
-        // Here, we expect it to fail again, but for different reasons
-        let testResponse = await authenticatedSession
-            .patch("/account/" + userOneId)
-            .send(updatedUserData);
-        expect(testResponse.body).toHaveProperty(
-            "errors",
-            "Error: You are not authorised to access this route"
-        );
-    });
-
-    test("PATCH request.body of updatedUserData returns userData with updates if OP", async () => {
-        let updatedUserData = {
-            pronouns: "she/her",
-        };
-        const responseResult = await authenticatedSession
+        const responseResult = await adminAuthSession
             .patch("/account/" + testUserId)
             .send(updatedUserData);
         expect(responseResult.body.message).toHaveProperty("pronouns", "she/her");
     });
-
-    test("signout route signs out user", async () => {
-        const checkProtectedRoute = await authenticatedSession.post(
-            "/account/someOtherProtectedRoute"
-        );
-        expect(checkProtectedRoute.statusCode).toEqual(200);
-        await authenticatedSession.post("/account/signOut");
-        const failProtectedRoute = await authenticatedSession.post(
-            "/account/someOtherProtectedRoute"
-        );
-        expect(failProtectedRoute.statusCode).toEqual(401);
-    });
 });
 
-describe("Signed in user PostsController routes work and accept/return data correctly", () => {
+describe("Signed in as admin PostsController routes work and accept/return data correctly", () => {
+
     // CREATE
     test("POST request.body of newPostData returns newPostData", async () => {
         let newPostData = {
@@ -121,7 +121,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
             "body": "new post body",
             "photo": "testimage.com"
         };
-        const responseResult = await authenticatedSession.post("/posts").send(newPostData);
+        const responseResult = await adminAuthSession.post("/posts").send(newPostData);
 
         testPostId = responseResult.body._id;
         testPostAuthor = responseResult.body.author;
@@ -132,7 +132,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
         expect(responseResult.body).toHaveProperty("photo", newPostData.photo)
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });
-    
+
     // READ
     test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
         const responseResult = await request(app).get("/posts/" + testPostId);
@@ -150,52 +150,43 @@ describe("Signed in user PostsController routes work and accept/return data corr
         expect(responseResult.body.length > 0).toEqual(true);
     });
 
-    // UPDATE
+    //UPDATE
     test("PATCH request.body of updatedPostData returns userData with updates", async () => {
         let updatedPostData = {
             "title": "update new title"
         };
-        const responseResult = await authenticatedSession
+        const responseResult = await adminAuthSession
             .patch("/posts/" + testPostId + "/" + testPostAuthor)
             .send(updatedPostData);
 
         expect(responseResult.body).toHaveProperty("title", "update new title");
     });
-    test("PATCH request.body of updatedPostData returns userData with updates", async () => {
-        let updatedPostData = {
-            "title": "update new title"
-        };
-        const responseResult = await authenticatedSession
-            .patch("/posts/" + "/12345" + "/123")
-            .send(updatedPostData);
-
-            expect(responseResult.body.errors).toEqual("Error: You are not authorised to access this route")
-    });
 
     // DELETE
-    test("DELETE postData returns message with username", async () => {
-        const responseResult = await authenticatedSession.delete(
-            "/posts/" + testPostId + "/" + testPostAuthor
-        );
+    test("DELETE postData returns success message", async () => {
+        const responseResult = await adminAuthSession.delete("/posts/" + testPostId + "/" + testPostAuthor);
 
         expect(responseResult.body.message).toEqual("Post: update new title is successfully deleted");
     });
+    test("DELETE postData returns success message", async () => {
+        const testPost = await Post.findOne({title: "first post"}).exec();
+        const responseResult = await adminAuthSession.delete("/posts/" + testPost._id + "/" + testPost.author);
 
-    // DELETE
-    test("DELETE postData returns message with username", async () => {
-        const responseResult = await authenticatedSession.delete("/posts/123456/1234");
-
-        expect(responseResult.body.errors).toEqual(
-            "Error: You are not authorised to access this route"
-        );
+        expect(responseResult.body.message).toEqual("Post: first post is successfully deleted");
     });
 });
 
-// THIS TEST MUST GO LAST --> authenticatedSession is reliant on this account
-describe("User can delete account", () => {
+// THESE TESTS MUST GO LAST --> adminAuthSession relies on these accounts
+describe("Admin delete routes work for other users, and for self", () => {
     // DELETE
-    test("DELETE route works for self-deletion", async () => {
-        const responseResult = await authenticatedSession.delete("/account/");
+
+    test("Admin DELETE userData returns message with username", async () => {
+        const responseResult = await adminAuthSession.delete("/account/" + testUserId);
         expect(responseResult.body.message).toEqual("deleting user: User4");
     });
+    test("DELETE admin userData returns message with username", async () => {
+        const responseResult = await adminAuthSession.delete("/account/");
+        expect(responseResult.body.message).toEqual("deleting user: Admin2");
+    });
+
 });

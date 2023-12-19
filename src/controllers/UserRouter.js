@@ -35,7 +35,10 @@ router.get("/", verifyUserRoleAndId, onlyAllowAdmin, async (request, response) =
 
 // shows a user's data which matches a specified username
 router.get("/:username", async (request, response) => {
-    responseData = await getUserByUsername(request.params.username);
+    let user = await getUserByUsername(request.params.username);
+    let responseData = {...user._doc}
+    delete responseData.password;
+    delete responseData.__v;
 
     response.json({
         data: responseData,

@@ -110,7 +110,8 @@ describe("Signed in as admin UserController routes work and accept/return data c
     });
 });
 
-describe("PostsController routes work and accept/return data correctly", () => {
+describe("Signed in as admin PostsController routes work and accept/return data correctly", () => {
+
     // CREATE
     test("POST request.body of newPostData returns newPostData", async () => {
         let newPostData = {
@@ -130,38 +131,46 @@ describe("PostsController routes work and accept/return data correctly", () => {
         expect(responseResult.body).toHaveProperty("photo", newPostData.photo)
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });
-    // // READ
-    // test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
-    //     const responseResult = await request(app).get("/posts/" + testPostId);
 
-    //     expect(responseResult.body.data).toHaveProperty("title", "NewPost");
-    //     expect(responseResult.body.data).toHaveProperty("content", "Oh boy, I loooove content");
-    //     expect(responseResult.body.data).toHaveProperty("_id", testPostId);
+    // READ
+    test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
+        const responseResult = await request(app).get("/posts/" + testPostId);
+
+        expect(responseResult.body).toHaveProperty("title", "new post");
+        expect(responseResult.body).toHaveProperty("caption", "new post caption");
+        expect(responseResult.body).toHaveProperty("body", "new post body");
+        expect(responseResult.body).toHaveProperty("photo", "testimage.com");
+        expect(responseResult.body).toHaveProperty("_id", testPostId);
+    });
+    // test("GET 'posts' route exists and returns all posts", async () => {
+    //     const responseResult = await request(app).get("/posts/");
+
+    //     expect(responseResult.body).toHaveProperty("title", "new post");
+    //     expect(responseResult.body).toHaveProperty("caption", "new post caption");
+    //     expect(responseResult.body).toHaveProperty("body", "new post body");
+    //     expect(responseResult.body).toHaveProperty("photo", "testimage.com");
+    //     expect(responseResult.body).toHaveProperty("_id", testPostId);
     // });
 
-    // UPDATE
-    // test("PUT request.body of updatedPostData returns userData with updates", async () => {
-    //     let updatedPostData = {
-    //         "title": "update new title"
-    //     };
-    //     const responseResult = await adminAuthSession
-    //         .put("/posts/" + testPostSlug + "/" + testPostAuthor)
-    //         .send(updatedPostData);
+    //UPDATE
+    test("PATCH request.body of updatedPostData returns userData with updates", async () => {
+        let updatedPostData = {
+            "title": "update new title"
+        };
+        const responseResult = await adminAuthSession
+            .patch("/posts/" + testPostId + "/" + testPostAuthor)
+            .send(updatedPostData);
 
-    //     expect(responseResult.body).toHaveProperty("title", "update new title");
-    // });
-
-    // DELETE
-    test("DELETE postData returns message with username", async () => {
-        const responseResult = await adminAuthSession.delete(
-            "/posts/" + testPostSlug + "/" + testPostAuthor
-        );
-
-        expect(responseResult.body.message).toEqual("Post is successfully deleted");
+        expect(responseResult.body).toHaveProperty("title", "update new title");
     });
 
     // DELETE
-    test("DELETE postData returns message with username", async () => {
+    test("DELETE postData returns success message", async () => {
+        const responseResult = await adminAuthSession.delete("/posts/" + testPostId + "/" + testPostAuthor);
+
+        expect(responseResult.body.message).toEqual("Post is successfully deleted");
+    });
+    test("DELETE postData returns success message", async () => {
         const responseResult = await adminAuthSession.delete("/posts/123456/1234");
 
         expect(responseResult.body.message).toEqual("Post is successfully deleted");
@@ -171,6 +180,7 @@ describe("PostsController routes work and accept/return data correctly", () => {
 // THESE TESTS MUST GO LAST --> adminAuthSession relies on these accounts
 describe("Admin delete routes work for other users, and for self", () => {
     // DELETE
+
     test("Admin DELETE userData returns message with username", async () => {
         const responseResult = await adminAuthSession.delete("/account/" + testUserId);
         expect(responseResult.body.message).toEqual("deleting user: User4");
@@ -179,4 +189,5 @@ describe("Admin delete routes work for other users, and for self", () => {
         const responseResult = await adminAuthSession.delete("/account/");
         expect(responseResult.body.message).toEqual("deleting user: Admin2");
     });
+
 });

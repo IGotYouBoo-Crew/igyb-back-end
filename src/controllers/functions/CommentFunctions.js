@@ -15,7 +15,7 @@ const createComment = async (request, response, next) => {
         const newComment = new Comment({
             author: request.headers.userId,
             desc,
-            post: post._id,
+            post: post.id,
             parent,
             replyOnUser,
         });

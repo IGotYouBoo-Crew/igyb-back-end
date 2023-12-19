@@ -82,7 +82,7 @@ const deletePost = async (request, response, next) => {
 // READ
 const getPost = async (request, response, next) => {
     try {
-        const post = await Post.findOne({id: request.params._id}).populate([
+        const post = await Post.findById(request.params.id).populate([
             {
                 path: 'author',
                 select: ["username"],

@@ -90,8 +90,6 @@ const updateEventById = async (request, response, next) => {
     
             handleUpdateEventData(request.body);
         }
-
-        
     } catch (error) {
         next(error);
     }

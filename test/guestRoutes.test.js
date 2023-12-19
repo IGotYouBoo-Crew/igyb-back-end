@@ -120,7 +120,7 @@ describe("PostsController routes work and reject non users", () => {
         expect(responseResult.body).toHaveProperty("title", "second post");
         expect(responseResult.body).toHaveProperty("caption", "second post caption");
         expect(responseResult.body).toHaveProperty("body", "post 2 body...");
-        expect(responseResult.body).toHaveProperty("photo", "https://www.dreamstime.com/photos-images/blog.html");
+        expect(responseResult.body).toHaveProperty("photo", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU");
         expect(responseResult.body).toHaveProperty("_id");
     });
     test("GET 'posts' route exists and returns all posts", async () => {

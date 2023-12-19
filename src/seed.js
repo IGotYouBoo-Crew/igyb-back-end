@@ -52,14 +52,14 @@ const posts = [
         title: "first post",
         caption: "fist post caption",
         body: "post 1 body...",
-        photo: "https://images.app.goo.gl/nBRuxwm7mfhvN1Hj6",
+        photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU",
         author: null,
     },
     {
         title: "second post",
         caption: "second post caption",
         body: "post 2 body...",
-        photo: "https://www.dreamstime.com/photos-images/blog.html",
+        photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU",
         author: null,
     },
 ];

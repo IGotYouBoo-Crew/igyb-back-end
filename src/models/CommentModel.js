@@ -26,6 +26,11 @@ const CommentSchema = new mongoose.Schema(
             ref: 'User', 
             default: null,
         },
+        date: {
+            type: Date,
+            required: true,
+            default: Date.now()
+        },
     },
     { timestamps: true, toJSON: { virtuals:true } }
 );

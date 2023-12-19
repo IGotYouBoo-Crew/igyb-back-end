@@ -22,6 +22,7 @@ const createComment = async (request, response, next) => {
             parentPostId: parentPostId,
             parentComment,
             replyOnUser,
+            date: Date.now(),
         });
 
         const savedComment = await newComment.save();

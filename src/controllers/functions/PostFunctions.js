@@ -62,7 +62,9 @@ const updatePost = async (request, response, next) => {
 // DELETE
 const deletePost = async (request, response, next) => {
     try {
-        const post = await Post.findOneAndDelete({ id: request.params._id });
+        const post = await Post.findOneAndDelete({ _id: request.params.id });
+        console.log("Deleting Post...")
+        console.log(post)
 
         if(!post) {
             const error = new Error("Post was not found");

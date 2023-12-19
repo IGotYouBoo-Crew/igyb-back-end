@@ -219,6 +219,7 @@ describe("EventsController routes work and reject non users", () => {
         expect(responseResult.statusCode).toEqual(200);
         expect(responseResult.body.length > 0).toEqual(true);
     });
+    
     test("GET 'events/seededEventId' route exists and returns seededEventId's data", async () => {
         const seededEvent = await Event.findOne({title: "second seeded event"}).exec();
         const responseResult = await request(app).get("/events/" + seededEvent._id);
@@ -238,7 +239,7 @@ describe("EventsController routes work and reject non users", () => {
     // UPDATE
     test("PATCH request.body of updatedEventData returns error message", async () => {
         let updatedEventData = {
-            content: "update: I'm still a potato'",
+            content: "false update - because I'm still a potato",
         };
         const responseResult = await request(app)
             .patch("/events/123456/potato")

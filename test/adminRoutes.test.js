@@ -265,6 +265,7 @@ describe("Signed in as admin EventsController routes work and accept/return data
         expect(responseResult.statusCode).toEqual(200);
         expect(responseResult.body.length > 0).toEqual(true);
     });
+    
     test("GET 'events/testEventId' route exists and returns testEventId's data", async () => {
         const responseResult = await request(app).get("/events/" + testEventId);
 
@@ -297,6 +298,7 @@ describe("Signed in as admin EventsController routes work and accept/return data
 
         expect(responseResult.body.message).toEqual("event: update new title is successfully deleted");
     });
+
     test("DELETE eventData returns success message (from seeded event)", async () => {
         const seededEvent = await Event.findOne({title: "first seeded event"}).exec();
         const responseResult = await adminAuthSession.delete("/event/" + seededEvent._id + "/" + seededEvent.author);

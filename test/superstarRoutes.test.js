@@ -164,8 +164,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
 
         expect(responseResult.body).toHaveProperty("title", "update new title");
     });
-    test("PATCH request.body of updatedPostData returns postData with updates", async () => {
-
+    test("PATCH request.body of updatedPostData returns error message as user is unauthorised", async () => {
         let updatedPostData = {
             "title": "update new title"
         };
@@ -184,7 +183,9 @@ describe("Signed in user PostsController routes work and accept/return data corr
 
         expect(responseResult.body.message).toEqual("Post: update new title has been successfully deleted");
     });
-    test("DELETE postData returns message with username", async () => {
+
+    // DELETE
+    test("DELETE postData returns error message as user is unauthorised", async () => {
         const responseResult = await authenticatedSession.delete("/posts/123456/1234");
 
         expect(responseResult.body.errors).toEqual(
@@ -250,6 +251,103 @@ describe("Signed in as superstar CommentsController routes work and accept/retur
         );
     });
 });
+
+
+// Tests for EVENTS, for logged in Superstar users:
+
+describe("Signed in as admin EventsController routes work and accept/return data correctly", () => {
+    
+    // CREATE
+    test("POST request.body of newEventData returns newEventData", async () => {
+        let newEventData = {
+            host: "Boiled Potato",
+            image: "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg",
+            title: "Hot Potato Test Event",
+            date: "26th December 2023",
+            start: "12:00",
+            finish: "15:00",
+            ticketLink: "https://thewiggles.com/live",
+            content: "I'm trying to create a test event and I'm a potato"
+        };
+        const responseResult = await adminAuthSession.post("/events/").send(newEventData);
+
+        testEventId = responseResult.body._id;
+        testEventAuthor = responseResult.body.author;
+
+        expect(responseResult.body).toHaveProperty("host", newEventData.host);
+        expect(responseResult.body).toHaveProperty("image", newEventData.image)
+        expect(responseResult.body).toHaveProperty("title", newEventData.title);
+        expect(responseResult.body).toHaveProperty("date", newEventData.date);
+        expect(responseResult.body).toHaveProperty("start", newEventData.start);
+        expect(responseResult.body).toHaveProperty("finish", newEventData.finish);
+        expect(responseResult.body).toHaveProperty("ticketLink", newEventData.ticketLink);
+        expect(responseResult.body).toHaveProperty("content", newEventData.content);
+        expect(responseResult.body).toHaveProperty("_id", testEventId);
+    });
+    
+    // READ
+    test("GET 'events' route exists and returns all events", async () => {
+        const responseResult = await request(app).get("/events/");
+
+        expect(responseResult.statusCode).toEqual(200);
+        expect(responseResult.body.length > 0).toEqual(true);
+    });
+    test("GET 'events/testEventId' route exists and returns testEventId's data", async () => {
+        const responseResult = await request(app).get("/events/" + testEventId);
+
+        expect(responseResult.body).toHaveProperty("host", "Boiled Potato");
+        expect(responseResult.body).toHaveProperty("image", "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg");
+        expect(responseResult.body).toHaveProperty("title", "Hot Potato Test Event");
+        expect(responseResult.body).toHaveProperty("date", "26th December 2023");
+        expect(responseResult.body).toHaveProperty("start", "12:00");
+        expect(responseResult.body).toHaveProperty("finish", "15:00");
+        expect(responseResult.body).toHaveProperty("ticketLink", "https://thewiggles.com/live");
+        expect(responseResult.body).toHaveProperty("content", "I'm trying to create a test event and I'm a potato");
+        expect(responseResult.body).toHaveProperty("_id", testEventId);
+    });
+
+    // UPDATE
+    test("PATCH request.body of updatedEventData returns eventData with updates", async () => {
+        let updatedEventData = {
+            "host": "Dauphinoise Potato"
+        };
+        const responseResult = await authenticatedSession
+            .patch("/events/" + testEventId + "/" + testEventAuthor)
+            .send(updatedEventData);
+
+        expect(responseResult.body).toHaveProperty("host", "Dauphinoise Potato");
+    });
+
+    test("PATCH request.body of updatedEventData returns userData with updates", async () => {
+        let updatedEventData = {
+            "host": "Scalloped Potato"
+        };
+        const responseResult = await authenticatedSession
+            .patch("/events/" + "12345/" + "CaptainNaomi")
+            .send(updatedEventData);
+
+            expect(responseResult.body.errors).toEqual("Error: You are not authorised to access this route")
+    });
+
+    // DELETE event created by this Superstar
+    test("DELETE eventData returns message with username", async () => {
+        const responseResult = await authenticatedSession.delete(
+            "/events/" + testEventId + "/" + testEventAuthor
+        );
+
+        expect(responseResult.body.message).toEqual("Event: Hot Potato Test Event is successfully deleted");
+    });
+
+    // DELETE event created by someone else
+    test("DELETE returns error message as user is unauthorised", async () => {
+        const responseResult = await authenticatedSession.delete("/events/12345/CaptainNaomi");
+
+        expect(responseResult.body.errors).toEqual(
+            "Error: You are not authorised to access this route"
+        );
+    });
+});
+
 
 // THIS TEST MUST GO LAST --> authenticatedSession is reliant on this account
 describe("User can delete account", () => {

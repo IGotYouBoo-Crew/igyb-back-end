@@ -23,15 +23,15 @@ router.post("/", verifyUserRoleAndId, createPost);
 
 // UPDATE
 
-router.put("/:slug/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updatePost);
+router.put("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updatePost);
 
 // DELETE
 
-router.delete("/:slug/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deletePost);
+router.delete("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deletePost);
 
 // READ
 
-router.get("/:slug", getPost)
+router.get("/:id", getPost)
 router.get("/", getAllPosts)
 
 router.get("/", getAllPosts)

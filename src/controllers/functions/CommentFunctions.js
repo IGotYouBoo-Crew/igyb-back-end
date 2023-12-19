@@ -3,9 +3,9 @@ const { Comment } = require("../../models/CommentModel")
 
 const createComment = async (request, response, next) => {
     try {
-        const {desc, slug, parent, replyOnUser} = request.body
+        const {desc, id, parent, replyOnUser} = request.body
         
-        const post = await Post.findOne({slug: slug});
+        const post = await Post.findOne({id: id});
 
         if(!post) {
             const error = new Error("Post was not found");

@@ -116,17 +116,18 @@ describe("PostsController routes work and accept/return data correctly", () => {
         let newPostData = {
             "title": "new post",
             "caption": "new post caption",
-            "body": "new post body"
+            "body": "new post body",
+            "photo": "testimage.com"
         };
         const responseResult = await adminAuthSession.post("/posts").send(newPostData);
 
         testPostId = responseResult.body._id;
-        testPostSlug = responseResult.body.slug;
         testPostAuthor = responseResult.body.author;
 
         expect(responseResult.body).toHaveProperty("title", newPostData.title);
         expect(responseResult.body).toHaveProperty("caption", newPostData.caption);
         expect(responseResult.body).toHaveProperty("body", newPostData.body);
+        expect(responseResult.body).toHaveProperty("photo", newPostData.photo)
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });
     // // READ

@@ -49,7 +49,7 @@ const onlyAllowAuthorOrAdmin = async (request, response, next) => {
         ) {
             next();
         } else {
-            // Throws a 403 error if not authorised
+            console.log(request.headers.userRole)
             response.status(403);
             throw new Error("You are not authorised to access this route");
         }
@@ -77,7 +77,6 @@ const onlyAllowAdmin = async (request, response, next) => {
         next(error);
     }
 };
-
 
 module.exports = {
     verifyUserRoleAndId,

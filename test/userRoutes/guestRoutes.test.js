@@ -7,6 +7,7 @@ let bcrypt = require("bcrypt");
 const request = require("supertest");
 const { getRoleIdByName } = require("../../src/controllers/functions/RoleFunctions");
 var session = require("supertest-session");
+const { Post } = require("../../src/models/PostModel");
 
 var testSession = session(app);
 
@@ -96,8 +97,9 @@ describe("UserController routes work and accept/return data correctly", () => {
 });
 
 describe("PostsController routes work and reject non users", () => {
+    
     // CREATE
-    test("POST request.body of newPostData returns newPostData", async () => {
+    test("POST request.body of newPostData returns error message", async () => {
         let newPostData = {
             title: "NewPost",
             content: "Oh boy, I loooove content",
@@ -106,27 +108,50 @@ describe("PostsController routes work and reject non users", () => {
 
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
-    // READ
-    // test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
-    //     const responseResult = await request(app).get("/posts/" + testPostId);
 
-    //     expect(responseResult.body.data).toHaveProperty("title", "NewPost");
-    //     expect(responseResult.body.data).toHaveProperty("content", "Oh boy, I loooove content");
-    //     expect(responseResult.body.data).toHaveProperty("_id", testPostId);
+    // // READ
+    // test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
+    //     const testPost = await Post.findOne({title: "first post"});
+    //     console.log(testPost)
+    //     const responseResult = await request(app).get("/posts/" + testPost._id);
+
+    //     expect(responseResult.body).toHaveProperty("title", "first post");
+    //     expect(responseResult.body).toHaveProperty("caption", "new post caption");
+    //     expect(responseResult.body).toHaveProperty("body", "post 1 body...");
+    //     expect(responseResult.body).toHaveProperty("photo", "https://images.app.goo.gl/nBRuxwm7mfhvN1Hj6");
+    //     expect(responseResult.body).toHaveProperty("_id", testPost._id);
     // });
+
+    // // READ
+    // test("GET 'posts' route exists and returns all posts", async () => {
+    //     const responseResult = await request(app).get("/posts/");
+
+    //     expect(responseResult.body).toHaveProperty("title", "new post");
+    //     expect(responseResult.body).toHaveProperty("caption", "new post caption");
+    //     expect(responseResult.body).toHaveProperty("body", "new post body");
+    //     expect(responseResult.body).toHaveProperty("photo", "testimage.com");
+    //     expect(responseResult.body).toHaveProperty("_id", testPostId);
+    // });
+
     // UPDATE
-    test("PUT request returns error", async () => {
+
+    test("PATCH request.body of updatedPostData returns error message", async () => {
         let updatedPostData = {
             content: "update: I hate content",
         };
-        const responseResult = await request(app).put("/posts/123456/1234").send(updatedPostData);
+        const responseResult = await request(app)
+            .patch("/posts/123456/1234")
+            .send(updatedPostData);
 
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
+
     // DELETE
     test("DELETE userData returns error 'user not signed in'", async () => {
+
         const responseResult = await request(app).delete("/posts/123456/1234");
 
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
+
 });

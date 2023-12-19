@@ -50,15 +50,15 @@ const posts = [
     {
         title: "first post",
         caption: "fist post caption",
-        slug: "123456",
         body: "post 1 body...",
+        photo: "https://images.app.goo.gl/nBRuxwm7mfhvN1Hj6",
         author: null,
     },
     {
         title: "second post",
         caption: "second post caption",
-        slug: "2468",
         body: "post 2 body...",
+        photo: "https://www.dreamstime.com/photos-images/blog.html",
         author: null,
     },
 ];
@@ -120,7 +120,8 @@ function seedDb() {
             for (const post of posts) {
                 post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
             }
-            await Post.insertMany(posts);
+            let postsCreated = await Post.insertMany(posts);
+            console.log(postsCreated);
             for (const event of events) {
                 event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
             }

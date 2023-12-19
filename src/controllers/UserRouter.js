@@ -21,6 +21,7 @@ router.post("/newUser", generateUser, generateCookie, async (request, response) 
     });
 });
 
+
 // READ
 
 // Show all users

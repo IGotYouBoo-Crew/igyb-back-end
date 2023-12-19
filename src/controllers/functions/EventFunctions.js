@@ -3,8 +3,8 @@
 const { Event } = require('../../models/EventModel');
 
 // CREATE
-async function createNewEvent(data){
-    return await Event.create(data).catch((error) => error)
+async function createNewEvent(eventData){
+    return await Event.create(eventData)
 }
 
 // READ

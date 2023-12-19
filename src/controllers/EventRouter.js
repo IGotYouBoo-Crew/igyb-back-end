@@ -9,17 +9,16 @@ const {
     updateEventById,
     deleteEventById,
     getEventById,
-    createNewEvent,
 } = require("./functions/EventFunctions");
+const { generateEvent } = require("./middleware/errorMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
 // CREATE
 // request.body must include required fields (TBD when creating events model)
-router.post("/newEvent", async (request, response) => {
-    let responseData = await createNewEvent(request.body);
+router.post("/newEvent", generateEvent, async (request, response) => {
     response.json({
-        data: responseData,
+        data: request.headers.data ||  "generateEvent middleware not run",
     });
 });
 

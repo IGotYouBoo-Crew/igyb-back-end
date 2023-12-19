@@ -119,7 +119,6 @@ describe("Signed in as admin PostsController routes work and accept/return data 
         let newPostData = {
             "title": "new post",
             "caption": "new post caption",
-            "body": "new post body",
             "photo": "testimage.com"
         };
         const responseResult = await adminAuthSession.post("/posts").send(newPostData);
@@ -129,7 +128,6 @@ describe("Signed in as admin PostsController routes work and accept/return data 
 
         expect(responseResult.body).toHaveProperty("title", newPostData.title);
         expect(responseResult.body).toHaveProperty("caption", newPostData.caption);
-        expect(responseResult.body).toHaveProperty("body", newPostData.body);
         expect(responseResult.body).toHaveProperty("photo", newPostData.photo)
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });
@@ -140,7 +138,6 @@ describe("Signed in as admin PostsController routes work and accept/return data 
 
         expect(responseResult.body).toHaveProperty("title", "new post");
         expect(responseResult.body).toHaveProperty("caption", "new post caption");
-        expect(responseResult.body).toHaveProperty("body", "new post body");
         expect(responseResult.body).toHaveProperty("photo", "testimage.com");
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });

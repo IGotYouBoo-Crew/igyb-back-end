@@ -5,25 +5,19 @@ const {fileRemover} = require('../../utils/fileRemover')
 const { Post } = require('../../models/PostModel');
 const { Comment } = require('../../models/CommentModel')
 
+// import external packages
 const {v4: uuidv4} = require('uuid');
-
-// CREATE - OLD
-// async function createNewPost(data){
-//     return await Post.create(data).catch((error) => error)
-// }
 
 // CREATE 
 
 const createPost = async (request, response, next) => {
     try {
+        const {title, caption, slug, body} = request.body
         const post = new Post({
-            title: request.body.title,
-            caption: request.body.caption,
+            title,
+            caption,
             slug: uuidv4(),
-            body: {
-                type: "doc",
-                content: [],
-            },
+            body,
             author: request.headers.userId,
         });
 
@@ -111,41 +105,61 @@ const deletePost = async (request, response, next) => {
 }
 
 // READ
-// Model.find({}) returns all documents in a collection.
-async function getAllPosts(){
-    return await Post.find({}).populate("author", "username");
-    
+const getPost = async (request, response, next) => {
+    try {
+        const post = await Post.findOne({slug: request.params.slug}).populate([
+            {
+                path: 'author',
+                select: ["username"],
+            },
+            {
+                path: 'comments',
+                match: {
+                    parent: null,
+                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: ['username']
+                    },
+                    {
+                        path: 'replies'
+                    }
+                ]            
+            }
+        ]);
+
+        if(!post) {
+            const error = new Error("Post was not found");
+            return next(error);
+        }
+
+        return response.json(post);
+    } catch (error) {
+        next(error);
+    }
 }
 
-async function getPostByTitle(postTitle){
-    // finds one post with matching postTitle
-    return await Post.findOne({title: postTitle}).exec()
+const getAllPosts = async (request, response, next) => {
+    try {
+        const posts = await Post.find({}).populate([
+            {
+                path: "author",
+                select: ["username"]
+            }
+        ]);
+
+        response.json(posts);
+    } catch (error) {
+        next(error);
+    }
 }
-
-async function getPostById(postId){
-    // finds post with matching postId
-    return await Post.findById(postId).exec()
-}
-
-// UPDATE - OLD
-// async function updatePostById(postId, updatedPostData){
-//     return await Post.findByIdAndUpdate(postId, updatedPostData, { runValidators: true, returnDocument: 'after' }).exec()
-// }
-
-// DELETE - OLD
-// async function deletePostById(postId){
-//     return await Post.findByIdAndDelete(postId).exec()
-// }
 
 // Export the functions for our routes to use.
 module.exports = {
     createPost,
     updatePost,
     deletePost,
+    getPost,
     getAllPosts,
-    getPostByTitle,
-    getPostById,
-    // deletePostById,
-    // updatePostById,
-    // createNewPost
 }

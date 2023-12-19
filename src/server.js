@@ -53,6 +53,9 @@ app.use("/account", userController);
 // Adds post routes
 const postController = require("./controllers/PostRouter");
 app.use("/posts", postController);
+// Adds comments routes
+const commentController = require("./controllers/CommentRouter");
+app.use("/comments", commentController);
 // Adds event routes
 const eventController = require("./controllers/EventRouter");
 app.use("/events", eventController);

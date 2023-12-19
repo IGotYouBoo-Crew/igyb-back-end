@@ -110,7 +110,8 @@ describe("PostsController routes work and accept/return data correctly", () => {
     test("POST request.body of newPostData returns newPostData", async () => {
         let newPostData = {
             "title": "new post",
-            "caption": "new post caption"
+            "caption": "new post caption",
+            "body": "new post body"
         };
         const responseResult = await adminAuthSession.post("/posts").send(newPostData);
         console.log("flag")
@@ -121,6 +122,7 @@ describe("PostsController routes work and accept/return data correctly", () => {
 
         expect(responseResult.body).toHaveProperty("title", newPostData.title);
         expect(responseResult.body).toHaveProperty("caption", newPostData.caption);
+        expect(responseResult.body).toHaveProperty("body", newPostData.body);
         expect(responseResult.body).toHaveProperty("_id", testPostId);
     });
     // // READ

@@ -80,8 +80,8 @@ const comments = [
 const events = [
     {
         host: "Captain Naomi",
-        image: "https://pbs.twimg.com/profile_images/1056752759402307584/vFjSXrWY_400x400.jpg",
-        title: "first event",
+        image: "https://img.freepik.com/premium-vector/potato-head-cartoon-pilot-mascot-cartoon-vector_193274-39483.jpg?w=2000",
+        title: "first seeded event",
         date: "25th December 2023",
         start: "12:00",
         finish: "14:00",
@@ -90,10 +90,12 @@ const events = [
     },
     {
         host: "Queen Ella",
-        title: "second event",
+        image: "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg",
+        title: "second seeded event",
         date: "1st Jan 2024",
         start: "08:00",
         finish: "20:00",
+        ticketLink: "https://premier.ticketek.com.au/",
         content: "this is the second fake event",
         author: null,
     },
@@ -146,7 +148,8 @@ function seedDb() {
             for (const event of events) {
                 event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
             }
-            await Event.insertMany(events);
+            let eventsCreated = await Event.insertMany(events);
+            console.log(eventsCreated);
             console.log("New DB data created");
         })
         .then(() => {

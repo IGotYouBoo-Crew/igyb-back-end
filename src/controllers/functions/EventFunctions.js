@@ -1,45 +1,125 @@
-// Require specific models so that we can 
+// Require Event model so that we can 
 // create functionality involving them.
 const { Event } = require('../../models/EventModel');
 
 // CREATE
-async function createNewEvent(eventData){
-    return await Event.create(eventData)
+const createEvent = async (request, response, next) => {
+    try {
+        const {host, image, title, date, start, finish, ticketLink, content} = request.body
+        const event = new Event({
+            host, 
+            image, 
+            title, 
+            date, 
+            start, 
+            finish, 
+            ticketLink, 
+            content,
+            author: request.headers.userId,
+        });
+
+        const createdEvent = await event.save();
+        return response.json(createdEvent);
+        
+    } catch (error) {
+        next(error);
+    }
 }
 
 // READ
 // Model.find({}) returns all documents in a collection.
-async function getAllEvents(){
-    return await Event.find({}).populate("author", "username");
-    
+const getAllEvents = async (request, response, next) => {
+    try {
+        const events = await Event.find({}).populate([
+            {
+                path: "author",
+                select: ["username"]
+            }
+        ]);
+
+        response.json(events);
+    } catch (error) {
+        next(error);
+    }
 }
 
-async function getEventByTitle(eventTitle){
-    // finds one event with matching eventTitle
-    return await Event.findOne({title: eventTitle}).exec()
-}
+const getEventById = async (request, response, next) => {
+    try {
+        const event = await Event.findById(request.params.id).populate([
+            {
+                path: 'author',
+                select: ["username"],
+            }
+        ]);
 
-async function getEventById(eventId){
-    // finds event with matching eventId
-    return await Event.findById(eventId).exec()
+        if(!event) {
+            const error = new Error("Oops, that event was not found");
+            return next(error);
+        }
+
+        return response.json(event);
+    } catch (error) {
+        next(error);
+    }
 }
 
 // UPDATE
-async function updateEventById(eventId, updatedEventData){
-    return await Event.findByIdAndUpdate(eventId, updatedEventData, { runValidators: true, returnDocument: 'after' }).exec()
+const updateEventById = async (request, response, next) => {
+    try {
+
+        const event = await Event.findById(request.params.id);
+        console.log(event)
+
+        if(!event) {
+            const error = new Error("Oops, that event was not found");
+            next(error);
+            return;
+        } else {
+            async function handleUpdateEventData(eventData) {
+                const {host, image, title, date, start, finish, ticketLink, content} = eventData;
+                event.host = host || event.host;
+                event.image = image || event.image;
+                event.title = title || event.title;
+                event.date = date || event.date;
+                event.start = start || event.start;
+                event.finish = finish || event.finish;
+                event.ticketLink = ticketLink || event.ticketLink;
+                event.content = content || event.content;
+                const updatedEvent = await event.save();
+                return response.json(updatedEvent);
+            }
+    
+            handleUpdateEventData(request.body);
+        }
+
+        
+    } catch (error) {
+        next(error);
+    }
 }
 
 // DELETE
-async function deleteEventById(eventId){
-    return await Event.findByIdAndDelete(eventId).exec()
+const deleteEventById = async (request, response, next) => {
+    try {
+        const eventToDelete = await Event.findOneAndDelete({ _id: request.params.id });
+
+        if(!eventToDelete) {
+            const error = new Error("Oops, that event was not found");
+            return next(error);
+        }
+        return response.json({
+            message: `Event: ${eventToDelete.title} is successfully deleted`,
+        })
+    } catch (error) {
+        next(error);
+    }
 }
 
 // Export the functions for our routes to use.
 module.exports = {
+    createEvent,
     getAllEvents,
-    getEventByTitle,
     getEventById,
-    deleteEventById,
     updateEventById,
-    createNewEvent
+    deleteEventById
 }

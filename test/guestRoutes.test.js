@@ -9,6 +9,7 @@ const { getRoleIdByName } = require("../src/controllers/functions/RoleFunctions"
 var session = require("supertest-session");
 const { Post } = require("../src/models/PostModel");
 const { Comment } = require("../src/models/CommentModel")
+const { Event } = require("../src/models/EventModel");
 
 
 var testSession = session(app);
@@ -118,6 +119,7 @@ describe("PostsController routes work and reject non users", () => {
 
         expect(responseResult.body).toHaveProperty("title", "second post");
         expect(responseResult.body).toHaveProperty("caption", "second post caption");
+        expect(responseResult.body).toHaveProperty("body", "post 2 body...");
         expect(responseResult.body).toHaveProperty("photo", "https://www.dreamstime.com/photos-images/blog.html");
         expect(responseResult.body).toHaveProperty("_id");
     });

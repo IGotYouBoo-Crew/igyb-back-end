@@ -51,12 +51,14 @@ const posts = [
     {
         title: "first post",
         caption: "fist post caption",
+        body: "post 1 body...",
         photo: "https://images.app.goo.gl/nBRuxwm7mfhvN1Hj6",
         author: null,
     },
     {
         title: "second post",
         caption: "second post caption",
+        body: "post 2 body...",
         photo: "https://www.dreamstime.com/photos-images/blog.html",
         author: null,
     },

@@ -62,17 +62,17 @@ const updatePost = async (request, response, next) => {
 // DELETE
 const deletePost = async (request, response, next) => {
     try {
-        const post = await Post.findOneAndDelete({ _id: request.params.id });
+        const postToDelete = await Post.findOneAndDelete({ _id: request.params.id });
 
-        if(!post) {
+        if(!postToDelete) {
             const error = new Error("Post was not found");
             return next(error);
         }
 
-        await Comment.deleteMany({ post: post._id });
+        await Comment.deleteMany({ post: postToDelete._id });
 
         return response.json({
-            message: "Post is successfully deleted",
+            message: `Post: ${postToDelete.title} is successfully deleted`,
         })
     } catch (error) {
         next(error);

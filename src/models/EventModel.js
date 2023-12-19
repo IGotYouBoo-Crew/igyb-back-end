@@ -5,7 +5,7 @@ const EventSchema = new mongoose.Schema({
     host: {type: String, required: true},
     image: {type: String, required: false},
     title: {type: String, required: true},
-    date: {type: String, required: true},
+    date: {type: Date, format:'%Y-%m-%d', required: true},
     start: {type: String,
         validate: {
         validator: function (v) {
@@ -14,7 +14,7 @@ const EventSchema = new mongoose.Schema({
             }
             return /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(v);
         },
-        message: (props) => `${props.value} is not valid time!`,
+        message: (props) => `${props.value} is not valid 24hr time!`,
         },
         required: true}, 
     finish: {type: String,
@@ -25,7 +25,7 @@ const EventSchema = new mongoose.Schema({
             }
             return /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(v);
         },
-        message: (props) => `${props.value} is not valid time!`,
+        message: (props) => `${props.value} is not valid 24hr time!`,
         },
         required: true}, 
     ticketLink: {type: String, required: false},

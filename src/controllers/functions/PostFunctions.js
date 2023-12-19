@@ -14,6 +14,7 @@ const createPost = async (request, response, next) => {
             body,
             photo,
             author: request.headers.userId,
+            date: Date.now(),
         });
 
         const createdPost = await post.save();

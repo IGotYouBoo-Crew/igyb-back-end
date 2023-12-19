@@ -22,6 +22,11 @@ const PostSchema = new mongoose.Schema(
             type: mongoose.Types.ObjectId, 
             ref: 'User'
         },
+        date: {
+            type: Date,
+            required: true,
+            default: Date.now()
+        },
     },
     { timestamps: true, toJSON: { virtuals: true } }
 );

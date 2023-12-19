@@ -2,7 +2,6 @@
 // create functionality involving them.
 const { Post } = require('../../models/PostModel');
 const { Comment } = require('../../models/CommentModel');
-const { post } = require('../RoleRouter');
 
 // CREATE 
 

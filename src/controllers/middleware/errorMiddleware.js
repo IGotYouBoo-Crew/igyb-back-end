@@ -22,7 +22,7 @@ const generateEvent = async (request, response, next) => {
 const updateEvent = async (request, response, next) => {
     try{
         let updatedEvent = await updateEventById(request.params.eventId, request.body);
-        request.header.updatedEvent = updatedEvent
+        request.header.updatedEventTitle = updatedEvent.title
         next()
     } catch(error) {
         next(error)

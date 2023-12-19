@@ -23,7 +23,7 @@ router.post("/", verifyUserRoleAndId, createPost);
 
 // UPDATE
 
-router.put("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updatePost);
+router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updatePost);
 
 // DELETE
 

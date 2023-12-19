@@ -180,7 +180,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
     // DELETE
     test("DELETE postData returns message with username", async () => {
         const responseResult = await authenticatedSession.delete(
-            "/posts/" + testPostSlug + "/" + testPostAuthor
+            "/posts/" + testPostId + "/" + testPostAuthor
         );
 
         expect(responseResult.body.message).toEqual("Post is successfully deleted");

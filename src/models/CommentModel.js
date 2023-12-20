@@ -18,30 +18,13 @@ const CommentSchema = new mongoose.Schema(
             ref: 'Post', 
             required: true
         },
-        parentComment: {
-            type: mongoose.Types.ObjectId, 
-            ref: 'Comment', 
-            default: null
-        },
-        replyOnUser: {
-            type: mongoose.Types.ObjectId, 
-            ref: 'User', 
-            default: null,
-        },
         date: {
             type: Date,
             required: true,
             default: Date.now()
         },
-    },
-    { timestamps: true, toJSON: { virtuals:true } }
+    }
 );
-
-CommentSchema.virtual('replies', {
-    ref: "Comment",
-    localField: '_id',
-    foreignField: 'parentComment'
-});
 
 // Middleware to format the date before saving
 CommentSchema.pre('save', function (next) {

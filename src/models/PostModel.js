@@ -28,8 +28,7 @@ const PostSchema = new mongoose.Schema(
             required: true,
             default: new Date(Date.now())
         },
-    },
-    { timestamps: true, toJSON: { virtuals: true } }
+    }
 );
 
 PostSchema.virtual('comments', {

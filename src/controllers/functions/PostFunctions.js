@@ -2,6 +2,7 @@
 // create functionality involving them.
 const { Post } = require('../../models/PostModel');
 const { Comment } = require('../../models/CommentModel');
+const { populate } = require('dotenv');
 
 // CREATE 
 
@@ -92,12 +93,9 @@ const getPost = async (request, response, next) => {
                     {
                         path: 'author',
                         select: ['username']
-                    },
-                    {
-                        path: 'replies'
-                    }
-                ]            
-            }
+                    },                    
+                ],            
+            },
         ]);
 
         if(!post) {

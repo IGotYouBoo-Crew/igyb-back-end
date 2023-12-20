@@ -25,7 +25,7 @@ const PostSchema = new mongoose.Schema(
         date: {
             type: Date,
             required: true,
-            default: Date.now()
+            default: new Date(Date.now())
         },
     },
     { timestamps: true, toJSON: { virtuals: true } }

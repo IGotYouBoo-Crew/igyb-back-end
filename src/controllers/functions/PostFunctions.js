@@ -13,8 +13,7 @@ const createPost = async (request, response, next) => {
             caption,
             body,
             photo,
-            author: request.headers.userId,
-            date: Date.now(),
+            author: request.headers.userId
         });
 
         const createdPost = await post.save();
@@ -79,6 +78,7 @@ const deletePost = async (request, response, next) => {
 // READ
 const getPost = async (request, response, next) => {
     try {
+        console.log(request.params.id)
         const post = await Post.findById(request.params.id).populate([
             {
                 path: 'author',

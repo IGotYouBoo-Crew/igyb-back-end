@@ -13,8 +13,7 @@ const createPost = async (request, response, next) => {
             caption,
             body,
             photo,
-            author: request.headers.userId,
-            date: Date.now(),
+            author: request.headers.userId
         });
 
         const createdPost = await post.save();

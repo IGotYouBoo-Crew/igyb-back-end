@@ -78,7 +78,6 @@ const deletePost = async (request, response, next) => {
 // READ
 const getPost = async (request, response, next) => {
     try {
-        console.log(request.params.id)
         const post = await Post.findById(request.params.id).populate([
             {
                 path: 'author',

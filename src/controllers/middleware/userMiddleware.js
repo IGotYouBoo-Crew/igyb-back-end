@@ -130,6 +130,7 @@ const generateUser = async (request, response, next) => {
         request.headers.data = responseData;
         request.headers.jwt = createUserJwt(responseData);
         request.headers.username = responseData.username;
+        request.headers.role = await getRoleNameById(responseData.role);
 
         next();
 
@@ -153,8 +154,22 @@ const updateUser = async (request, response, next) => {
     try{
         let updatedUser = await updateUserById(request.params.authorId, request.body);
         request.header.updatedUser = updatedUser
+        request.headers.jwt = createUserJwt(updatedUser)
         next()
     } catch(error) {
+        next(error)
+    }
+}
+
+const getUser = async (request, response, next) => {
+    try {
+        let user = await getUserByUsername(request.params.username);
+        let responseData = {...user._doc}
+        delete responseData.password;
+        delete responseData.__v;
+        request.headers.data = responseData
+        next()
+    } catch (error) {
         next(error)
     }
 }
@@ -167,5 +182,6 @@ module.exports = {
     targetSelf,
     recogniseCookie,
     deleteUser,
-    updateUser
+    updateUser,
+    getUser
 };

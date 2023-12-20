@@ -6,9 +6,8 @@ const router = express.Router();
 // Import our new functions:
 const {
     getAllUsers,
-    getUserByUsername,
 } = require("./functions/UserFunctions");
-const { generateUser, generateCookie, targetSelf, logout, login, recogniseCookie, deleteUser, updateUser } = require("./middleware/userMiddleware");
+const { generateUser, generateCookie, targetSelf, logout, login, recogniseCookie, deleteUser, updateUser, getUser } = require("./middleware/userMiddleware");
 const { verifyUserRoleAndId, onlyAllowAdmin, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -17,7 +16,9 @@ const { verifyUserRoleAndId, onlyAllowAdmin, onlyAllowAuthorOrAdmin } = require(
 // request.body must include required fields (TBD when creating users model)
 router.post("/newUser", generateUser, generateCookie, async (request, response) => {
     response.json({
-        data: request.headers.data || "generateUser middleware not run",
+        data: request.headers.data,
+        username: request.headers.username,
+        role: request.headers.role,
     });
 });
 
@@ -34,14 +35,10 @@ router.get("/", verifyUserRoleAndId, onlyAllowAdmin, async (request, response) =
 });
 
 // shows a user's data which matches a specified username
-router.get("/:username", async (request, response) => {
-    let user = await getUserByUsername(request.params.username);
-    let responseData = {...user._doc}
-    delete responseData.password;
-    delete responseData.__v;
-
+router.get("/:username", getUser, async (request, response) => {
+    
     response.json({
-        data: responseData,
+        data: request.headers.data,
     });
 });
 
@@ -49,7 +46,7 @@ router.get("/:username", async (request, response) => {
 // Updates the user properties provided in the request.body according to the userId
 // I used :authorId here instead of :userId because it allows for 
 // a single middleware to perform all checks rather than write a specific only only for users protections
-router.patch("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updateUser,  async (request, response) => {
+router.patch("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updateUser, generateCookie,  async (request, response) => {
     response.json({
         message: request.header.updatedUser,
     });

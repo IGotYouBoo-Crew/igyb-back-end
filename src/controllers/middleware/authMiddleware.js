@@ -49,7 +49,6 @@ const onlyAllowAuthorOrAdmin = async (request, response, next) => {
         ) {
             next();
         } else {
-            console.log(request.headers.userRole)
             response.status(403);
             throw new Error("You are not authorised to access this route");
         }

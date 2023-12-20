@@ -131,7 +131,8 @@ describe("Signed in user PostsController routes work and accept/return data corr
         expect(responseResult.body).toHaveProperty("title", superstarPostData.title);
         expect(responseResult.body).toHaveProperty("caption", superstarPostData.caption);
         expect(responseResult.body).toHaveProperty("body", superstarPostData.body);
-        expect(responseResult.body).toHaveProperty("photo", superstarPostData.photo)
+        expect(responseResult.body).toHaveProperty("photo", superstarPostData.photo);
+        expect(responseResult.body).toHaveProperty("date");
         expect(responseResult.body).toHaveProperty("_id", superstarTestPostId);
     });
     
@@ -143,6 +144,7 @@ describe("Signed in user PostsController routes work and accept/return data corr
         expect(responseResult.body).toHaveProperty("caption", "new superstar post caption");
         expect(responseResult.body).toHaveProperty("body", "new superstar post body");
         expect(responseResult.body).toHaveProperty("photo", "testimage.com");
+        expect(responseResult.body).toHaveProperty("date");
         expect(responseResult.body).toHaveProperty("_id", superstarTestPostId);
     });
     test("GET '/posts/' route exists and returns all posts", async () => {
@@ -210,6 +212,7 @@ describe("Signed in as superstar CommentsController routes work and accept/retur
 
         expect(responseResult.body).toHaveProperty("desc", superstarCommentData.desc);
         expect(responseResult.body).toHaveProperty("parentPostId");
+        expect(responseResult.body).toHaveProperty("date");
         expect(responseResult.body).toHaveProperty("_id", superstarTestCommentId);
 
     });

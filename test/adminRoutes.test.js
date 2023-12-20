@@ -131,8 +131,9 @@ describe("Signed in as admin PostsController routes work and accept/return data 
         expect(responseResult.body).toHaveProperty("title", adminPostData.title);
         expect(responseResult.body).toHaveProperty("caption", adminPostData.caption);
         expect(responseResult.body).toHaveProperty("body", adminPostData.body);
-        expect(responseResult.body).toHaveProperty("photo", adminPostData.photo)
+        expect(responseResult.body).toHaveProperty("photo", adminPostData.photo);
         expect(responseResult.body).toHaveProperty("_id", adminTestPostId);
+        expect(responseResult.body).toHaveProperty("date");
     });
 
     // READ
@@ -144,6 +145,7 @@ describe("Signed in as admin PostsController routes work and accept/return data 
         expect(responseResult.body).toHaveProperty("body", "New admin post body");
         expect(responseResult.body).toHaveProperty("photo", "testimage.com");
         expect(responseResult.body).toHaveProperty("_id", adminTestPostId);
+        expect(responseResult.body).toHaveProperty("date");
     });
     test("GET '/posts/' route exists and returns all posts", async () => {
         const responseResult = await request(app).get("/posts/");
@@ -195,6 +197,7 @@ describe("Signed in as admin CommentsController routes work and accept/return da
 
         expect(responseResult.body).toHaveProperty("desc", adminCommentData.desc);
         expect(responseResult.body).toHaveProperty("parentPostId");
+        expect(responseResult.body).toHaveProperty("date");
         expect(responseResult.body).toHaveProperty("_id", adminTestCommentId);
 
     });

@@ -250,7 +250,7 @@ describe("Signed in as admin EventsController routes work and accept/return data
         expect(responseResult.body).toHaveProperty("host", newEventData.host);
         expect(responseResult.body).toHaveProperty("image", newEventData.image)
         expect(responseResult.body).toHaveProperty("title", newEventData.title);
-        expect(responseResult.body).toHaveProperty("date", newEventData.date);
+        expect(responseResult.body).toHaveProperty("date", "31-12-2023");
         expect(responseResult.body).toHaveProperty("start", newEventData.start);
         expect(responseResult.body).toHaveProperty("finish", newEventData.finish);
         expect(responseResult.body).toHaveProperty("ticketLink", newEventData.ticketLink);

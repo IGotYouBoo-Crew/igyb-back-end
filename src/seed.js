@@ -49,16 +49,16 @@ const adminUser = {
 
 const posts = [
     {
-        title: "first post",
+        title: "first seeded post",
         caption: "fist post caption",
         body: "post 1 body...",
         photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU",
         author: null,
     },
     {
-        title: "second post",
-        caption: "second post caption",
-        body: "post 2 body...",
+        title: "second seeded post",
+        caption: "second seeded post caption",
+        body: "second seeded post body...",
         photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU",
         author: null,
     },
@@ -66,12 +66,12 @@ const posts = [
 
 const comments = [
     {
-        desc: "first comment",
+        desc: "first seeded comment",
         parentPostId: null,
         author: null,
     },
     {
-        desc: "second comment",
+        desc: "second seeded comment",
         parentPostId: null,
         author: null,
     },

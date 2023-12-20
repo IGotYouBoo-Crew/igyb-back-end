@@ -116,36 +116,36 @@ describe("Signed in as admin UserController routes work and accept/return data c
 describe("Signed in as admin PostsController routes work and accept/return data correctly", () => {
 
     // CREATE
-    test("POST request.body of newPostData returns newPostData", async () => {
-        let newPostData = {
-            "title": "new post",
-            "caption": "new post caption",
-            "body": "new post body",
+    test("POST request.body of adminPostData returns adminPostData", async () => {
+        let adminPostData = {
+            "title": "New Admin Post",
+            "caption": "New admin post caption",
+            "body": "New admin post body",
             "photo": "testimage.com"
         };
-        const responseResult = await adminAuthSession.post("/posts").send(newPostData);
+        const responseResult = await adminAuthSession.post("/posts").send(adminPostData);
 
-        testPostId = responseResult.body._id;
-        testPostAuthor = responseResult.body.author;
+        adminTestPostId = responseResult.body._id;
+        adminTestPostAuthor = responseResult.body.author;
 
-        expect(responseResult.body).toHaveProperty("title", newPostData.title);
-        expect(responseResult.body).toHaveProperty("caption", newPostData.caption);
-        expect(responseResult.body).toHaveProperty("body", newPostData.body);
-        expect(responseResult.body).toHaveProperty("photo", newPostData.photo)
-        expect(responseResult.body).toHaveProperty("_id", testPostId);
+        expect(responseResult.body).toHaveProperty("title", adminPostData.title);
+        expect(responseResult.body).toHaveProperty("caption", adminPostData.caption);
+        expect(responseResult.body).toHaveProperty("body", adminPostData.body);
+        expect(responseResult.body).toHaveProperty("photo", adminPostData.photo)
+        expect(responseResult.body).toHaveProperty("_id", adminTestPostId);
     });
 
     // READ
-    test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
-        const responseResult = await request(app).get("/posts/" + testPostId);
+    test("GET '/posts/adminTestPostId' route exists and returns adminTestPostId's data", async () => {
+        const responseResult = await request(app).get("/posts/" + adminTestPostId);
 
-        expect(responseResult.body).toHaveProperty("title", "new post");
-        expect(responseResult.body).toHaveProperty("caption", "new post caption");
-        expect(responseResult.body).toHaveProperty("body", "new post body");
+        expect(responseResult.body).toHaveProperty("title", "New Admin Post");
+        expect(responseResult.body).toHaveProperty("caption", "New admin post caption");
+        expect(responseResult.body).toHaveProperty("body", "New admin post body");
         expect(responseResult.body).toHaveProperty("photo", "testimage.com");
-        expect(responseResult.body).toHaveProperty("_id", testPostId);
+        expect(responseResult.body).toHaveProperty("_id", adminTestPostId);
     });
-    test("GET 'posts' route exists and returns all posts", async () => {
+    test("GET '/posts/' route exists and returns all posts", async () => {
         const responseResult = await request(app).get("/posts/");
 
         expect(responseResult.statusCode).toEqual(200);
@@ -153,75 +153,75 @@ describe("Signed in as admin PostsController routes work and accept/return data 
     });
 
     //UPDATE
-    test("PATCH request.body of updatedPostData returns postData with updates", async () => {
-        let updatedPostData = {
-            "title": "update new title"
+    test("PATCH request.body of updatedAdminPostData returns adminPostData with updates", async () => {
+        let updatedAdminPostData = {
+            "title": "Updated Admin Title"
         };
         const responseResult = await adminAuthSession
-            .patch("/posts/" + testPostId + "/" + testPostAuthor)
-            .send(updatedPostData);
+            .patch("/posts/" + adminTestPostId + "/" + adminTestPostAuthor)
+            .send(updatedAdminPostData);
 
-        expect(responseResult.body).toHaveProperty("title", "update new title");
+        expect(responseResult.body).toHaveProperty("title", "Updated Admin Title");
     });
 
     // DELETE
-    test("DELETE postData returns success message", async () => {
-        const responseResult = await adminAuthSession.delete("/posts/" + testPostId + "/" + testPostAuthor);
+    test("DELETE adminPostData returns success message", async () => {
+        const responseResult = await adminAuthSession.delete("/posts/" + adminTestPostId + "/" + adminTestPostAuthor);
 
-        expect(responseResult.body.message).toEqual("Post: update new title has been successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: Updated Admin Title has been successfully deleted");
 
     });
-    test("DELETE postData returns success message", async () => {
-        const testPost = await Post.findOne({title: "first post"}).exec();
-        const responseResult = await adminAuthSession.delete("/posts/" + testPost._id + "/" + testPost.author);
+    test("DELETE adminPostData returns success message for post that wasn't created by the user", async () => {
+        const seededTestPost = await Post.findOne({title: "first seeded post"}).exec();
+        const responseResult = await adminAuthSession.delete("/posts/" + seededTestPost._id + "/" + seededTestPost.author);
 
-        expect(responseResult.body.message).toEqual("Post: first post has been successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: first seeded post has been successfully deleted");
     });
 });
 
 describe("Signed in as admin CommentsController routes work and accept/return data correctly", () => {
 
     // CREATE
-    test("POST request.body of newCommentData returns newCommentData", async () => {
-        const testPost = await Post.findOne({title: "second post"}).exec();
-        let newCommentData = {
-            desc: "New Comment",
-            parentPostId: testPost._id,
+    test("POST request.body of adminCommentData returns adminCommentData", async () => {
+        const seededTestPost = await Post.findOne({title: "second seeded post"}).exec();
+        let adminCommentData = {
+            desc: "New Admin Comment",
+            parentPostId: seededTestPost._id,
         };
-        const responseResult = await adminAuthSession.post("/comments").send(newCommentData);
+        const responseResult = await adminAuthSession.post("/comments").send(adminCommentData);
 
-        testCommentId = responseResult.body._id;
-        testCommentAuthor = responseResult.body.author;
+        adminTestCommentId = responseResult.body._id;
+        adminTestCommentAuthor = responseResult.body.author;
 
-        expect(responseResult.body).toHaveProperty("desc", newCommentData.desc);
+        expect(responseResult.body).toHaveProperty("desc", adminCommentData.desc);
         expect(responseResult.body).toHaveProperty("parentPostId");
-        expect(responseResult.body).toHaveProperty("_id", testCommentId);
+        expect(responseResult.body).toHaveProperty("_id", adminTestCommentId);
 
     });
 
     //UPDATE
-    test("PATCH request.body of updatedCommentData returns CommentData with updates", async () => {
-        let updatedCommentData = {
-            "desc": "updated comment description admin"
+    test("PATCH request.body of updatedAdminCommentData returns adminCommentData with updates", async () => {
+        let updatedAdminCommentData = {
+            "desc": "updated admin comment desc"
         };
         const responseResult = await adminAuthSession
-            .patch("/comments/" + testCommentId + "/" + testCommentAuthor)
-            .send(updatedCommentData);
+            .patch("/comments/" + adminTestCommentId + "/" + adminTestCommentAuthor)
+            .send(updatedAdminCommentData);
 
-        expect(responseResult.body).toHaveProperty("desc", "updated comment description admin");
+        expect(responseResult.body).toHaveProperty("desc", "updated admin comment desc");
     });
 
     // DELETE
-    test("DELETE commentData returns success message", async () => {
-        const responseResult = await adminAuthSession.delete("/comments/" + testCommentId + "/" + testCommentAuthor);
+    test("DELETE adminCommentData returns success message", async () => {
+        const responseResult = await adminAuthSession.delete("/comments/" + adminTestCommentId + "/" + adminTestCommentAuthor);
 
-        expect(responseResult.body.message).toEqual(`Comment: ${testCommentId} has been successfully deleted`);
+        expect(responseResult.body.message).toEqual(`Comment: ${adminTestCommentId} has been successfully deleted`);
     });
-    test("DELETE commentData returns success message", async () => {
-        const testComment = await Comment.findOne({desc: "first comment"}).exec();
-        const responseResult = await adminAuthSession.delete("/comments/" + testComment._id + "/" + testComment.author);
+    test("DELETE commentData returns success message for comment that wasn't created by the user", async () => {
+        const seededTestComment = await Comment.findOne({desc: "first seeded comment"}).exec();
+        const responseResult = await adminAuthSession.delete("/comments/" + seededTestComment._id + "/" + seededTestComment.author);
 
-        expect(responseResult.body.message).toEqual(`Comment: ${testComment._id} has been successfully deleted`);
+        expect(responseResult.body.message).toEqual(`Comment: ${seededTestComment._id} has been successfully deleted`);
     });
 });
 

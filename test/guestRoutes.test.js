@@ -102,28 +102,29 @@ describe("UserController routes work and accept/return data correctly", () => {
 describe("PostsController routes work and reject non users", () => {
     
     // CREATE
-    test("POST request.body of newPostData returns error message", async () => {
-        let newPostData = {
-            title: "NewPost",
-            caption: "Oh boy, I loooove content",
+    test("POST request.body of guestPostData returns error message", async () => {
+        let guestPostData = {
+            title: "New Guest Post",
+            caption: "Guest post caption",
+            body: "Guest post body"
         };
-        const responseResult = await request(app).post("/posts").send(newPostData);
+        const responseResult = await request(app).post("/posts").send(guestPostData);
 
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
 
     // READ
-    test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
-        const testPost = await Post.findOne({title: "second post"}).exec();
-        const responseResult = await request(app).get("/posts/" + testPost._id);
+    test("GET '/posts/testPostId' route exists and returns testPostId's data", async () => {
+        const seededTestPost = await Post.findOne({title: "second seeded post"}).exec();
+        const responseResult = await request(app).get("/posts/" + seededTestPost._id);
 
-        expect(responseResult.body).toHaveProperty("title", "second post");
-        expect(responseResult.body).toHaveProperty("caption", "second post caption");
-        expect(responseResult.body).toHaveProperty("body", "post 2 body...");
+        expect(responseResult.body).toHaveProperty("title", "second seeded post");
+        expect(responseResult.body).toHaveProperty("caption", "second seeded post caption");
+        expect(responseResult.body).toHaveProperty("body", "second seeded post body...");
         expect(responseResult.body).toHaveProperty("photo", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU");
         expect(responseResult.body).toHaveProperty("_id");
     });
-    test("GET 'posts' route exists and returns all posts", async () => {
+    test("GET '/posts/' route exists and returns all posts", async () => {
         const responseResult = await request(app).get("/posts/");
 
         expect(responseResult.statusCode).toEqual(200);
@@ -144,7 +145,7 @@ describe("PostsController routes work and reject non users", () => {
     });
 
     // DELETE
-    test("DELETE postData returns error 'user not signed in'", async () => {
+    test("DELETE guestPostData returns error 'user not signed in'", async () => {
 
         const responseResult = await request(app).delete("/posts/123456/1234");
 
@@ -156,13 +157,13 @@ describe("PostsController routes work and reject non users", () => {
 describe("CommentsController routes work and reject non users", () => {
     
     // CREATE
-    test("POST request.body of newCommentData returns error message", async () => {
-        const testPost = await Post.findOne({title: "second post"}).exec();
-        let newCommentData = {
-            desc: "New Comment",
-            parentPostId: testPost._id,
+    test("POST request.body of guestCommentData returns error message", async () => {
+        const seededTestPost = await Post.findOne({title: "second seeded post"}).exec();
+        let guestCommentData = {
+            desc: "New Guest Comment",
+            parentPostId: seededTestPost._id,
         };
-        const responseResult = await request(app).post("/comments").send(newCommentData);
+        const responseResult = await request(app).post("/comments").send(guestCommentData);
 
         expect(responseResult.body.errors).toEqual("Error: User not signed in");
     });
@@ -170,7 +171,7 @@ describe("CommentsController routes work and reject non users", () => {
     // UPDATE
     test("PATCH request.body of updatedCommentData returns error message", async () => {
         let updatedCommentData = {
-            desc: "new desc",
+            desc: "Updated guest desc.",
         };
         const responseResult = await request(app)
             .patch("/comments/123456/1234")
@@ -180,7 +181,7 @@ describe("CommentsController routes work and reject non users", () => {
     });
 
     // DELETE
-    test("DELETE commentData returns error 'user not signed in'", async () => {
+    test("DELETE guestCommentData returns error 'user not signed in'", async () => {
 
         const responseResult = await request(app).delete("/comments/123456/1234");
 

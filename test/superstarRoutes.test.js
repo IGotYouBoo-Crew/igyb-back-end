@@ -116,36 +116,36 @@ describe("Signed in UserController routes work and accept/return data correctly"
 
 describe("Signed in user PostsController routes work and accept/return data correctly", () => {
     // CREATE
-    test("POST request.body of newPostData returns newPostData", async () => {
-        let newPostData = {
-            "title": "new post",
-            "caption": "new post caption",
-            "body": "new post body",
+    test("POST request.body of superstarPostData returns newPostData", async () => {
+        let superstarPostData = {
+            "title": "New Superstar Post",
+            "caption": "new superstar post caption",
+            "body": "new superstar post body",
             "photo": "testimage.com"
         };
-        const responseResult = await authenticatedSession.post("/posts").send(newPostData);
+        const responseResult = await authenticatedSession.post("/posts").send(superstarPostData);
 
-        testPostId = responseResult.body._id;
-        testPostAuthor = responseResult.body.author;
+        superstarTestPostId = responseResult.body._id;
+        superstarTestPostAuthor = responseResult.body.author;
 
-        expect(responseResult.body).toHaveProperty("title", newPostData.title);
-        expect(responseResult.body).toHaveProperty("caption", newPostData.caption);
-        expect(responseResult.body).toHaveProperty("body", newPostData.body);
-        expect(responseResult.body).toHaveProperty("photo", newPostData.photo)
-        expect(responseResult.body).toHaveProperty("_id", testPostId);
+        expect(responseResult.body).toHaveProperty("title", superstarPostData.title);
+        expect(responseResult.body).toHaveProperty("caption", superstarPostData.caption);
+        expect(responseResult.body).toHaveProperty("body", superstarPostData.body);
+        expect(responseResult.body).toHaveProperty("photo", superstarPostData.photo)
+        expect(responseResult.body).toHaveProperty("_id", superstarTestPostId);
     });
     
     // READ
-    test("GET 'posts/testPostId' route exists and returns testPostId's data", async () => {
-        const responseResult = await request(app).get("/posts/" + testPostId);
+    test("GET '/posts/superstarTestPostId' route exists and returns superstarTestPostId's data", async () => {
+        const responseResult = await request(app).get("/posts/" + superstarTestPostId);
 
-        expect(responseResult.body).toHaveProperty("title", "new post");
-        expect(responseResult.body).toHaveProperty("caption", "new post caption");
-        expect(responseResult.body).toHaveProperty("body", "new post body");
+        expect(responseResult.body).toHaveProperty("title", "New Superstar Post");
+        expect(responseResult.body).toHaveProperty("caption", "new superstar post caption");
+        expect(responseResult.body).toHaveProperty("body", "new superstar post body");
         expect(responseResult.body).toHaveProperty("photo", "testimage.com");
-        expect(responseResult.body).toHaveProperty("_id", testPostId);
+        expect(responseResult.body).toHaveProperty("_id", superstarTestPostId);
     });
-    test("GET 'posts' route exists and returns all posts", async () => {
+    test("GET '/posts/' route exists and returns all posts", async () => {
         const responseResult = await request(app).get("/posts/");
 
         expect(responseResult.statusCode).toEqual(200);
@@ -153,39 +153,39 @@ describe("Signed in user PostsController routes work and accept/return data corr
     });
 
     // UPDATE
-    test("PATCH request.body of updatedPostData returns postData with updates", async () => {
+    test("PATCH request.body of updatedSuperstarPostData returns superstarPostData with updates", async () => {
 
-        let updatedPostData = {
-            "title": "update new title"
+        let updatedSuperstarPostData = {
+            "title": "updated superstar post title"
         };
         const responseResult = await authenticatedSession
-            .patch("/posts/" + testPostId + "/" + testPostAuthor)
-            .send(updatedPostData);
+            .patch("/posts/" + superstarTestPostId + "/" + superstarTestPostAuthor)
+            .send(updatedSuperstarPostData);
 
-        expect(responseResult.body).toHaveProperty("title", "update new title");
+        expect(responseResult.body).toHaveProperty("title", "updated superstar post title");
     });
-    test("PATCH request.body of updatedPostData returns error message as user is unauthorised", async () => {
-        let updatedPostData = {
-            "title": "update new title"
+    test("PATCH request.body of updatedSuperstarPostData returns error message as user is unauthorised", async () => {
+        let updatedSuperstarPostData = {
+            "title": "updated superstar post title - non-owner"
         };
         const responseResult = await authenticatedSession
             .patch("/posts/" + "/12345" + "/123")
-            .send(updatedPostData);
+            .send(updatedSuperstarPostData);
 
             expect(responseResult.body.errors).toEqual("Error: You are not authorised to access this route")
     });
 
     // DELETE
-    test("DELETE postData returns message with username", async () => {
+    test("DELETE superstarPostData returns success message", async () => {
         const responseResult = await authenticatedSession.delete(
-            "/posts/" + testPostId + "/" + testPostAuthor
+            "/posts/" + superstarTestPostId + "/" + superstarTestPostAuthor
         );
 
-        expect(responseResult.body.message).toEqual("Post: update new title has been successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: updated superstar post title has been successfully deleted");
     });
 
     // DELETE
-    test("DELETE postData returns error message as user is unauthorised", async () => {
+    test("DELETE superstarPostData returns error message as user is unauthorised", async () => {
         const responseResult = await authenticatedSession.delete("/posts/123456/1234");
 
         expect(responseResult.body.errors).toEqual(
@@ -197,54 +197,54 @@ describe("Signed in user PostsController routes work and accept/return data corr
 describe("Signed in as superstar CommentsController routes work and accept/return data correctly", () => {
 
     // CREATE
-    test("POST request.body of newCommentData returns newCommentData", async () => {
-        const testPost = await Post.findOne({title: "second post"}).exec();
-        let newCommentData = {
-            desc: "New Comment",
-            parentPostId: testPost._id,
+    test("POST request.body of superstarCommentData returns superstarCommentData", async () => {
+        const seededTestPost = await Post.findOne({title: "second seeded post"}).exec();
+        let superstarCommentData = {
+            desc: "New Superstar Comment",
+            parentPostId: seededTestPost._id,
         };
-        const responseResult = await authenticatedSession.post("/comments").send(newCommentData);
+        const responseResult = await authenticatedSession.post("/comments").send(superstarCommentData);
 
-        testCommentId = responseResult.body._id;
-        testCommentAuthor = responseResult.body.author;
+        superstarTestCommentId = responseResult.body._id;
+        superstarTestCommentAuthor = responseResult.body.author;
 
-        expect(responseResult.body).toHaveProperty("desc", newCommentData.desc);
+        expect(responseResult.body).toHaveProperty("desc", superstarCommentData.desc);
         expect(responseResult.body).toHaveProperty("parentPostId");
-        expect(responseResult.body).toHaveProperty("_id", testCommentId);
+        expect(responseResult.body).toHaveProperty("_id", superstarTestCommentId);
 
     });
 
     //UPDATE
     test("PATCH request.body of updatedCommentData returns commentData with updates", async () => {
-        let updatedCommentData = {
-            "desc": "updated comment description admin"
+        let updatedSuperstarCommentData = {
+            "desc": "updated superstar comment desc"
         };
         const responseResult = await authenticatedSession
-            .patch("/comments/" + testCommentId + "/" + testCommentAuthor)
-            .send(updatedCommentData);
+            .patch("/comments/" + superstarTestCommentId + "/" + superstarTestCommentAuthor)
+            .send(updatedSuperstarCommentData);
 
-        expect(responseResult.body).toHaveProperty("desc", "updated comment description admin");
+        expect(responseResult.body).toHaveProperty("desc", "updated superstar comment desc");
     });
-    test("PATCH request.body of updatedCommentData returns commentData with updates", async () => {
-        let updatedCommentData = {
+    test("PATCH request.body of updatedSuperstarCommentData returns error message as user is not authorised", async () => {
+        let updatedSuperstarCommentData = {
             "desc": "updated comment description admin"
         };
         const responseResult = await authenticatedSession
             .patch("/comments/" + "/12345" + "/123")
-            .send(updatedCommentData);
+            .send(updatedSuperstarCommentData);
 
             expect(responseResult.body.errors).toEqual("Error: You are not authorised to access this route")
     });
 
     // DELETE
-    test("DELETE commentData returns success message", async () => {
-        const responseResult = await authenticatedSession.delete("/comments/" + testCommentId + "/" + testCommentAuthor);
+    test("DELETE superstarCommentData returns success message", async () => {
+        const responseResult = await authenticatedSession.delete("/comments/" + superstarTestCommentId + "/" + superstarTestCommentAuthor);
 
-        expect(responseResult.body.message).toEqual(`Comment: ${testCommentId} has been successfully deleted`);
+        expect(responseResult.body.message).toEqual(`Comment: ${superstarTestCommentId} has been successfully deleted`);
     });
-    test("DELETE commentData returns success message", async () => {
-        const testComment = await Comment.findOne({desc: "first comment"}).exec();
-        const responseResult = await authenticatedSession.delete("/comments/" + testComment._id + "/" + testComment.author);
+    test("DELETE superstarCommentData returns error message as user is unauthorised", async () => {
+        const seededTestComment = await Comment.findOne({desc: "first seeded comment"}).exec();
+        const responseResult = await authenticatedSession.delete("/comments/" + seededTestComment._id + "/" + seededTestComment.author);
 
         expect(responseResult.body.errors).toEqual(
             "Error: You are not authorised to access this route"

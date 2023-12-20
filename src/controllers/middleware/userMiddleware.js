@@ -130,6 +130,7 @@ const generateUser = async (request, response, next) => {
         request.headers.data = responseData;
         request.headers.jwt = createUserJwt(responseData);
         request.headers.username = responseData.username;
+        request.headers.role = responseData.role.name;
 
         next();
 
@@ -153,6 +154,7 @@ const updateUser = async (request, response, next) => {
     try{
         let updatedUser = await updateUserById(request.params.authorId, request.body);
         request.header.updatedUser = updatedUser
+        request.headers.jwt = createUserJwt(updatedUser)
         next()
     } catch(error) {
         next(error)

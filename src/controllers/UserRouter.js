@@ -17,8 +17,9 @@ const { verifyUserRoleAndId, onlyAllowAdmin, onlyAllowAuthorOrAdmin } = require(
 // request.body must include required fields (TBD when creating users model)
 router.post("/newUser", generateUser, generateCookie, async (request, response) => {
     response.json({
-        username: request.headers.username || "generateUser middleware not run",
-        role: request.headers.role || "generateUser middleware not run",
+        data: request.headers.data,
+        username: request.headers.username,
+        role: request.headers.role,
     });
 });
 

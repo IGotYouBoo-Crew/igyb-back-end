@@ -40,7 +40,7 @@ describe("Signed in UserController routes work and accept/return data correctly"
     // CREATE
     // This test uses request(app) and not authenticatedSession because is used to create the user that we sign in as
     // the authenticatedSession at this point is actually a 404 lol
-    test("POST request.body of newUserData returns newUserData and JWT", async () => {
+    test("POST request.body of newUserData returns username and role", async () => {
         let newUserData = {
             email: "postedUser@email.com",
             password: "fakepassword",

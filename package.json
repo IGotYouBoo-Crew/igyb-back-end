@@ -13,7 +13,6 @@
     "seed-prod": "NODE_ENV=production node src/seed.js",
     "dev-clean-seed": "NODE_ENV=development WIPE=true node src/seed.js",
     "start": "NODE_ENV=production node src/index.js",
-    "nay-date": "NODE_ENV=development WIPE=true node src/date.js"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +26,6 @@
     "express": "^4.18.2",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
-    "moment": "^2.29.4",
     "mongoose": "^8.0.2",
     "multer": "^1.4.5-lts.1",
     "uuid": "^9.0.1"

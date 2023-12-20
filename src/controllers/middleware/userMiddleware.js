@@ -2,7 +2,7 @@
 const { getUserByUsername, createNewUser, getUserById, deleteUserById, updateUserById } = require("../functions/UserFunctions");
 const { createUserJwt, getUserDataFromJwt } = require("../functions/JwtFunctions");
 const { getRoleNameById } = require("../functions/RoleFunctions");
-const { checkUnhashedData } = require("../functions/EncryptionFunctions");
+const { checkUnhashedData, hashString } = require("../functions/EncryptionFunctions");
 
 
 
@@ -152,6 +152,9 @@ const deleteUser = async (request, response, next) => {
 
 const updateUser = async (request, response, next) => {
     try{
+        if (request.body.password){
+            request.body.password = await hashString(request.body.password)
+        }
         let updatedUser = await updateUserById(request.params.authorId, request.body);
         request.header.updatedUser = updatedUser
         request.headers.jwt = createUserJwt(updatedUser)

@@ -201,7 +201,7 @@ describe("EventsController routes work and reject non users", () => {
             host: "Boiled Potato",
             image: "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg",
             title: "Guest Potato Test Event",
-            date: "26th December 2023",
+            date: "2023-12-31",
             start: "12:00",
             finish: "15:00",
             content: "I'm trying to create a test event but I'm a potato"
@@ -227,7 +227,7 @@ describe("EventsController routes work and reject non users", () => {
         expect(responseResult.body).toHaveProperty("host", "Queen Ella");
         expect(responseResult.body).toHaveProperty("image", "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg");
         expect(responseResult.body).toHaveProperty("title", "second seeded event");
-        expect(responseResult.body).toHaveProperty("date", "1st Jan 2024");
+        expect(responseResult.body).toHaveProperty("date", "28-02-2024");
         expect(responseResult.body).toHaveProperty("start", "08:00");
         expect(responseResult.body).toHaveProperty("finish", "20:00");
         expect(responseResult.body).toHaveProperty("ticketLink", "https://premier.ticketek.com.au/");

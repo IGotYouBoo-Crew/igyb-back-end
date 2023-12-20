@@ -236,7 +236,7 @@ describe("Signed in as admin EventsController routes work and accept/return data
             host: "Boiled Potato",
             image: "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg",
             title: "Hot Potato Test Event",
-            date: "26th December 2023",
+            date: "2023-12-31",
             start: "12:00",
             finish: "15:00",
             ticketLink: "https://thewiggles.com/live",
@@ -250,7 +250,7 @@ describe("Signed in as admin EventsController routes work and accept/return data
         expect(responseResult.body).toHaveProperty("host", newEventData.host);
         expect(responseResult.body).toHaveProperty("image", newEventData.image)
         expect(responseResult.body).toHaveProperty("title", newEventData.title);
-        expect(responseResult.body).toHaveProperty("date", newEventData.date);
+        expect(responseResult.body).toHaveProperty("date", "31-12-2023");
         expect(responseResult.body).toHaveProperty("start", newEventData.start);
         expect(responseResult.body).toHaveProperty("finish", newEventData.finish);
         expect(responseResult.body).toHaveProperty("ticketLink", newEventData.ticketLink);
@@ -272,7 +272,7 @@ describe("Signed in as admin EventsController routes work and accept/return data
         expect(responseResult.body).toHaveProperty("host", "Boiled Potato");
         expect(responseResult.body).toHaveProperty("image", "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg");
         expect(responseResult.body).toHaveProperty("title", "Hot Potato Test Event");
-        expect(responseResult.body).toHaveProperty("date", "26th December 2023");
+        expect(responseResult.body).toHaveProperty("date", "31-12-2023");
         expect(responseResult.body).toHaveProperty("start", "12:00");
         expect(responseResult.body).toHaveProperty("finish", "15:00");
         expect(responseResult.body).toHaveProperty("ticketLink", "https://thewiggles.com/live");

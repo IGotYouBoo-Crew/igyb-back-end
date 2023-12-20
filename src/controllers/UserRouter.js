@@ -6,9 +6,8 @@ const router = express.Router();
 // Import our new functions:
 const {
     getAllUsers,
-    getUserByUsername,
 } = require("./functions/UserFunctions");
-const { generateUser, generateCookie, targetSelf, logout, login, recogniseCookie, deleteUser, updateUser } = require("./middleware/userMiddleware");
+const { generateUser, generateCookie, targetSelf, logout, login, recogniseCookie, deleteUser, updateUser, getUser } = require("./middleware/userMiddleware");
 const { verifyUserRoleAndId, onlyAllowAdmin, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -36,14 +35,10 @@ router.get("/", verifyUserRoleAndId, onlyAllowAdmin, async (request, response) =
 });
 
 // shows a user's data which matches a specified username
-router.get("/:username", async (request, response) => {
-    let user = await getUserByUsername(request.params.username);
-    let responseData = {...user._doc}
-    delete responseData.password;
-    delete responseData.__v;
-
+router.get("/:username", getUser, async (request, response) => {
+    
     response.json({
-        data: responseData,
+        data: request.headers.data,
     });
 });
 

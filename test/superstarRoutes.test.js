@@ -36,6 +36,8 @@ afterAll(() => {
     mongoose.disconnect();
 });
 
+// Tests for USERS, who are Superstars:
+
 describe("Signed in UserController routes work and accept/return data correctly", () => {
     // CREATE
     // This test uses request(app) and not authenticatedSession because is used to create the user that we sign in as
@@ -114,7 +116,11 @@ describe("Signed in UserController routes work and accept/return data correctly"
     });
 });
 
+
+// Tests for POSTS, for logged in Superstar users:
+
 describe("Signed in user PostsController routes work and accept/return data correctly", () => {
+    
     // CREATE
     test("POST request.body of superstarPostData returns newPostData", async () => {
         let superstarPostData = {
@@ -196,6 +202,9 @@ describe("Signed in user PostsController routes work and accept/return data corr
     });
 });
 
+
+// Tests for COMMENTS, for logged in Superstar users:
+
 describe("Signed in as superstar CommentsController routes work and accept/return data correctly", () => {
 
     // CREATE
@@ -266,7 +275,7 @@ describe("Signed in as superstar EventsController routes work and accept/return 
             host: "Boiled Potato",
             image: "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg",
             title: "Hot Potato Test Event",
-            date: "2023-12-31",
+            date: "Dec 31, 2023",
             start: "12:00",
             finish: "15:00",
             ticketLink: "https://thewiggles.com/live",
@@ -280,7 +289,7 @@ describe("Signed in as superstar EventsController routes work and accept/return 
         expect(responseResult.body).toHaveProperty("host", newEventData.host);
         expect(responseResult.body).toHaveProperty("image", newEventData.image)
         expect(responseResult.body).toHaveProperty("title", newEventData.title);
-        expect(responseResult.body).toHaveProperty("date", "31-12-2023");
+        expect(responseResult.body).toHaveProperty("date", "Dec 31, 2023");
         expect(responseResult.body).toHaveProperty("start", newEventData.start);
         expect(responseResult.body).toHaveProperty("finish", newEventData.finish);
         expect(responseResult.body).toHaveProperty("ticketLink", newEventData.ticketLink);
@@ -301,7 +310,7 @@ describe("Signed in as superstar EventsController routes work and accept/return 
         expect(responseResult.body).toHaveProperty("host", "Boiled Potato");
         expect(responseResult.body).toHaveProperty("image", "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg");
         expect(responseResult.body).toHaveProperty("title", "Hot Potato Test Event");
-        expect(responseResult.body).toHaveProperty("date", "31-12-2023");
+        expect(responseResult.body).toHaveProperty("date", "Dec 31, 2023");
         expect(responseResult.body).toHaveProperty("start", "12:00");
         expect(responseResult.body).toHaveProperty("finish", "15:00");
         expect(responseResult.body).toHaveProperty("ticketLink", "https://thewiggles.com/live");

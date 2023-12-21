@@ -92,6 +92,7 @@ const events = [
         date: "Dec 25, 2023",
         start: "12:00",
         finish: "14:00",
+        ticketLink: "https://www.songkick.com/artists/282353-fat-freddys-drop",
         content: "this is the first fake event",
         author: null,
     },

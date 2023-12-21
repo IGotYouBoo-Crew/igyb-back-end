@@ -44,7 +44,10 @@ describe("server root route exists and returns status hello world", () => {
     });
 });
 
+// Tests for USERS, who are guests that don't yet have accounts or are not signed in:
+
 describe("UserController routes work and accept/return data correctly", () => {
+    
     // CREATE
     test("POST request.body of newUserData returns newUserData and JWT", async () => {
         let newUserData = {
@@ -99,6 +102,9 @@ describe("UserController routes work and accept/return data correctly", () => {
     });
 });
 
+
+// Tests for POSTS, with guests/users who are not logged in:
+
 describe("PostsController routes work and reject non users", () => {
     
     // CREATE
@@ -132,7 +138,6 @@ describe("PostsController routes work and reject non users", () => {
     });
 
     // UPDATE
-
     test("PATCH request.body of updatedPostData returns error message", async () => {
         let updatedPostData = {
             caption: "update: I hate content",
@@ -153,6 +158,9 @@ describe("PostsController routes work and reject non users", () => {
     });
 
 });
+
+
+// Tests for COMMENTS, with guests/users who are not logged in:
 
 describe("CommentsController routes work and reject non users", () => {
     
@@ -192,7 +200,7 @@ describe("CommentsController routes work and reject non users", () => {
 
 
 
-// Tests for EVENTS, with guests who are not logged in:
+// Tests for EVENTS, with guests/users who are not logged in:
 
 describe("EventsController routes work and reject non users", () => {
     
@@ -202,9 +210,10 @@ describe("EventsController routes work and reject non users", () => {
             host: "Boiled Potato",
             image: "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg",
             title: "Guest Potato Test Event",
-            date: "2023-12-31",
+            date: "Jun 26, 2024",
             start: "12:00",
             finish: "15:00",
+            ticketLink: "https://thewiggles.com/live",
             content: "I'm trying to create a test event but I'm a potato"
         };
         const responseResult = await request(app).post("/events/").send(newEventData);
@@ -228,7 +237,7 @@ describe("EventsController routes work and reject non users", () => {
         expect(responseResult.body).toHaveProperty("host", "Queen Ella");
         expect(responseResult.body).toHaveProperty("image", "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg");
         expect(responseResult.body).toHaveProperty("title", "second seeded event");
-        expect(responseResult.body).toHaveProperty("date", "28-02-2024");
+        expect(responseResult.body).toHaveProperty("date", "Feb 28, 2024");
         expect(responseResult.body).toHaveProperty("start", "08:00");
         expect(responseResult.body).toHaveProperty("finish", "20:00");
         expect(responseResult.body).toHaveProperty("ticketLink", "https://premier.ticketek.com.au/");

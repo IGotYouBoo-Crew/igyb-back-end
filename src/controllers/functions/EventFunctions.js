@@ -65,32 +65,31 @@ const getEventById = async (request, response, next) => {
 // UPDATE
 const updateEventById = async (request, response, next) => {
     try {
-        let updatedEvent = await Event.findByIdAndUpdate(request.params.id, request.body, { runValidators: true, returnDocument: 'after' }).exec()
-        return response.json(updatedEvent)
-        // const event = await Event.findById(request.params.id);
-        // console.log(event)
 
-        // if(!event) {
-        //     const error = new Error("Oops, that event was not found");
-        //     next(error);
-        //     return;
-        // } else {
-        //     async function handleUpdateEventData(eventData) {
-        //         const {host, image, title, date, start, finish, ticketLink, content} = eventData;
-        //         event.host = host || event.host;
-        //         event.image = image || event.image;
-        //         event.title = title || event.title;
-        //         event.date = date || event.date;
-        //         event.start = start || event.start;
-        //         event.finish = finish || event.finish;
-        //         event.ticketLink = ticketLink || event.ticketLink;
-        //         event.content = content || event.content;
-        //         const updatedEvent = await event.save();
-        //         return response.json(updatedEvent);
-        //     }
+        const event = await Event.findById(request.params.id);
+        console.log(event)
+
+        if(!event) {
+            const error = new Error("Oops, that event was not found");
+            next(error);
+            return;
+        } else {
+            async function handleUpdateEventData(eventData) {
+                const {host, image, title, date, start, finish, ticketLink, content} = eventData;
+                event.host = host || event.host;
+                event.image = image || event.image;
+                event.title = title || event.title;
+                event.date = date || event.date;
+                event.start = start || event.start;
+                event.finish = finish || event.finish;
+                event.ticketLink = ticketLink || event.ticketLink;
+                event.content = content || event.content;
+                const updatedEvent = await event.save();
+                return response.json(updatedEvent);
+            }
     
-        //     handleUpdateEventData(request.body);
-        
+            handleUpdateEventData(request.body);
+        }
     } catch (error) {
         next(error);
     }

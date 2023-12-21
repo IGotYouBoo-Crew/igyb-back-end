@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
-const dayjs = require("dayjs");
+const dayjs = require('dayjs');
+var localizedFormat = require('dayjs/plugin/localizedFormat')
+dayjs.extend(localizedFormat)
 const { timeValidators } = require("./validatorFunctions/eventValidators");
+
 
 const EventSchema = new mongoose.Schema({
     host: { type: String, required: true },
@@ -29,7 +32,7 @@ EventSchema.set("toObject", { getters: true });
 EventSchema.set("toJSON", { getters: true });
 
 EventSchema.path("date").get(function (value) {
-    return dayjs(value).format("DD-MM-YYYY");
+        return dayjs(value).format('ll');
 });
 
 const Event = mongoose.model("Event", EventSchema);

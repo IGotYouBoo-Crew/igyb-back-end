@@ -7,6 +7,15 @@ const { getRoleIdByName } = require('./RoleFunctions');
 // checklist: Create, Read, Update, Delete
 
 // CREATE
+
+/**
+ * Creates User from UserSchema according to data provided
+ * @date 22/12/2023 - 01:05:57
+ *
+ * @async
+ * @param {object} userDetails  {username: string, password: string, email: string, [profilePicture: string,] [pronouns: string]}
+ * @returns {object} mongooseSchema
+ */
 async function createNewUser(userDetails){
     // hash user password
     userDetails.password = await hashString(userDetails.password)
@@ -14,7 +23,7 @@ async function createNewUser(userDetails){
     !userDetails.role ? userDetails.role = await getRoleIdByName("Superstar") : ""
     return await User.create(userDetails)
 }
-
+createNewUser()
 // READ 
 // Model.find({}) returns all documents in a collection.
 async function getAllUsers(){

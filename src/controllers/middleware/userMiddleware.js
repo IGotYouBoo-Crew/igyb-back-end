@@ -9,6 +9,7 @@ const { checkUnhashedData, hashString } = require("../functions/EncryptionFuncti
 // logs user in, 
 // attaches user data as a JWT to the header of the request for cookie generation
 // adds username and role name to header for response --> used in front-end state 
+
 const login = async (request, response, next) => {
     try {
         // username and password are required in the request body

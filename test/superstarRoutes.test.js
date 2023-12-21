@@ -65,14 +65,27 @@ describe("Signed in UserController routes work and accept/return data correctly"
         expect(responseData).toHaveProperty("pronouns", newUserData.pronouns);
         expect(responseData).toHaveProperty("_id", testUserId);
     });
+    test("POST request.body of newUserData returns username and role", async () => {
+        let newUserData = {
+            email: "postedUser6@email.com",
+            password: "fakepassword",
+            username: "User6",
+            pronouns: "he/him",
+        };
 
+        const responseResult = await request(app).post("/account/newUser").send(newUserData);
+        const responseData = responseResult.body.data;
+        // global variable used to access same document later for Update and Delete actions
+        errorTestUserId = responseData._id;
+        expect(responseResult.statusCode).toEqual(200)
+    });
+
+    // READ
     // this test is run to get the userOneId --> used to test updating another user's account
-    test("'account/user1' route exists and returns user1's data", async () => {
+    test("'account/user1' route exists and returns error", async () => {
         const responseResult = await request(app).get("/account/user1");
-        expect(responseResult.body.data).toHaveProperty("username", "user1");
-        expect(responseResult.body.data).toHaveProperty("_id");
-        // global variable used later
-        userOneId = responseResult.body.data._id;
+        console.log(responseResult.body)
+        expect(responseResult.body.errors).toEqual('Error: User not signed in')
     });
 
     // UPDATE
@@ -83,7 +96,7 @@ describe("Signed in UserController routes work and accept/return data correctly"
         // authenticatedSession used to test signed-in attempt
         // Here, we expect it to fail again, but for different reasons
         let testResponse = await authenticatedSession
-            .patch("/account/" + userOneId)
+            .patch("/account/" + errorTestUserId)
             .send(updatedUserData);
         expect(testResponse.body).toHaveProperty(
             "errors",

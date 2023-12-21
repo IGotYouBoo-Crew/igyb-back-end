@@ -35,8 +35,7 @@ router.get("/", verifyUserRoleAndId, onlyAllowAdmin, async (request, response) =
 });
 
 // shows a user's data which matches a specified username
-router.get("/:username", getUser, async (request, response) => {
-    
+router.get("/:username", verifyUserRoleAndId, targetSelf, onlyAllowAuthorOrAdmin, getUser, async (request, response) => {
     response.json({
         data: request.headers.data,
     });

@@ -82,7 +82,7 @@ const getPost = async (request, response, next) => {
         const post = await Post.findById(request.params.id).populate([
             {
                 path: 'author',
-                select: ["username"],
+                select: ['username', 'profilePicture'],
             },
             {
                 path: 'comments',
@@ -92,7 +92,7 @@ const getPost = async (request, response, next) => {
                 populate: [
                     {
                         path: 'author',
-                        select: ['username']
+                        select: ['username', 'profilePicture']
                     },                    
                 ],            
             },
@@ -114,7 +114,7 @@ const getAllPosts = async (request, response, next) => {
         const posts = await Post.find({}).populate([
             {
                 path: "author",
-                select: ["username"]
+                select: ['username', 'profilePicture']
             }
         ]);
 

@@ -9,7 +9,6 @@ const { checkUnhashedData, hashString } = require("../functions/EncryptionFuncti
 // logs user in, 
 // attaches user data as a JWT to the header of the request for cookie generation
 // adds username and role name to header for response --> used in front-end state 
-
 const login = async (request, response, next) => {
     try {
         // username and password are required in the request body
@@ -87,9 +86,16 @@ const recogniseCookie = async(request, response, next) => {
         // gets user data from stored user
         let targetUser = await getUserById(userData._id)
 
+        // redirects to signOut route
+        // This should only happen if user data is deleted in DB by 3rd party (e.g. admin)
+        if (!targetUser) {
+            response.redirect("/signOut")
+            return
+        }
+
         // if stored user with provided userId does not exist, 
         // or the password from the JWT doesn't match the stored user password, throws error
-        if (!targetUser || userData.password !== targetUser.password) {
+        if (userData.password !== targetUser.password) {
             throw new Error("Local cookie details do not match information on record")
         }
 

@@ -70,6 +70,7 @@ router.delete("/", verifyUserRoleAndId, targetSelf, onlyAllowAuthorOrAdmin, logo
     });
 });
 
+// Logs user in and generates cookie
 router.post("/signIn", login, generateCookie, async (request, response) => {
     response.json({
         username: request.headers.username,
@@ -77,12 +78,14 @@ router.post("/signIn", login, generateCookie, async (request, response) => {
     });
 });
 
+// logs user out and expires any existing cookies 
 router.post("/signOut", logout, verifyUserRoleAndId, generateCookie, async (request, response) => {
     response.json({
         signed: "out",
     });
 });
 
+// retrieves user data from cookie and returns renewed cookie
 router.post("/cookieCheck", recogniseCookie, verifyUserRoleAndId, generateCookie, async (request, response) => {
     response.json({
         username: request.headers.username,

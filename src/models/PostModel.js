@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const dayjs = require('dayjs');
+var localizedFormat = require('dayjs/plugin/localizedFormat')
+dayjs.extend(localizedFormat)
 
 const PostSchema = new mongoose.Schema(
     {
@@ -48,7 +50,7 @@ PostSchema.set('toObject', { getters: true });
 PostSchema.set('toJSON', { getters: true });
 
 PostSchema.path('date').get(function (value) {
-    return dayjs(value).format('DD-MM-YYYY');
+    return dayjs(value).format('ll');
 });
 
 const Post = mongoose.model("Post", PostSchema);

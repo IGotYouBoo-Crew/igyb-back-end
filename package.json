@@ -12,7 +12,8 @@
     "start-dev": "NODE_ENV=development nodemon src/index.js",
     "seed-prod": "NODE_ENV=production node src/seed.js",
     "dev-clean-seed": "NODE_ENV=development WIPE=true node src/seed.js",
-    "start": "NODE_ENV=production node src/index.js"
+    "start": "NODE_ENV=production node src/index.js",
+    "test-cc": "jest --coverage"
   },
   "keywords": [],
   "author": "",

@@ -1,8 +1,6 @@
 // Import our new functions:
-const { getUserByUsername, createNewUser, getUserById } = require("../functions/UserFunctions");
-const { createUserJwt, getUserDataFromJwt } = require("../functions/JwtFunctions");
+const { getUserDataFromJwt } = require("../functions/JwtFunctions");
 const { getRoleNameById } = require("../functions/RoleFunctions");
-const { checkUnhashedData } = require("../functions/EncryptionFunctions");
 
 // Middleware
 

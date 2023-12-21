@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const dayjs = require('dayjs');
+var localizedFormat = require('dayjs/plugin/localizedFormat')
+dayjs.extend(localizedFormat)
 
 
 const EventSchema = new mongoose.Schema({
@@ -45,7 +47,7 @@ EventSchema.set('toObject', { getters: true });
 EventSchema.set('toJSON', { getters: true });
 
 EventSchema.path('date').get(function (value) {
-    return dayjs(value).format('DD-MM-YYYY');
+        return dayjs(value).format('ll');
 });
 
 const Event = mongoose.model("Event", EventSchema);

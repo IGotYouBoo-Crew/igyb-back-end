@@ -4,7 +4,6 @@ var localizedFormat = require('dayjs/plugin/localizedFormat')
 dayjs.extend(localizedFormat)
 const { timeValidators } = require("./validatorFunctions/eventValidators");
 
-
 const EventSchema = new mongoose.Schema({
     host: { type: String, required: true },
     image: { type: String, required: false },

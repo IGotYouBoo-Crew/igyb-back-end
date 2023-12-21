@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         validate: usernameValidators,
     },
-    pronouns: String,
+    pronouns: {type: String, default: ""},
     role: {
         type: mongoose.Types.ObjectId,
         ref: "Role",

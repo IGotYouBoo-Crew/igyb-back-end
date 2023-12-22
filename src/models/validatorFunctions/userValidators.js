@@ -13,12 +13,15 @@ let notTooLong = function (username) {
 };
 
 let noWhiteSpace = function (username) {
-    console.log("running whitespace test");
-    console.log("username: " + username + "|");
-    console.log("test result" + /\s/g.test(username));
     return !/\s/g.test(username);
 };
 
+/**
+ * List of validator functions and their fail-case response strings
+ * @date 22/12/2023 - 02:15:56
+ *
+ * @type {[{validator:function, message:string}]} List of Objects
+ */
 var usernameValidators = [
     {
         validator: notTooLong,
@@ -30,6 +33,12 @@ var usernameValidators = [
     },
 ];
 
+/**
+ * List of validator functions and their fail-case response strings
+ * @date 22/12/2023 - 02:15:56
+ *
+ * @type {[{validator:function, message:string}]} List of Objects
+ */
 var emailValidators = [
     {
         validator: invalidEmailAddress,

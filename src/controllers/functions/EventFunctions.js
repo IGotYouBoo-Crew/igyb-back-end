@@ -5,11 +5,11 @@ const { Event } = require('../../models/EventModel');
 // CREATE
 const createEvent = async (request, response, next) => {
     try {
-        const {host, image, title, date, start, finish, ticketLink, content} = request.body
+        const {title, host, image, date, start, finish, ticketLink, content} = request.body
         const event = new Event({
+            title, 
             host, 
             image, 
-            title, 
             date, 
             start, 
             finish, 
@@ -63,7 +63,7 @@ const getEventById = async (request, response, next) => {
 }
 
 // UPDATE
-const updateEventById = async (request, response, next) => {
+const updateEvent = async (request, response, next) => {
     try {
 
         const event = await Event.findById(request.params.id);
@@ -75,10 +75,10 @@ const updateEventById = async (request, response, next) => {
             return;
         } else {
             async function handleUpdateEventData(eventData) {
-                const {host, image, title, date, start, finish, ticketLink, content} = eventData;
+                const {title, host, image, date, start, finish, ticketLink, content} = eventData;
+                event.title = title || event.title;
                 event.host = host || event.host;
                 event.image = image || event.image;
-                event.title = title || event.title;
                 event.date = date || event.date;
                 event.start = start || event.start;
                 event.finish = finish || event.finish;
@@ -96,7 +96,7 @@ const updateEventById = async (request, response, next) => {
 }
 
 // DELETE
-const deleteEventById = async (request, response, next) => {
+const deleteEvent = async (request, response, next) => {
     try {
         const eventToDelete = await Event.findOneAndDelete({ _id: request.params.id });
 
@@ -117,6 +117,6 @@ module.exports = {
     createEvent,
     getAllEvents,
     getEventById,
-    updateEventById,
-    deleteEventById
+    updateEvent,
+    deleteEvent
 }

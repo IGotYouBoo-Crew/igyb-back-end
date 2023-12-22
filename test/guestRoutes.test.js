@@ -207,9 +207,9 @@ describe("EventsController routes work and reject non users", () => {
     // CREATE
     test("POST request.body of newEventData returns error message", async () => {
         let newEventData = {
+            title: "Guest Potato Test Event",
             host: "Boiled Potato",
             image: "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg",
-            title: "Guest Potato Test Event",
             date: "Jun 26, 2024",
             start: "12:00",
             finish: "15:00",
@@ -234,9 +234,9 @@ describe("EventsController routes work and reject non users", () => {
         const seededEvent = await Event.findOne({title: "second seeded event"}).exec();
         const responseResult = await request(app).get("/events/" + seededEvent._id);
 
+        expect(responseResult.body).toHaveProperty("title", "second seeded event");
         expect(responseResult.body).toHaveProperty("host", "Queen Ella");
         expect(responseResult.body).toHaveProperty("image", "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg");
-        expect(responseResult.body).toHaveProperty("title", "second seeded event");
         expect(responseResult.body).toHaveProperty("date", "Feb 28, 2024");
         expect(responseResult.body).toHaveProperty("start", "08:00");
         expect(responseResult.body).toHaveProperty("finish", "20:00");

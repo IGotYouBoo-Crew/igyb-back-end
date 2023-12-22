@@ -8,8 +8,8 @@ const {
     createEvent,
     getAllEvents,
     getEventById,
-    updateEventById,
-    deleteEventById
+    updateEvent,
+    deleteEvent
 } = require("./functions/EventFunctions");
 
 // Import our auth middleware:
@@ -24,11 +24,11 @@ router.post("/", verifyUserRoleAndId, createEvent);
 
 // UPDATE
 
-router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthor, updateEventById);
+router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthor, updateEvent);
 
 // DELETE
 
-router.delete("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deleteEventById);
+router.delete("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deleteEvent);
 
 // READ
 

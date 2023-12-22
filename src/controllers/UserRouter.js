@@ -20,6 +20,7 @@ const {
     verifyUserRoleAndId,
     onlyAllowAdmin,
     onlyAllowAuthorOrAdmin,
+    onlyAllowAuthor,
 } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE

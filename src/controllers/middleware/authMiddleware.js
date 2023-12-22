@@ -55,6 +55,26 @@ const onlyAllowAuthorOrAdmin = async (request, response, next) => {
     }
 };
 
+const onlyAllowAuthor = async (request, response, next) => {
+    try {
+        // checks that all required data is available
+        if (!request.headers.userId || !request.headers.userRole || !request.cookies.access_token) {
+            throw new Error("You need to run verifyUserRoleAndId middleware first");
+        }
+        if (
+            // checks ":authorId" (from params) against userId (from header) OR
+            request.params.authorId === request.headers.userId
+        ) {
+            next();
+        } else {
+            response.status(403);
+            throw new Error("You are not authorised to access this route");
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
 // similar to the above, but only allows admin
 const onlyAllowAdmin = async (request, response, next) => {
     try {
@@ -78,5 +98,6 @@ const onlyAllowAdmin = async (request, response, next) => {
 module.exports = {
     verifyUserRoleAndId,
     onlyAllowAuthorOrAdmin,
+    onlyAllowAuthor,
     onlyAllowAdmin,
 };

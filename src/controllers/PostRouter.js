@@ -13,7 +13,7 @@ const {
 } = require("./functions/PostFunctions");
 
 // Import our auth middleware:
-const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
+const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin, onlyAllowAuthor } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
@@ -23,7 +23,7 @@ router.post("/", verifyUserRoleAndId, createPost);
 
 // UPDATE
 
-router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updatePost);
+router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthor, updatePost);
 
 // DELETE
 

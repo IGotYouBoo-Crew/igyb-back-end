@@ -13,7 +13,7 @@ const {
 } = require("./functions/EventFunctions");
 
 // Import our auth middleware:
-const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
+const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin, onlyAllowAuthor } = require("./middleware/authMiddleware");
 const { generateEvent } = require("./middleware/errorMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -24,7 +24,7 @@ router.post("/", verifyUserRoleAndId, createEvent);
 
 // UPDATE
 
-router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updateEventById);
+router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthor, updateEventById);
 
 // DELETE
 

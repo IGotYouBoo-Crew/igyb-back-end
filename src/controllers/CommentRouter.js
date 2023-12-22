@@ -11,7 +11,7 @@ const {
 } = require("./functions/CommentFunctions");
 
 // Import our auth middleware:
-const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin } = require("./middleware/authMiddleware");
+const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin, onlyAllowAuthor } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
@@ -19,7 +19,7 @@ const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin } = require("./middleware/au
 router.post("/", verifyUserRoleAndId, createComment)
 
 // UPDATE
-router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updateComment)
+router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthor, updateComment)
 
 
 // DELETE

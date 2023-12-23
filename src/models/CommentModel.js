@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const dayjs = require('dayjs');
-
+var localizedFormat = require('dayjs/plugin/localizedFormat');
+dayjs.extend(localizedFormat);
 
 const CommentSchema = new mongoose.Schema(
     {
@@ -37,7 +38,7 @@ CommentSchema.set('toObject', { getters: true });
 CommentSchema.set('toJSON', { getters: true });
 
 CommentSchema.path('date').get(function (value) {
-    return dayjs(value).format('DD-MM-YYYY');
+    return dayjs(value).format('ll');
 });
 
 const Comment = mongoose.model("Comment", CommentSchema);

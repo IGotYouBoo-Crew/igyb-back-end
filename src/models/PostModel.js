@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const dayjs = require('dayjs');
-var localizedFormat = require('dayjs/plugin/localizedFormat')
-dayjs.extend(localizedFormat)
+var localizedFormat = require('dayjs/plugin/localizedFormat');
+dayjs.extend(localizedFormat);
 
 const PostSchema = new mongoose.Schema(
     {

@@ -14,7 +14,6 @@ const {
 
 // Import our auth middleware:
 const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin, onlyAllowAuthor } = require("./middleware/authMiddleware");
-const { generateEvent } = require("./middleware/errorMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 

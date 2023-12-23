@@ -1,7 +1,7 @@
 // Test the routes from server.js
 const { default: mongoose } = require("mongoose");
-const { databaseConnect } = require("../src/database");
-const { app } = require("../src/server");
+const { databaseConnect } = require("../../src/database");
+const { app } = require("../../src/server");
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
 

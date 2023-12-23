@@ -1,15 +1,15 @@
 // Test the routes from server.js
 const { default: mongoose } = require("mongoose");
-const { databaseConnect } = require("../src/database");
-const { app } = require("../src/server");
+const { databaseConnect } = require("../../src/database");
+const { app } = require("../../src/server");
 let bcrypt = require("bcrypt");
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
-const { getRoleIdByName } = require("../src/controllers/functions/RoleFunctions");
+const { getRoleIdByName } = require("../../src/controllers/functions/RoleFunctions");
 var session = require("supertest-session");
-const { Post } = require("../src/models/PostModel");
-const { Comment } = require("../src/models/CommentModel");
-const { Event } = require("../src/models/EventModel");
+const { Post } = require("../../src/models/PostModel");
+const { Comment } = require("../../src/models/CommentModel");
+const { Event } = require("../../src/models/EventModel");
 
 var testSession = session(app);
 var adminAuthSession;
@@ -101,6 +101,10 @@ describe("Signed in as admin UserController routes work and accept/return data c
     // READ
     test("Admin GET '/' route passes", async () => {
         let responseData = await adminAuthSession.get("/account/");
+        expect(responseData.status).toEqual(200)
+    });
+    test("Admin GET '/:username' route passes", async () => {
+        let responseData = await adminAuthSession.get("/account/User4");
         expect(responseData.status).toEqual(200)
     });
 

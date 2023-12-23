@@ -31,11 +31,6 @@ async function databaseConnect() {
     }
 }
 
-async function databaseDisconnector(){
-    await connection.close();
-}
-
 module.exports = {
     databaseConnect,
-    databaseDisconnector
 }

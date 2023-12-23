@@ -1,14 +1,14 @@
 // Test the routes from server.js
 const { default: mongoose } = require("mongoose");
-const { databaseConnect } = require("../src/database");
-const { app } = require("../src/server");
+const { databaseConnect } = require("../../src/database");
+const { app } = require("../../src/server");
 let bcrypt = require("bcrypt");
 // Import supertest so we can manage the app/server in tests properly
 const request = require("supertest");
-const { getRoleIdByName } = require("../src/controllers/functions/RoleFunctions");
+const { getRoleIdByName } = require("../../src/controllers/functions/RoleFunctions");
 var session = require("supertest-session");
-const { Post } = require("../src/models/PostModel");
-const { Comment } = require("../src/models/CommentModel");
+const { Post } = require("../../src/models/PostModel");
+const { Comment } = require("../../src/models/CommentModel");
 
 var testSession = session(app);
 var authenticatedSession;

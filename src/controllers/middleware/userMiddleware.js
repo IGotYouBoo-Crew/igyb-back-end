@@ -60,7 +60,7 @@ const generateCookie = async (request, response, next) => {
             expiry = 0;
         }
         // attaches a cookie to the response
-        response.cookie("access_token", request.headers.jwt, { maxAge: expiry, httpOnly: true, sameSite: "Lax" });
+        response.cookie("access_token", request.headers.jwt, { maxAge: expiry, httpOnly: true, sameSite: "None" });
 
         next();
 

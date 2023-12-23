@@ -2,7 +2,6 @@
 // create functionality involving them.
 const { Post } = require('../../models/PostModel');
 const { Comment } = require('../../models/CommentModel');
-const { populate } = require('dotenv');
 
 // CREATE 
 
@@ -82,7 +81,7 @@ const getPost = async (request, response, next) => {
         const post = await Post.findById(request.params.id).populate([
             {
                 path: 'author',
-                select: ["username"],
+                select: ["username", "profilePicture"],
             },
             {
                 path: 'comments',

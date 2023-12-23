@@ -1,35 +1,37 @@
-// Import Express
-const express = require("express");
-// Create an instance of an Express Router
-const router = express.Router();
+// ROLE ROUTER NOT USED IN FINAL APP
 
-// Import our new functions:
-const { getUsersWithRole, getAllRoles } = require("./functions/RoleFunctions");
+// // Import Express
+// const express = require("express");
+// // Create an instance of an Express Router
+// const router = express.Router();
 
-// Configure routes attached to the router instance
+// // Import our new functions:
+// const { getUsersWithRole, getAllRoles } = require("./functions/RoleFunctions");
 
-// Show all roles
-router.get("/", async (request, response) => {
-    let responseData = {};
+// // Configure routes attached to the router instance
 
-    responseData = await getAllRoles();
+// // Show all roles
+// router.get("/", async (request, response) => {
+//     let responseData = {};
 
-    response.json({
-        data: responseData,
-    });
-});
+//     responseData = await getAllRoles();
 
-// Show all users with a matching role
-// Uses route params, notice the request.params too!
-router.get("/:roleName", async (request, response) => {
-    let responseData = {};
+//     response.json({
+//         data: responseData,
+//     });
+// });
 
-    responseData = await getUsersWithRole(request.params.roleName);
+// // Show all users with a matching role
+// // Uses route params, notice the request.params too!
+// router.get("/:roleName", async (request, response) => {
+//     let responseData = {};
 
-    response.json({
-        data: responseData,
-    });
-});
+//     responseData = await getUsersWithRole(request.params.roleName);
 
-// Export the router so that other files can use it:
-module.exports = router;
+//     response.json({
+//         data: responseData,
+//     });
+// });
+
+// // Export the router so that other files can use it:
+// module.exports = router;

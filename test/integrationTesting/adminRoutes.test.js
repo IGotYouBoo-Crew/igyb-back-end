@@ -103,6 +103,10 @@ describe("Signed in as admin UserController routes work and accept/return data c
         let responseData = await adminAuthSession.get("/account/");
         expect(responseData.status).toEqual(200)
     });
+    test("Admin GET '/:username' route passes", async () => {
+        let responseData = await adminAuthSession.get("/account/User4");
+        expect(responseData.status).toEqual(200)
+    });
 
     // UPDATE
     test("Admin PATCH request of another user returns updated userData", async () => {

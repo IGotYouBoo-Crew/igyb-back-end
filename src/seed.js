@@ -88,7 +88,7 @@ const events = [
     {
         title: "first seeded event",
         host: "Captain Naomi",
-        image: "https://img.freepik.com/premium-vector/potato-head-cartoon-pilot-mascot-cartoon-vector_193274-39483.jpg?w=2000",
+        image: "https://pm1.aminoapps.com/7527/d9dfbba4a87d3ae3583aa74dbf831ba4ccd1243ar1-1488-1000v2_uhq.jpg",
         date: "Dec 25, 2023",
         start: "12:00",
         finish: "14:00",
@@ -99,7 +99,7 @@ const events = [
     {
         title: "second seeded event",
         host: "Queen Ella",
-        image: "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg",
+        image: "https://musicfeeds.com.au/wp-content/uploads/sites/7/2023/10/New-Project-2023-10-11T142201.049.jpg",
         date: "Feb 28, 2024",
         start: "08:00",
         finish: "20:00",

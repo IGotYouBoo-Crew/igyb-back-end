@@ -236,7 +236,7 @@ describe("EventsController routes work and reject non users", () => {
 
         expect(responseResult.body).toHaveProperty("title", "second seeded event");
         expect(responseResult.body).toHaveProperty("host", "Queen Ella");
-        expect(responseResult.body).toHaveProperty("image", "https://pbs.twimg.com/profile_images/1136133643900866563/TNAIerMx_400x400.jpg");
+        expect(responseResult.body).toHaveProperty("image", "https://musicfeeds.com.au/wp-content/uploads/sites/7/2023/10/New-Project-2023-10-11T142201.049.jpg");
         expect(responseResult.body).toHaveProperty("date", "Feb 28, 2024");
         expect(responseResult.body).toHaveProperty("start", "08:00");
         expect(responseResult.body).toHaveProperty("finish", "20:00");

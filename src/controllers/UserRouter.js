@@ -59,7 +59,15 @@ router.get("/:username", verifyUserRoleAndId, targetSelf, onlyAllowAuthorOrAdmin
 // Updates the user properties provided in the request.body according to the userId
 // I used :authorId here instead of :userId because it allows for
 // a single middleware to perform all checks rather than write a specific only only for users protections
-router.patch("/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, updateUser, generateCookie,
+router.patch("/:authorId/false", verifyUserRoleAndId, onlyAllowAuthor, updateUser, generateCookie,
+    async (request, response) => {
+        response.json({
+            message: request.header.updatedUser,
+        });
+    }
+);
+
+router.patch("/:authorId/true", verifyUserRoleAndId, onlyAllowAdmin, updateUser,
     async (request, response) => {
         response.json({
             message: request.header.updatedUser,

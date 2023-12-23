@@ -8,7 +8,7 @@
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
     "reseed-and-test": "NODE_ENV=test WIPE=true node src/seed.js && jest --runInBand",
     "check-coverage": "NODE_ENV=test WIPE=true node src/seed.js && jest --runInBand --coverage",
-    "nay-reseed": "NODE_ENV=test WIPE=true node src/seed.js",
+    "nay-reseed": "NODE_ENV=production WIPE=true node src/seed.js",
     "nay-test": "NODE_ENV=test jest --runInBand",
     "start-dev": "NODE_ENV=development nodemon src/index.js",
     "seed-prod": "NODE_ENV=production node src/seed.js",

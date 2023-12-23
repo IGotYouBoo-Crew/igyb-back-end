@@ -84,7 +84,7 @@ describe("UserController routes work and accept/return data correctly", () => {
             pronouns: "she/her",
         };
         let responseResult = await request(app)
-            .patch("/account/" + testUserId)
+            .patch("/account/" + testUserId + "/false")
             .send(updatedUserData);
         expect(responseResult.body).toHaveProperty("errors", "Error: User not signed in");
     });

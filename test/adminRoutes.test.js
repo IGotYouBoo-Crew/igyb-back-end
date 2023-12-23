@@ -110,7 +110,7 @@ describe("Signed in as admin UserController routes work and accept/return data c
             pronouns: "she/her",
         };
         const responseResult = await adminAuthSession
-            .patch("/account/" + testUserId)
+            .patch("/account/" + testUserId + "/true")
             .send(updatedUserData);
         expect(responseResult.body.message).toHaveProperty("pronouns", "she/her");
     });

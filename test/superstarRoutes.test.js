@@ -98,7 +98,7 @@ describe("Signed in UserController routes work and accept/return data correctly"
         // authenticatedSession used to test signed-in attempt
         // Here, we expect it to fail again, but for different reasons
         let testResponse = await authenticatedSession
-            .patch("/account/" + errorTestUserId)
+            .patch("/account/" + errorTestUserId + "/false")
             .send(updatedUserData);
         expect(testResponse.body).toHaveProperty(
             "errors",
@@ -111,7 +111,7 @@ describe("Signed in UserController routes work and accept/return data correctly"
             pronouns: "she/her",
         };
         const responseResult = await authenticatedSession
-            .patch("/account/" + testUserId)
+            .patch("/account/" + testUserId + "/false")
             .send(updatedUserData);
         expect(responseResult.body.message).toHaveProperty("pronouns", "she/her");
     });

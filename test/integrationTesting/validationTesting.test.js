@@ -149,3 +149,11 @@ describe("User Model validation rejects invalid data correctly", () => {
         expect(responseResult.body).toHaveProperty("errors", `ValidationError: start: ${newEventData.start} is not valid 24hr time!`);
     });
 });
+// THIS TEST MUST GO LAST --> authenticatedSession is reliant on this account
+describe("User can delete account", () => {
+    // DELETE
+    test("DELETE route works for self-deletion", async () => {
+        const responseResult = await authenticatedSession.delete("/account/");
+        expect(responseResult.body.message).toEqual("deleting user: User4");
+    });
+});

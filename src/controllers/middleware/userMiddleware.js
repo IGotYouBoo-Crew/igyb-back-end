@@ -7,7 +7,7 @@ const {
     updateUserById,
 } = require("../functions/UserFunctions");
 const { createUserJwt, getUserDataFromJwt } = require("../functions/JwtFunctions");
-const { getRoleNameById } = require("../functions/RoleFunctions");
+const { getRoleNameById, getRoleIdByName } = require("../functions/RoleFunctions");
 const { checkUnhashedData, hashString } = require("../functions/EncryptionFunctions");
 
 // logs user in,
@@ -175,6 +175,11 @@ const updateUser = async (request, response, next) => {
     try {
         if (request.body.password) {
             request.body.password = await hashString(request.body.password);
+        }
+        if (request.headers.userRole !== "Admin"){
+            request.body.role == await getRoleIdByName("Superstar")
+        } else if (request.body.role != undefined){
+            request.body.role = await getRoleIdByName(request.body.role)
         }
         let updatedUser = await updateUserById(request.params.authorId, request.body);
         request.header.updatedUser = updatedUser;

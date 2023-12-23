@@ -66,29 +66,14 @@ const getEventById = async (request, response, next) => {
 const updateEvent = async (request, response, next) => {
     try {
 
-        const event = await Event.findById(request.params.id);
-        console.log(event)
-
+        const event = await Event.findByIdAndUpdate(request.params.id, request.body, { runValidators: true, returnDocument: 'after' });
+        
         if(!event) {
             const error = new Error("Oops, that event was not found");
             next(error);
             return;
         } else {
-            async function handleUpdateEventData(eventData) {
-                const {title, host, image, date, start, finish, ticketLink, content} = eventData;
-                event.title = title || event.title;
-                event.host = host || event.host;
-                event.image = image || event.image;
-                event.date = date || event.date;
-                event.start = start || event.start;
-                event.finish = finish || event.finish;
-                event.ticketLink = ticketLink || event.ticketLink;
-                event.content = content || event.content;
-                const updatedEvent = await event.save();
-                return response.json(updatedEvent);
-            }
-    
-            handleUpdateEventData(request.body);
+                return response.json(event);
         }
     } catch (error) {
         next(error);

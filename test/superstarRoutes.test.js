@@ -285,9 +285,9 @@ describe("Signed in as superstar EventsController routes work and accept/return 
     // CREATE
     test("POST request.body of newEventData returns newEventData", async () => {
         let newEventData = {
+            title: "Hot Potato Test Event",
             host: "Boiled Potato",
             image: "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg",
-            title: "Hot Potato Test Event",
             date: "Dec 31, 2023",
             start: "12:00",
             finish: "15:00",
@@ -299,9 +299,9 @@ describe("Signed in as superstar EventsController routes work and accept/return 
         testEventId = responseResult.body._id;
         testEventAuthor = responseResult.body.author;
 
+        expect(responseResult.body).toHaveProperty("title", newEventData.title);
         expect(responseResult.body).toHaveProperty("host", newEventData.host);
         expect(responseResult.body).toHaveProperty("image", newEventData.image)
-        expect(responseResult.body).toHaveProperty("title", newEventData.title);
         expect(responseResult.body).toHaveProperty("date", "Dec 31, 2023");
         expect(responseResult.body).toHaveProperty("start", newEventData.start);
         expect(responseResult.body).toHaveProperty("finish", newEventData.finish);
@@ -320,9 +320,9 @@ describe("Signed in as superstar EventsController routes work and accept/return 
     test("GET 'events/testEventId' route exists and returns testEventId's data", async () => {
         const responseResult = await request(app).get("/events/" + testEventId);
 
+        expect(responseResult.body).toHaveProperty("title", "Hot Potato Test Event");
         expect(responseResult.body).toHaveProperty("host", "Boiled Potato");
         expect(responseResult.body).toHaveProperty("image", "https://t4.ftcdn.net/jpg/03/43/50/71/360_F_343507119_ZEc4MsKNcqhPpCQlk5SZ3KEZmUz4d8u2.jpg");
-        expect(responseResult.body).toHaveProperty("title", "Hot Potato Test Event");
         expect(responseResult.body).toHaveProperty("date", "Dec 31, 2023");
         expect(responseResult.body).toHaveProperty("start", "12:00");
         expect(responseResult.body).toHaveProperty("finish", "15:00");

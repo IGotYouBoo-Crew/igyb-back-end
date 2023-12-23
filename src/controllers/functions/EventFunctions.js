@@ -5,11 +5,11 @@ const { Event } = require('../../models/EventModel');
 // CREATE
 const createEvent = async (request, response, next) => {
     try {
-        const {host, image, title, date, start, finish, ticketLink, content} = request.body
+        const {title, host, image, date, start, finish, ticketLink, content} = request.body
         const event = new Event({
+            title, 
             host, 
             image, 
-            title, 
             date, 
             start, 
             finish, 
@@ -63,32 +63,17 @@ const getEventById = async (request, response, next) => {
 }
 
 // UPDATE
-const updateEventById = async (request, response, next) => {
+const updateEvent = async (request, response, next) => {
     try {
 
-        const event = await Event.findById(request.params.id);
-        console.log(event)
-
+        const event = await Event.findByIdAndUpdate(request.params.id, request.body, { runValidators: true, returnDocument: 'after' });
+        
         if(!event) {
             const error = new Error("Oops, that event was not found");
             next(error);
             return;
         } else {
-            async function handleUpdateEventData(eventData) {
-                const {host, image, title, date, start, finish, ticketLink, content} = eventData;
-                event.host = host || event.host;
-                event.image = image || event.image;
-                event.title = title || event.title;
-                event.date = date || event.date;
-                event.start = start || event.start;
-                event.finish = finish || event.finish;
-                event.ticketLink = ticketLink || event.ticketLink;
-                event.content = content || event.content;
-                const updatedEvent = await event.save();
-                return response.json(updatedEvent);
-            }
-    
-            handleUpdateEventData(request.body);
+                return response.json(event);
         }
     } catch (error) {
         next(error);
@@ -96,7 +81,7 @@ const updateEventById = async (request, response, next) => {
 }
 
 // DELETE
-const deleteEventById = async (request, response, next) => {
+const deleteEvent = async (request, response, next) => {
     try {
         const eventToDelete = await Event.findOneAndDelete({ _id: request.params.id });
 
@@ -117,6 +102,6 @@ module.exports = {
     createEvent,
     getAllEvents,
     getEventById,
-    updateEventById,
-    deleteEventById
+    updateEvent,
+    deleteEvent
 }

@@ -4,31 +4,41 @@ const express = require("express");
 const router = express.Router();
 
 // Import our new functions:
-const { 
-    createComment,
-    updateComment,
-    deleteComment 
+const {
+  createComment,
+  updateComment,
+  deleteComment,
 } = require("./functions/CommentFunctions");
 
 // Import our auth middleware:
-const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin, onlyAllowAuthor } = require("./middleware/authMiddleware");
+const {
+  verifyUserRoleAndId,
+  onlyAllowAuthorOrAdmin,
+  onlyAllowAuthor,
+} = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
 // CREATE
-router.post("/", verifyUserRoleAndId, createComment)
+router.post("/", verifyUserRoleAndId, createComment);
 
 // UPDATE
-router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthor, updateComment)
-
+router.patch(
+  "/:id/:authorId",
+  verifyUserRoleAndId,
+  onlyAllowAuthor,
+  updateComment
+);
 
 // DELETE
-router.delete("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deleteComment);
-
+router.delete(
+  "/:id/:authorId",
+  verifyUserRoleAndId,
+  onlyAllowAuthorOrAdmin,
+  deleteComment
+);
 
 // READ
-
-
 
 // Export the router so that other files can use it:
 module.exports = router;

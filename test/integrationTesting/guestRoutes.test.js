@@ -121,13 +121,13 @@ describe("PostsController routes work and reject non users", () => {
 
     // READ
     test("GET '/posts/testPostId' route exists and returns testPostId's data", async () => {
-        const seededTestPost = await Post.findOne({title: "second seeded post"}).exec();
+        const seededTestPost = await Post.findOne({title: "I need advice..."}).exec();
         const responseResult = await request(app).get("/posts/" + seededTestPost._id);
 
-        expect(responseResult.body).toHaveProperty("title", "second seeded post");
-        expect(responseResult.body).toHaveProperty("caption", "second seeded post caption");
-        expect(responseResult.body).toHaveProperty("body", "second seeded post body...");
-        expect(responseResult.body).toHaveProperty("photo", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU");
+        expect(responseResult.body).toHaveProperty("title", "I need advice...");
+        expect(responseResult.body).toHaveProperty("caption", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        expect(responseResult.body).toHaveProperty("body", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu ex malesuada, rutrum nunc a, condimentum dui. Nulla facilisi. Donec hendrerit efficitur augue id vestibulum. Etiam maximus enim augue, nec gravida neque porta ut. In nulla mauris, euismod lacinia viverra id, sollicitudin id enim. Morbi eget dapibus purus, id cursus erat. Morbi mollis lacus non dapibus vestibulum. Etiam tincidunt erat maximus erat ultrices, in egestas nisi facilisis. Phasellus non rhoncus elit. Donec vulputate, ante vel vehicula sagittis, enim erat pharetra felis, sit amet euismod velit tortor ut lacus. Vestibulum volutpat tristique libero, non dignissim odio.");
+        expect(responseResult.body).toHaveProperty("photo", "https://everydaypower.com/wp-content/uploads/2018/07/How-to-Stop-Being-Dazed-and-Confused-About-Your-Future.jpg");
         expect(responseResult.body).toHaveProperty("_id");
     });
     test("GET '/posts/' route exists and returns all posts", async () => {
@@ -166,7 +166,7 @@ describe("CommentsController routes work and reject non users", () => {
     
     // CREATE
     test("POST request.body of guestCommentData returns error message", async () => {
-        const seededTestPost = await Post.findOne({title: "second seeded post"}).exec();
+        const seededTestPost = await Post.findOne({title: "I need advice..."}).exec();
         let guestCommentData = {
             desc: "New Guest Comment",
             parentPostId: seededTestPost._id,

@@ -9,11 +9,15 @@ const {
     updatePost,
     deletePost,
     getPost,
-    getAllPosts
+    getAllPosts,
 } = require("./functions/PostFunctions");
 
 // Import our auth middleware:
-const { verifyUserRoleAndId, onlyAllowAuthorOrAdmin, onlyAllowAuthor } = require("./middleware/authMiddleware");
+const {
+    verifyUserRoleAndId,
+    onlyAllowAuthorOrAdmin,
+    onlyAllowAuthor,
+} = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
 
@@ -23,18 +27,28 @@ router.post("/", verifyUserRoleAndId, createPost);
 
 // UPDATE
 
-router.patch("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthor, updatePost);
+router.patch(
+    "/:id/:authorId",
+    verifyUserRoleAndId,
+    onlyAllowAuthor,
+    updatePost
+);
 
 // DELETE
 
-router.delete("/:id/:authorId", verifyUserRoleAndId, onlyAllowAuthorOrAdmin, deletePost);
+router.delete(
+    "/:id/:authorId",
+    verifyUserRoleAndId,
+    onlyAllowAuthorOrAdmin,
+    deletePost
+);
 
 // READ
 
-router.get("/:id", getPost)
-router.get("/", getAllPosts)
+router.get("/:id", getPost);
+router.get("/", getAllPosts);
 
-router.get("/", getAllPosts)
+router.get("/", getAllPosts);
 
 // Export the router so that other files can use it:
 module.exports = router;

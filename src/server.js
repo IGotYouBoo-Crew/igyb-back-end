@@ -7,8 +7,8 @@ dotenv.config();
 const express = require("express");
 const app = express();
 
-const cookieParser = require("cookie-parser")
-app.use(cookieParser())
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 // If no process.env.X is found, assign a default value instead.
 const PORT = process.env.PORT || 3000;
@@ -31,14 +31,19 @@ app.use(
 // listed in the array of origins for CORS configuration.
 const cors = require("cors");
 var corsOptions = {
-    origin: ["http://localhost:3000", "http://localhost:3001", "http://localhost:5000", "https://igotyouboo.netlify.app"],
+    origin: [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:5000",
+        "https://igotyouboo.netlify.app",
+    ],
     optionsSuccessStatus: 200,
     credentials: true,
     preflightContinue: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH' , 'DELETE', 'OPTIONS']
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // Configure some API-friendly request data formatting.
 app.use(express.json());
@@ -121,7 +126,7 @@ app.get("*", (request, response) => {
 });
 
 app.use((error, request, response, next) => {
-    console.log(`Error: ${error}`)
+    console.log(`Error: ${error}`);
     if (response.headersSent) {
         return next(error);
     }

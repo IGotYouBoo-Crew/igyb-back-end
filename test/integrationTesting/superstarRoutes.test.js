@@ -222,7 +222,7 @@ describe("Signed in as superstar CommentsController routes work and accept/retur
 
     // CREATE
     test("POST request.body of superstarCommentData returns superstarCommentData", async () => {
-        const seededTestPost = await Post.findOne({title: "second seeded post"}).exec();
+        const seededTestPost = await Post.findOne({title: "I need advice..."}).exec();
         let superstarCommentData = {
             desc: "New Superstar Comment",
             parentPostId: seededTestPost._id,
@@ -268,7 +268,7 @@ describe("Signed in as superstar CommentsController routes work and accept/retur
         expect(responseResult.body.message).toEqual(`Comment: ${superstarTestCommentId} has been successfully deleted`);
     });
     test("DELETE superstarCommentData returns error message as user is unauthorised", async () => {
-        const seededTestComment = await Comment.findOne({desc: "first seeded comment"}).exec();
+        const seededTestComment = await Comment.findOne({desc: "This is great!"}).exec();
         const responseResult = await authenticatedSession.delete("/comments/" + seededTestComment._id + "/" + seededTestComment.author);
 
         expect(responseResult.body.errors).toEqual(

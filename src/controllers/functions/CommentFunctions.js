@@ -1,17 +1,17 @@
-// Require specific models so that we can 
+// Require specific models so that we can
 // create functionality involving them.
-const { Post } = require("../../models/PostModel")
-const { Comment } = require("../../models/CommentModel")
+const { Post } = require("../../models/PostModel");
+const { Comment } = require("../../models/CommentModel");
 
-// CREATE 
+// CREATE
 
 const createComment = async (request, response, next) => {
     try {
-        const {desc, parentPostId, parentComment, replyOnUser} = request.body
-        
+        const { desc, parentPostId, parentComment, replyOnUser } = request.body;
+
         const findPost = await Post.findById(parentPostId);
 
-        if(!findPost) {
+        if (!findPost) {
             const error = new Error("Post was not found");
             return next(error);
         }
@@ -28,44 +28,43 @@ const createComment = async (request, response, next) => {
         const savedComment = await newComment.save();
         return response.json(savedComment);
     } catch (error) {
-        next(error)
+        next(error);
     }
-}
+};
 
-// UPDATE 
+// UPDATE
 
 const updateComment = async (request, response, next) => {
     try {
-
         const comment = await Comment.findById(request.params.id);
 
-        if(!comment) {
+        if (!comment) {
             const error = new Error("Comment was not found");
             next(error);
             return;
         } else {
             async function handleUpdateCommentData(data) {
-                const { desc} = data;
+                const { desc } = data;
                 comment.desc = desc || comment.desc;
                 const updatedComment = await comment.save();
                 return response.json(updatedComment);
             }
-    
+
             handleUpdateCommentData(request.body);
         }
-
-        
     } catch (error) {
         next(error);
     }
-}
+};
 
 // DELETE
 const deleteComment = async (request, response, next) => {
     try {
-        const commentToDelete = await Comment.findOneAndDelete({ _id: request.params.id });
+        const commentToDelete = await Comment.findOneAndDelete({
+            _id: request.params.id,
+        });
 
-        if(!commentToDelete) {
+        if (!commentToDelete) {
             const error = new Error("Comment was not found");
             return next(error);
         }
@@ -74,15 +73,15 @@ const deleteComment = async (request, response, next) => {
 
         return response.json({
             message: `Comment: ${commentToDelete.id} has been successfully deleted`,
-        })
+        });
     } catch (error) {
         next(error);
     }
-}
+};
 
 // Export the functions for our routes to use.
 module.exports = {
     createComment,
     updateComment,
-    deleteComment
-}
+    deleteComment,
+};

@@ -45,40 +45,40 @@ const adminUser = {
     password: "secretAdminPassword",
     pronouns: "ad/min",
     role: null,
-}
+};
 
 const posts = [
     {
-        title: "first seeded post",
-        caption: "first seeded post caption",
-        body: "first seeded post body...",
-        photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU",
+        title: "How I got the job!",
+        caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu ex malesuada, rutrum nunc a, condimentum dui. Nulla facilisi. Donec hendrerit efficitur augue id vestibulum. Etiam maximus enim augue, nec gravida neque porta ut. In nulla mauris, euismod lacinia viverra id, sollicitudin id enim. Morbi eget dapibus purus, id cursus erat. Morbi mollis lacus non dapibus vestibulum. Etiam tincidunt erat maximus erat ultrices, in egestas nisi facilisis. Phasellus non rhoncus elit. Donec vulputate, ante vel vehicula sagittis, enim erat pharetra felis, sit amet euismod velit tortor ut lacus. Vestibulum volutpat tristique libero, non dignissim odio.",
+        photo: "https://i0.wp.com/www.alphr.com/wp-content/uploads/2018/11/how_to_get_a_job_at_google_apple_microsoft.jpg?fit=2048%2C1152&ssl=1",
         author: null,
     },
     {
-        title: "second seeded post",
-        caption: "second seeded post caption",
-        body: "second seeded post body...",
-        photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU",
+        title: "I need advice...",
+        caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu ex malesuada, rutrum nunc a, condimentum dui. Nulla facilisi. Donec hendrerit efficitur augue id vestibulum. Etiam maximus enim augue, nec gravida neque porta ut. In nulla mauris, euismod lacinia viverra id, sollicitudin id enim. Morbi eget dapibus purus, id cursus erat. Morbi mollis lacus non dapibus vestibulum. Etiam tincidunt erat maximus erat ultrices, in egestas nisi facilisis. Phasellus non rhoncus elit. Donec vulputate, ante vel vehicula sagittis, enim erat pharetra felis, sit amet euismod velit tortor ut lacus. Vestibulum volutpat tristique libero, non dignissim odio.",
+        photo: "https://everydaypower.com/wp-content/uploads/2018/07/How-to-Stop-Being-Dazed-and-Confused-About-Your-Future.jpg",
         author: null,
     },
     {
-        title: "third seeded post",
-        caption: "third seeded post caption",
-        body: "third seeded post body...",
-        photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbi6SmUiWTXz4_ve03OoxVJQ2_g7jaKxvi20DIMxsLlv5zDleZqMnfX1OaJGtpOs56UUw&usqp=CAU",
+        title: "How to be nicer",
+        caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu ex malesuada, rutrum nunc a, condimentum dui. Nulla facilisi. Donec hendrerit efficitur augue id vestibulum. Etiam maximus enim augue, nec gravida neque porta ut. In nulla mauris, euismod lacinia viverra id, sollicitudin id enim. Morbi eget dapibus purus, id cursus erat. Morbi mollis lacus non dapibus vestibulum. Etiam tincidunt erat maximus erat ultrices, in egestas nisi facilisis. Phasellus non rhoncus elit. Donec vulputate, ante vel vehicula sagittis, enim erat pharetra felis, sit amet euismod velit tortor ut lacus. Vestibulum volutpat tristique libero, non dignissim odio.",
+        photo: "https://empoweredandthriving.com/wp-content/uploads/2022/05/how-to-be-nicer.jpg",
         author: null,
     },
 ];
 
 const comments = [
     {
-        desc: "first seeded comment",
+        desc: "This is great!",
         parentPostId: null,
         author: null,
     },
     {
-        desc: "second seeded comment",
+        desc: "Nice post :)",
         parentPostId: null,
         author: null,
     },
@@ -109,12 +109,14 @@ const events = [
     },
 ];
 
-seedDb()
+seedDb();
 
 function seedDb() {
     databaseConnect()
         .catch((error) => {
-            console.log(`An error occurred while connecting to the database:\n${error}`);
+            console.log(
+                `An error occurred while connecting to the database:\n${error}`
+            );
         })
         .then(() => {
             console.log("Database connected successfully when seeding!");
@@ -122,7 +124,9 @@ function seedDb() {
         .then(async () => {
             if (process.env.WIPE === "true") {
                 // get the names of all collections in the DB
-                const collections = await mongoose.connection.db.listCollections().toArray();
+                const collections = await mongoose.connection.db
+                    .listCollections()
+                    .toArray();
                 // empty data and collections from the DB
                 collections
                     .map((collection) => collection.name)
@@ -135,26 +139,41 @@ function seedDb() {
         .then(async () => {
             // add new data
             let rolesCreated = await Role.insertMany(roles);
-            console.log(await Role.find({}))
+            console.log(await Role.find({}));
             for (const user of users) {
-                user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id;
+                user.role =
+                    rolesCreated[
+                        Math.floor(Math.random() * rolesCreated.length)
+                    ].id;
             }
-            adminUser.role = rolesCreated[1].id
-            await User.create(adminUser)
+            adminUser.role = rolesCreated[1].id;
+            await User.create(adminUser);
             let usersCreated = await User.insertMany(users);
             for (const post of posts) {
-                post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+                post.author =
+                    usersCreated[
+                        Math.floor(Math.random() * usersCreated.length)
+                    ].id;
             }
             let postsCreated = await Post.insertMany(posts);
             console.log(postsCreated);
             for (const comment of comments) {
-                comment.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
-                comment.parentPostId = postsCreated[Math.floor(Math.random() * postsCreated.length)].id;
+                comment.author =
+                    usersCreated[
+                        Math.floor(Math.random() * usersCreated.length)
+                    ].id;
+                comment.parentPostId =
+                    postsCreated[
+                        Math.floor(Math.random() * postsCreated.length)
+                    ].id;
             }
             let commentsCreated = await Comment.insertMany(comments);
             console.log(commentsCreated);
             for (const event of events) {
-                event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+                event.author =
+                    usersCreated[
+                        Math.floor(Math.random() * usersCreated.length)
+                    ].id;
             }
             let eventsCreated = await Event.insertMany(events);
             console.log(eventsCreated);
@@ -167,4 +186,4 @@ function seedDb() {
         });
 }
 
-module.exports = { seedDb }
+module.exports = { seedDb };

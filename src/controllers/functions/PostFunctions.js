@@ -1,37 +1,35 @@
-// Require specific models so that we can 
+// Require specific models so that we can
 // create functionality involving them.
-const { Post } = require('../../models/PostModel');
-const { Comment } = require('../../models/CommentModel');
+const { Post } = require("../../models/PostModel");
+const { Comment } = require("../../models/CommentModel");
 
-// CREATE 
+// CREATE
 
 const createPost = async (request, response, next) => {
     try {
-        const {title, caption, body, photo} = request.body
+        const { title, caption, body, photo } = request.body;
         const post = new Post({
             title,
             caption,
             body,
             photo,
-            author: request.headers.userId
+            author: request.headers.userId,
         });
 
         const createdPost = await post.save();
         return response.json(createdPost);
-        
     } catch (error) {
         next(error);
     }
-}
+};
 
-// UPDATE 
+// UPDATE
 
 const updatePost = async (request, response, next) => {
     try {
-
         const post = await Post.findById(request.params.id);
 
-        if(!post) {
+        if (!post) {
             const error = new Error("Post was not found");
             next(error);
             return;
@@ -45,22 +43,22 @@ const updatePost = async (request, response, next) => {
                 const updatedPost = await post.save();
                 return response.json(updatedPost);
             }
-    
+
             handleUpdatePostData(request.body);
         }
-
-        
     } catch (error) {
         next(error);
     }
-}
+};
 
 // DELETE
 const deletePost = async (request, response, next) => {
     try {
-        const postToDelete = await Post.findOneAndDelete({ _id: request.params.id });
+        const postToDelete = await Post.findOneAndDelete({
+            _id: request.params.id,
+        });
 
-        if(!postToDelete) {
+        if (!postToDelete) {
             const error = new Error("Post was not found");
             return next(error);
         }
@@ -69,35 +67,35 @@ const deletePost = async (request, response, next) => {
 
         return response.json({
             message: `Post: ${postToDelete.title} has been successfully deleted`,
-        })
+        });
     } catch (error) {
         next(error);
     }
-}
+};
 
 // READ
 const getPost = async (request, response, next) => {
     try {
         const post = await Post.findById(request.params.id).populate([
             {
-                path: 'author',
+                path: "author",
                 select: ["username", "profilePicture"],
             },
             {
-                path: 'comments',
+                path: "comments",
                 match: {
                     parentComment: null,
                 },
                 populate: [
                     {
-                        path: 'author',
-                        select: ['username', 'profilePicture']
-                    },                    
-                ],            
+                        path: "author",
+                        select: ["username", "profilePicture"],
+                    },
+                ],
             },
         ]);
 
-        if(!post) {
+        if (!post) {
             const error = new Error("Post was not found");
             return next(error);
         }
@@ -106,22 +104,22 @@ const getPost = async (request, response, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 const getAllPosts = async (request, response, next) => {
     try {
         const posts = await Post.find({}).populate([
             {
                 path: "author",
-                select: ["username", "profilePicture"]
-            }
+                select: ["username", "profilePicture"],
+            },
         ]);
 
         response.json(posts);
     } catch (error) {
         next(error);
     }
-}
+};
 
 // Export the functions for our routes to use.
 module.exports = {
@@ -130,4 +128,4 @@ module.exports = {
     deletePost,
     getPost,
     getAllPosts,
-}
+};

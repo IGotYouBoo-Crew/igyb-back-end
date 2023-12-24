@@ -213,7 +213,7 @@ describe("EventsController routes work and reject non users", () => {
             date: "Jun 26, 2024",
             start: "12:00",
             finish: "15:00",
-            ticketLink: "https://thewiggles.com/live",
+            ticketLink: "https://potatofestival.com.au/whats-on/activities/",
             content: "I'm trying to create a test event but I'm a potato"
         };
         const responseResult = await request(app).post("/events/").send(newEventData);
@@ -240,7 +240,7 @@ describe("EventsController routes work and reject non users", () => {
         expect(responseResult.body).toHaveProperty("date", "Feb 28, 2024");
         expect(responseResult.body).toHaveProperty("start", "08:00");
         expect(responseResult.body).toHaveProperty("finish", "20:00");
-        expect(responseResult.body).toHaveProperty("ticketLink", "https://premier.ticketek.com.au/");
+        expect(responseResult.body).toHaveProperty("ticketLink", "https://thewiggles.com/live");
         expect(responseResult.body).toHaveProperty("content", "this is the second fake event");
         expect(responseResult.body).toHaveProperty("_id");
     });

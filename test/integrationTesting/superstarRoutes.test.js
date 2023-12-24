@@ -291,7 +291,7 @@ describe("Signed in as superstar EventsController routes work and accept/return 
             date: "Dec 31, 2023",
             start: "12:00",
             finish: "15:00",
-            ticketLink: "https://thewiggles.com/live",
+            ticketLink: "https://potatofestival.com.au/whats-on/activities/",
             content: "I'm trying to create a test event and I'm a potato"
         };
         const responseResult = await authenticatedSession.post("/events/").send(newEventData);
@@ -326,7 +326,7 @@ describe("Signed in as superstar EventsController routes work and accept/return 
         expect(responseResult.body).toHaveProperty("date", "Dec 31, 2023");
         expect(responseResult.body).toHaveProperty("start", "12:00");
         expect(responseResult.body).toHaveProperty("finish", "15:00");
-        expect(responseResult.body).toHaveProperty("ticketLink", "https://thewiggles.com/live");
+        expect(responseResult.body).toHaveProperty("ticketLink", "https://potatofestival.com.au/whats-on/activities/");
         expect(responseResult.body).toHaveProperty("content", "I'm trying to create a test event and I'm a potato");
         expect(responseResult.body).toHaveProperty("_id", testEventId);
     });

@@ -7,7 +7,7 @@ const { timeValidators } = require("./validatorFunctions/eventValidators");
 const EventSchema = new mongoose.Schema({
     title: { type: String, required: true },
     host: { type: String, required: true },
-    image: { type: String, required: false },
+    image: { type: String, required: true },
     date: { type: Date, required: true },
     start: { type: String, validate: timeValidators, required: true },
     finish: {

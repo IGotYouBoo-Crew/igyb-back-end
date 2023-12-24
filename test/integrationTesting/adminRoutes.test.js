@@ -184,10 +184,10 @@ describe("Signed in as admin PostsController routes work and accept/return data 
 
     });
     test("DELETE adminPostData returns success message for post that wasn't created by the user", async () => {
-        const seededTestPost = await Post.findOne({title: "first seeded post"}).exec();
+        const seededTestPost = await Post.findOne({title: "How I got the job!"}).exec();
         const responseResult = await adminAuthSession.delete("/posts/" + seededTestPost._id + "/" + seededTestPost.author);
 
-        expect(responseResult.body.message).toEqual("Post: first seeded post has been successfully deleted");
+        expect(responseResult.body.message).toEqual("Post: How I got the job! has been successfully deleted");
     });
 });
 
@@ -198,7 +198,7 @@ describe("Signed in as admin CommentsController routes work and accept/return da
 
     // CREATE
     test("POST request.body of adminCommentData returns adminCommentData", async () => {
-        const seededTestPost = await Post.findOne({title: "second seeded post"}).exec();
+        const seededTestPost = await Post.findOne({title: "I need advice..."}).exec();
         let adminCommentData = {
             desc: "New Admin Comment",
             parentPostId: seededTestPost._id,
@@ -234,7 +234,7 @@ describe("Signed in as admin CommentsController routes work and accept/return da
         expect(responseResult.body.message).toEqual(`Comment: ${adminTestCommentId} has been successfully deleted`);
     });
     test("DELETE commentData returns success message for comment that wasn't created by the user", async () => {
-        const seededTestComment = await Comment.findOne({desc: "first seeded comment"}).exec();
+        const seededTestComment = await Comment.findOne({desc: "This is great!"}).exec();
         const responseResult = await adminAuthSession.delete("/comments/" + seededTestComment._id + "/" + seededTestComment.author);
 
         expect(responseResult.body.message).toEqual(`Comment: ${seededTestComment._id} has been successfully deleted`);

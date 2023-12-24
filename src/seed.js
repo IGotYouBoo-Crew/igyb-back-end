@@ -45,7 +45,7 @@ const adminUser = {
     password: "secretAdminPassword",
     pronouns: "ad/min",
     role: null,
-}
+};
 
 const posts = [
     {
@@ -109,12 +109,14 @@ const events = [
     },
 ];
 
-seedDb()
+seedDb();
 
 function seedDb() {
     databaseConnect()
         .catch((error) => {
-            console.log(`An error occurred while connecting to the database:\n${error}`);
+            console.log(
+                `An error occurred while connecting to the database:\n${error}`
+            );
         })
         .then(() => {
             console.log("Database connected successfully when seeding!");
@@ -122,7 +124,9 @@ function seedDb() {
         .then(async () => {
             if (process.env.WIPE === "true") {
                 // get the names of all collections in the DB
-                const collections = await mongoose.connection.db.listCollections().toArray();
+                const collections = await mongoose.connection.db
+                    .listCollections()
+                    .toArray();
                 // empty data and collections from the DB
                 collections
                     .map((collection) => collection.name)
@@ -135,26 +139,41 @@ function seedDb() {
         .then(async () => {
             // add new data
             let rolesCreated = await Role.insertMany(roles);
-            console.log(await Role.find({}))
+            console.log(await Role.find({}));
             for (const user of users) {
-                user.role = rolesCreated[Math.floor(Math.random() * rolesCreated.length)].id;
+                user.role =
+                    rolesCreated[
+                        Math.floor(Math.random() * rolesCreated.length)
+                    ].id;
             }
-            adminUser.role = rolesCreated[1].id
-            await User.create(adminUser)
+            adminUser.role = rolesCreated[1].id;
+            await User.create(adminUser);
             let usersCreated = await User.insertMany(users);
             for (const post of posts) {
-                post.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+                post.author =
+                    usersCreated[
+                        Math.floor(Math.random() * usersCreated.length)
+                    ].id;
             }
             let postsCreated = await Post.insertMany(posts);
             console.log(postsCreated);
             for (const comment of comments) {
-                comment.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
-                comment.parentPostId = postsCreated[Math.floor(Math.random() * postsCreated.length)].id;
+                comment.author =
+                    usersCreated[
+                        Math.floor(Math.random() * usersCreated.length)
+                    ].id;
+                comment.parentPostId =
+                    postsCreated[
+                        Math.floor(Math.random() * postsCreated.length)
+                    ].id;
             }
             let commentsCreated = await Comment.insertMany(comments);
             console.log(commentsCreated);
             for (const event of events) {
-                event.author = usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+                event.author =
+                    usersCreated[
+                        Math.floor(Math.random() * usersCreated.length)
+                    ].id;
             }
             let eventsCreated = await Event.insertMany(events);
             console.log(eventsCreated);
@@ -167,4 +186,4 @@ function seedDb() {
         });
 }
 
-module.exports = { seedDb }
+module.exports = { seedDb };

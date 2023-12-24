@@ -5,18 +5,18 @@ const router = express.Router();
 
 // Import our new functions:
 const {
-  createPost,
-  updatePost,
-  deletePost,
-  getPost,
-  getAllPosts,
+    createPost,
+    updatePost,
+    deletePost,
+    getPost,
+    getAllPosts,
 } = require("./functions/PostFunctions");
 
 // Import our auth middleware:
 const {
-  verifyUserRoleAndId,
-  onlyAllowAuthorOrAdmin,
-  onlyAllowAuthor,
+    verifyUserRoleAndId,
+    onlyAllowAuthorOrAdmin,
+    onlyAllowAuthor,
 } = require("./middleware/authMiddleware");
 
 // Checklist: should include CREATE, READ, UPDATE, DELETE
@@ -28,19 +28,19 @@ router.post("/", verifyUserRoleAndId, createPost);
 // UPDATE
 
 router.patch(
-  "/:id/:authorId",
-  verifyUserRoleAndId,
-  onlyAllowAuthor,
-  updatePost
+    "/:id/:authorId",
+    verifyUserRoleAndId,
+    onlyAllowAuthor,
+    updatePost
 );
 
 // DELETE
 
 router.delete(
-  "/:id/:authorId",
-  verifyUserRoleAndId,
-  onlyAllowAuthorOrAdmin,
-  deletePost
+    "/:id/:authorId",
+    verifyUserRoleAndId,
+    onlyAllowAuthorOrAdmin,
+    deletePost
 );
 
 // READ
